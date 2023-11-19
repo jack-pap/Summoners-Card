@@ -1,0 +1,23 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+
+.box {
+  margin: 1px
+}
+
+select {
+  margin: 1em;
+  padding: 0.5em;
+}
+
+input {
+  padding: 0.5em;
+  width: 13cm;
+}
+
+
