@@ -6,8 +6,8 @@ function App() {
 
   return (
     <>
-      <h1>Summoners Card</h1>
-      <input type="text" name="summoner" placeholder='Enter summoner name' />
+      <h1>SUMMONERS CARD</h1>
+      <input type="text" name="summoner" placeholder='Enter summoner name...' />
       <div className="box">
         <select name="server">
           <option value="euw">EUW</option>

@@ -1,23 +1,82 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   text-align: center;
+  
 }
 
+@font-face {
+  font-family: 'Beaufort';
+  src: url(./Fonts_Package/BeaufortForLoL-OTF/BeaufortforLOL-Bold.otf);
+  font-weight: normal;
+  font-style: normal;
+  }
+
+@font-face {
+  font-family: 'Spiegel';
+  src: url(./Fonts_Package/Spiegel-OTF/Spiegel-Regular.otf);
+  font-weight: normal;
+  font-style: normal;
+  }
+
+.gradient_background {
+  background: linear-gradient(90deg, #0062ff, #da61ff);
+  height: 100vh;
+  width: 100vw;
+  }
 
 .box {
-  margin: 1px
+  margin: 1px;
 }
 
+
 select {
-  margin: 1em;
+  margin: 0.5em;
+  margin-top: 0.8em;
   padding: 0.5em;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: Spiegel;
+  color: #A09B8C;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s, transform 300ms ease-in-out;
 }
+
+select:hover {
+  border-color: #C89B3C;
+  transform: scale(1.05);
+}
+
+input::placeholder {
+  color: #5B5A56; /* Replace with your desired color */
+}
+
 
 input {
   padding: 0.5em;
   width: 13cm;
+  height: 0.45cm;
+  border-color: transparent;
+  border-radius: 3px;
+  background-color: #1E2328;
+  font-family: Spiegel;
+  transition: border-color 0.3s ease-in-out;
 }
+
+input:hover {
+  border-color: #C89B3C;
+}
+
+input:focus {
+  outline: none;
+  border: 2px solid #C89B3C;
+}
+
+
+
 
 
