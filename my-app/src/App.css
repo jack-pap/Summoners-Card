@@ -27,13 +27,16 @@
   }
 
 .box {
-  margin: 1px;
+  height: 40px;
+  margin-top: 0.8em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
 
 select {
-  margin: 0.5em;
-  margin-top: 0.8em;
   padding: 0.5em;
   border-radius: 9px;
   border: 1px solid transparent;
@@ -59,7 +62,7 @@ select:focus {
 
 
 .summonerField::placeholder {
-  color: #5B5A56; /* Replace with your desired color */
+  color: #5B5A56; 
 }
 
 .summonerField {

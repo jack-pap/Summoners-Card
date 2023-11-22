@@ -14,9 +14,10 @@
 }
 
 #root.dissapear {
-  transition: all 0.5s ease;
+  transition: opacity 0.8s, translate 2s ease-in;
   opacity: 0;
-  translate: 0px -70px;
+  translate: 0px -700px;
+  pointer-events: none;
 }
 
 *::selection {
@@ -26,10 +27,19 @@
 
 
 .line {
+  position: absolute;
   border-left: 1px solid #C89B3C;
   margin-left: 100px;
   margin-right: 100px;
-  height: 60vh
+  height: 60svh
+}
+
+#leftLine {
+  left: 0%;
+}
+
+#rightLine {
+  right: 0%;
 }
 
 
@@ -38,7 +48,7 @@ body {
   display: flex;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 100svh;
 }
 
 h1 {
