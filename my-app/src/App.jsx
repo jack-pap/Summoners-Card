@@ -1,12 +1,9 @@
-import { useState } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <h1 onClick={()=> window.location.reload()}>SUMMONERS CARD</h1>
+      <h1 onClick={() => window.location.reload()}>SUMMONERS CARD</h1>
       <input type="text" className="summonerField" id="summonerName" placeholder='Enter summonerName name...' />
       <div className="box">
         <select id="server">
@@ -27,37 +24,76 @@ function App() {
  * based on input to gather user account data
  */
 
-function getInput() {
+async function getInput() {
   const gameName = document.getElementById("summonerName").value;
   const tagLine = document.getElementById("server").value;
-  const api_key = "RGAPI-e5d86adb-e4f8-4d72-ba41-8f55e7dbc438";
-  const apiURL = "https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + gameName + "/" + tagLine + "?api_key=" + api_key;
+  const API_KEY = "RGAPI-4d68addb-57c0-439d-adf1-e52ffec5ca99"; // Bound to change keep updating frequently
 
   // Checks for valid input and plays animation
   if (gameName.match(/^[0-9a-zA-Z]+$/) && tagLine) {
     document.getElementById("summonerName").value = "";
     /*alert(summonerName + " " + server)
     document.getElementById("rightLine").classList.add('horizMoveLeft');
-    document.getElementById("leftLine").classList.add('horizMoveRight');*/
-    document.getElementById("root").classList.add('dissapear');
-    
-    alert(apiURL)
+    document.getElementById("leftLine").classList.add('horizMoveRight');
+    document.getElementById("root").classList.add('dissapear');*/
 
-    //API call
-    fetch(apiURL)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Network response was not ok: ${response.status}`);
-      }
-      return response.json();})
-    .then(data => { 
-      const jsonString = JSON.stringify(data.puuid); 
-      alert(jsonString);
-      console.log(jsonString);
-    })
-    .catch(error => console.error(error));
-
+    const puiid = await getPUUID(API_KEY, tagLine, gameName);
+    alert("PLAYER ID IS: " + puiid);
+    getSummonerInfo(API_KEY, tagLine, puiid)
   }
+}
+
+function getPUUID(API_KEY, tagLine, gameName) {
+  const puiidApiURL = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}?api_key=${API_KEY}`;
+
+  alert(puiidApiURL);
+  // Return a Promise to allow the use of async/await
+  return new Promise((resolve, reject) => {
+    //API call for PUIID
+    fetch(puiidApiURL)
+      .then(response => {
+        if (!response.ok) {
+          alert(`Summoner not found :(`);
+          throw new Error(`Network response was not ok: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        const puiid = data.puuid;
+        resolve(puiid);
+        console.log(jsonString);
+      })
+      .catch(error => {
+        reject(error)
+      });
+  });
+}
+
+function getSummonerInfo(API_KEY, tagLine , puuid) {
+  const summonerInfoApiURL =`https://${tagLine}1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}?api_key=${API_KEY}`;
+  const masteryApiURL = `https://${tagLine}1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}?api_key=${API_KEY}`;
+
+  alert(puiidApiURL);
+  // Return a Promise to allow the use of async/await
+  return new Promise((resolve, reject) => {
+    //API call for PUIID
+    fetch(puiidApiURL)
+      .then(response => {
+        if (!response.ok) {
+          alert(`Summoner not found :(`);
+          throw new Error(`Network response was not ok: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        const puiid = data.puuid;
+        resolve(puiid);
+        console.log(jsonString);
+      })
+      .catch(error => {
+        reject(error)
+      });
+  });
 }
 
 export default App

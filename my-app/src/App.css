@@ -60,7 +60,6 @@ select:focus {
   border: 2px solid #C89B3C;
 }
 
-
 .summonerField::placeholder {
   color: #5B5A56; 
 }
