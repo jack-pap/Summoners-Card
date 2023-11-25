@@ -14,9 +14,10 @@
 }
 
 #root.dissapear {
-  transition: opacity 0.8s, translate 2s ease-in;
+  transition: transform 1s, opacity 0.5s, translate 2s ease-in;
   opacity: 0;
-  translate: 0px -700px;
+  translate: 0px -100px;
+  transform: scale(0);
   pointer-events: none;
 }
 
