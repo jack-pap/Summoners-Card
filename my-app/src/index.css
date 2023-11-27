@@ -13,14 +13,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-#root.dissapear {
-  transition: transform 1s, opacity 0.5s, translate 2s ease-in;
-  opacity: 0;
-  translate: 0px -100px;
-  transform: scale(0);
-  pointer-events: none;
-}
-
 *::selection {
   color: #010A13;
   background-color: #C89B3C;
@@ -95,4 +87,5 @@ button:active {
   outline: none;
   transform: scale(1.04);
 }
+
 

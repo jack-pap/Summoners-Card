@@ -6,6 +6,14 @@
   
 }
 
+#homeBody.dissapear {
+  transition: transform 1s, opacity 0.5s, translate 2s ease-in;
+  opacity: 0;
+  translate: 0px -100px;
+  transform: scale(0);
+  pointer-events: none;
+}
+
 @font-face {
   font-family: 'Beaufort';
   src: url(./Fonts_Package/BeaufortForLoL-OTF/BeaufortforLOL-Bold.otf);
@@ -28,7 +36,7 @@ footer {
   left: 50%;
   transform: translateX(-50%);
   bottom: 1px;
-  width: 45%;
+  width: 50%;
   height: 50px;
   text-align: center;
   margin-top: 200px;
@@ -64,6 +72,7 @@ footer {
   background-color: #d8a841;
   cursor: pointer;
 }
+
 
 
 .box {
