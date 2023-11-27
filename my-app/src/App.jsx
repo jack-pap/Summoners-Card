@@ -5,16 +5,16 @@ function App() {
     <>
       <div id='homeBody'>
         <h1 onClick={() => window.location.reload()}>SUMMONERS <br /> CARD</h1>
-        <input type="text" className="summonerField" id="summonerName" placeholder='Enter summoner name: Gamename + #EUW' />
+        <input type="text" className="summonerField" id="summonerName" placeholder='Enter summoner name: Gamename + #EUW' onKeyDown={(event) => {
+          if (event.key == "Enter") getInput();
+        }}/>
         <div className="box">
           <select id="server">
             <option value="EUW1">EUW</option>
             <option value="EUNE1">EUNE</option>
             <option value="NA1">NA</option>
           </select>
-          <button onClick={getInput}>
-            Search
-          </button>
+          <button id="search" onClick={getInput}> Search </button>
         </div>
       </div>
       <footer className='footer'>
@@ -117,7 +117,7 @@ async function getSummonerInfo(API_KEY, server, puuid) {
 }
 
 /**
- * API call to retrieve arrays of summoner mastery info 
+ * API call to retrieve arrays of summoner mastery info on the top 3 champions
  * (champion ID, champion mastery level, champion mastery points)
  * based on puuid and server 
  * 
@@ -138,7 +138,8 @@ async function getMasteryInfo(API_KEY, server, puuid) {
     champInfo.push(champList);
   }
   return champInfo;
-  
+
 }
 
 export default App
+//id: '9X4zSGiolgIvaiBRxpRAnqXW2OoO0VU-5aTfCkVFAoC0z-VUXOVR9Y2rDg', accountId: '6LbHVRaYUozp3iu-_kTsm6U9UyxQporCNuZzFsIO7RPWxGZGc0vmHa3U'
