@@ -58,10 +58,10 @@ h1 {
   text-shadow: 
     4px 4px 0px #785A28, 
     7px 7px 0px #010A13;
-  margin: 48px;
+  margin: auto;
+  margin-bottom: 20px;
   letter-spacing: 0.02em;
-  width: 18cm;
-  overflow-wrap: break-word;  
+  width: 100%; 
   font-family: Beaufort;
   font-size: 6em;
   line-height: 0.8;
@@ -88,11 +88,11 @@ button {
 
 button:hover {
   border-color: #C89B3C;
-  transform: scale(1.02);
+  
 }
 
 button:active {
   outline: none;
-  border: 2px solid #C89B3C;
+  transform: scale(1.04);
 }
 

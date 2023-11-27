@@ -3,7 +3,7 @@ import './App.css'
 function App() {
   return (
     <>
-      <h1 onClick={() => window.location.reload()}>SUMMONERS CARD</h1>
+      <h1 onClick={() => window.location.reload()}>SUMMONERS <br /> CARD</h1>
       <input type="text" className="summonerField" id="summonerName" placeholder='Enter summoner name: Gamename + #EUW' />
       <div className="box">
         <select id="server">
@@ -15,6 +15,17 @@ function App() {
           Search
         </button>
       </div>
+
+      <footer className='footer'>
+        <div id="footerLine" />
+        <div className='image-container'>
+          © 2023 JACK PAPAIOANNOU 
+          <a href="https://github.com/jack-pap" target="_blank"><img id="image" src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="Github Icon"/></a>
+        </div>
+        Summoners Card isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or
+        anyone officially involved in producing or managing Riot Games properties.
+        Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
+      </footer>
     </>
   )
 }
