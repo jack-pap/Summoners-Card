@@ -57,12 +57,16 @@ h1 {
   font-family: Beaufort;
   font-size: 6em;
   line-height: 0.8;
-  cursor: pointer;
+  cursor: default;
   transition: transform ease 0.2s, text-shadow ease 0.4s;
 }
 
 h1:hover {
   text-shadow: #785A28 0 0 25px
+}
+
+a:focus {
+  outline: none;
 }
 
 button {
@@ -80,12 +84,16 @@ button {
 
 button:hover {
   border-color: #C89B3C;
-  
 }
 
 button:active {
   outline: none;
   transform: scale(1.04);
+}
+
+button:focus {
+  outline: none;
+  border-color: #C89B3C;
 }
 
 

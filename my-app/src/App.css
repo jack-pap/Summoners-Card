@@ -31,7 +31,7 @@
 footer {
   color: #A09B8C;
   font-family: Beaufort;
-  font-size: 0.7em;
+  font-size: 0.6em;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -50,7 +50,7 @@ footer {
 
 .image-container {
   color: #c4beae;
-  font-size: 1.1em;
+  font-size: 1.09em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,8 +59,8 @@ footer {
 }
 
 #image {
-  height: 18px;
-  width: 18px;
+  height: 17px;
+  width: 17px;
   background-color: #c4beae;
   background-size: 1px;
   border-radius: 100px;
@@ -71,9 +71,8 @@ footer {
 #image:hover {
   background-color: #d8a841;
   cursor: pointer;
+  transform: scale(1.1);
 }
-
-
 
 .box {
   height: 40px;

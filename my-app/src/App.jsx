@@ -4,10 +4,10 @@ function App() {
   return (
     <>
       <div id='homeBody'>
-        <h1 onClick={() => window.location.reload()}>SUMMONERS <br /> CARD</h1>
+        <h1>SUMMONERS <br /> CARD</h1>
         <input type="text" className="summonerField" id="summonerName" placeholder='Enter summoner name: Gamename + #EUW' onKeyDown={(event) => {
           if (event.key == "Enter") getInput();
-        }}/>
+        }} />
         <div className="box">
           <select id="server">
             <option value="EUW1">EUW</option>
@@ -16,6 +16,7 @@ function App() {
           </select>
           <button id="search" onClick={getInput}> Search </button>
         </div>
+        <div id='patcher'>Patch Version: 13.23</div>
       </div>
       <footer className='footer'>
         <div id="footerLine" />
@@ -31,16 +32,18 @@ function App() {
   )
 }
 
+
 /**
  * Gathers input from field, executes Riot API call 
  * based on input to gather user account data
  */
 
 async function getInput() {
+  const API_KEY = "RGAPI-5972e6b6-715c-4f47-af9a-5aa3a944e12e"; // Bound to change keep updating frequently
   const gameName = document.getElementById("summonerName").value.split("#")[0];
   const tagLine = document.getElementById("summonerName").value.split("#")[1];
   const server = document.getElementById("server").value;
-  const API_KEY = "RGAPI-2c140b18-0fa6-4034-8683-8e512ef7b542"; // Bound to change keep updating frequently
+
 
   // Checks for valid input and plays animation
   if (gameName.match(/^[0-9a-zA-Z#]+$/) && tagLine) {
@@ -51,8 +54,11 @@ async function getInput() {
     document.getElementById("homeBody").classList.add('dissapear');*/
 
     const puiid = await getPUUID(API_KEY, tagLine, gameName); // PUIID identifier for summoner
-    const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner level and profile picture
+    const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner ID, summoner level and profile picture
     const masteryInfo = await getMasteryInfo(API_KEY, server, puiid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
+    const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
+    const winrate = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10 
+    alert(winrate+ "%")
   }
 }
 
@@ -100,7 +106,7 @@ async function getPUUID(API_KEY, tagLine, gameName) {
 }
 
 /**
- * API call to retrieve summoner info (summoner level, profile icon ID)
+ * API call to retrieve summoner info (summoner id,summoner level, profile icon ID)
  * based on puuid and server 
  * 
  * @param {string} API_KEY 
@@ -111,9 +117,7 @@ async function getPUUID(API_KEY, tagLine, gameName) {
 async function getSummonerInfo(API_KEY, server, puuid) {
   const summonerInfoApiURL = `https://${server}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}?api_key=${API_KEY}`;
   const data = await makeApiCall(summonerInfoApiURL)
-  const level = data.summonerLevel
-  const profileIcon = data.profileIconId
-  return [level, profileIcon];
+  return [data.id, data.summonerLevel, data.profileIconId];
 }
 
 /**
@@ -138,8 +142,33 @@ async function getMasteryInfo(API_KEY, server, puuid) {
     champInfo.push(champList);
   }
   return champInfo;
+}
 
+/**
+ * API call to retrieve summoner ranked queue info
+ * (wins, losses, rank, tier)
+ * based on id and server 
+ * 
+ * @param {string} API_KEY 
+ * @param {string} server
+ * @param {string} id
+ * @returns {[string]} 
+ */
+async function getRankedInfo(API_KEY, server, id) {
+  const rankedApiURL = `https://${server}.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`;
+  const data = await makeApiCall(rankedApiURL);
+  var rankedSoloInfo = [];
+  var rankedFlexInfo = [];
+  var rankedInfo = [rankedFlexInfo, rankedSoloInfo]
+  for (let i = 0; i < data.length; i++) {
+    rankedInfo[i].push(data[i].queueType); // Solo/duo or Flex queue
+    rankedInfo[i].push(data[i].tier); // Iron - Challenger
+    rankedInfo[i].push(data[i].rank); // Roman numerical value IV - I
+    rankedInfo[i].push(data[i].leaguePoints); // Points out of 100 in current rank
+    rankedInfo[i].push(data[i].wins); // Wins in current ranked season
+    rankedInfo[i].push(data[i].losses); // Losses in current ranked season
+  }
+  return rankedInfo;
 }
 
 export default App
-//id: '9X4zSGiolgIvaiBRxpRAnqXW2OoO0VU-5aTfCkVFAoC0z-VUXOVR9Y2rDg', accountId: '6LbHVRaYUozp3iu-_kTsm6U9UyxQporCNuZzFsIO7RPWxGZGc0vmHa3U'
