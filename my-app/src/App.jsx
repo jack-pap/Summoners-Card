@@ -1,4 +1,5 @@
 import './App.css'
+import jsonKeyData from '../../config.json'
 
 function App() {
   return (
@@ -39,7 +40,7 @@ function App() {
  */
 
 async function getInput() {
-  const API_KEY = "RGAPI-5972e6b6-715c-4f47-af9a-5aa3a944e12e"; // Bound to change keep updating frequently
+  const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
   const gameName = document.getElementById("summonerName").value.split("#")[0];
   const tagLine = document.getElementById("summonerName").value.split("#")[1];
   const server = document.getElementById("server").value;

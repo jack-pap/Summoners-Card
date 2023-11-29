@@ -35,11 +35,10 @@ footer {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 1px;
+  bottom: 0;
   width: 50%;
   height: 50px;
   text-align: center;
-  margin-top: 200px;
 }
 
 #footerLine {
@@ -130,6 +129,12 @@ select:focus {
 .summonerField:focus {
   outline: none;
   border: 2px solid #C89B3C;
+}
+
+#patcher {
+  color: #9791839c;
+  font-size: 0.85em;
+  padding-top: 10px;
 }
 
 
