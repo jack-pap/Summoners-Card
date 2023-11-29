@@ -1,21 +1,94 @@
 import './App.css'
 import jsonKeyData from '../../config.json'
+import Select from 'react-select'
+import { useState } from 'react'
+
+const options = [
+  { value: 'EUW1', label: 'EUW' },
+  { value: 'EUNE1', label: 'EUNE' },
+  { value: 'NA1', label: 'NA' }
+]
+
+const customStyles = {
+  control: (provided, state) => ({
+    ...provided,
+    height: '40px',
+    width: '100px',
+    borderRadius: '9px',
+    border: '1px solid transparent',
+    fontSize: '1em',
+    fontWeight: '500',
+    fontFamily: 'Spiegel',
+    color: '#A09B8C',
+    backgroundColor: '#1a1a1a',
+    cursor: 'pointer',
+    transition: 'border-color 0.25s, transform 300ms ease-in-out',
+    outline: state.isFocused ? '2px solid #C89B3C' : '1px solid transparent', // Outline color on focus
+    '&:hover': {
+      borderColor: '#C89B3C', // Outline color on hover
+    },
+  }),
+  singleValue: (provided, state) => ({
+    ...provided,
+    color: '#A09B8C', // Set your desired color here
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    padding: 4,
+    backgroundColor: state.isSelected ? '#C89B3C' : 'transparent',
+    color: state.isSelected ? 'white' : '#A09B8C',
+    '&:hover': {
+      backgroundColor: '#C89B3C', // Background color on hover
+      color: 'white', // Text color on hover
+    },
+  }),
+  menu: (provided) => ({
+    ...provided,
+    backgroundColor: '#1a1a1a', // Background color of the dropdown menu
+  }),
+  indicatorSeparator: () => ({ display: 'none' }), // Hide the default separator
+  dropdownIndicator: (provided, state) => ({
+    ...provided,
+    color: state.selectProps.menuIsOpen ? '#A09B8C' : '#A09B8C',
+    transition: 'transform 0.25s',
+    transform: state.selectProps.menuIsOpen ? 'rotate(-180deg)' : 'rotate(0deg)',
+    '&:hover': {
+      color: '#A09B8C',
+    },
+  }),
+  placeholder: (provided) => ({
+    ...provided,
+    marginTop: 30,
+  }),
+}
+
 
 function App() {
+  const [selectedServer, setSelectedServer] = useState(options[0]); // Initialize with the default value
+
+  const handleChange = (server) => {
+    setSelectedServer(server);
+    console.log(`Option selected:`, server);
+  };
+
   return (
     <>
       <div id='homeBody'>
         <h1>SUMMONERS <br /> CARD</h1>
-        <input type="text" className="summonerField" id="summonerName" placeholder='Enter summoner name: Gamename + #EUW' onKeyDown={(event) => {
+        <input type="text" className="summonerField" id="summonerName" placeholder='Enter summoner name: Gamename + #EUW' autoFocus={true} onKeyDown={(event) => {
           if (event.key == "Enter") getInput();
         }} />
         <div className="box">
-          <select id="server">
-            <option value="EUW1">EUW</option>
-            <option value="EUNE1">EUNE</option>
-            <option value="NA1">NA</option>
-          </select>
-          <button id="search" onClick={getInput}> Search </button>
+          <Select
+            id='serverList'
+            options={options}
+            onChange={handleChange}
+            styles={customStyles}
+            theme={'primary50'}
+            defaultValue={options[0]}
+            isSearchable={false}
+          />
+        <button id="search" onClick={() => getInput(selectedServer.value)}> Search </button>
         </div>
         <div id='patcher'>Patch Version: 13.23</div>
       </div>
@@ -39,12 +112,11 @@ function App() {
  * based on input to gather user account data
  */
 
-async function getInput() {
+async function getInput(serverValue) {
   const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
   const gameName = document.getElementById("summonerName").value.split("#")[0];
   const tagLine = document.getElementById("summonerName").value.split("#")[1];
-  const server = document.getElementById("server").value;
-
+  const server = serverValue;
 
   // Checks for valid input and plays animation
   if (gameName.match(/^[0-9a-zA-Z#]+$/) && tagLine) {
@@ -58,8 +130,8 @@ async function getInput() {
     const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner ID, summoner level and profile picture
     const masteryInfo = await getMasteryInfo(API_KEY, server, puiid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
     const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
-    const winrate = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10 
-    alert(winrate+ "%")
+    const winrate = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10
+    alert(winrate + "%")
   }
 }
 
