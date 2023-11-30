@@ -6,7 +6,7 @@
   color-scheme: light dark;
   color: #F0E6D2;
   background: #010A13;
- 
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -21,7 +21,7 @@
 
 .line {
   position: absolute;
-  border-left: 1px solid #ac8533;
+  border-left: 1px solid #9b792f;
   margin-left: 100px;
   margin-right: 100px;
   height: 60svh;
@@ -55,7 +55,7 @@ h1 {
   margin: auto;
   margin-bottom: 20px;
   letter-spacing: 0.02em;
-  width: 100%; 
+  width: 100%;
   font-family: Beaufort;
   font-size: 6em;
   line-height: 0.8;
@@ -98,5 +98,3 @@ button:focus {
   outline: none;
   border-color: #C89B3C;
 }
-
-

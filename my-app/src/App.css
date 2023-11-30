@@ -29,10 +29,11 @@
 
 #minih1 {
   color: #F0E6D2;
+  width: 19%;
   text-shadow: 1.5px 1px 0px #785A28;
   font-size: 1.4em;
   letter-spacing: 0.02em;
-  transition: transform ease 0.2s, text-shadow ease 0.2s;
+  transition: transform ease 0.2s, background-color 0.17ss, text-shadow ease 0.2s;
 }
 
 #minih1:hover {
@@ -42,8 +43,7 @@
 
 header {
   color: #C89B3C;
-  background-color: #010a13;
-  border-bottom: 1px solid #705822;
+  border-bottom: 2px solid #9b792f;
   font-family: Beaufort;
   font-size: 1.09em;
   position: absolute;
@@ -56,23 +56,25 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 30px;
 }
 
 .headerChildren {
   height: 100%;
+  width: 10%;
+  border-bottom: 1px solid transparent;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: color 0.2s ease-in-out;
+  transition: color 0.2s, background-color 0.17s ease-in-out;
 
 }
 
 .headerChildren:hover {
-  border-bottom: 2px solid #C89B3C;
-  color: #ecb846;
+  border-bottom: 2px solid #f7ba39;
+  background-color: #1b1917;
+  color: #f7ba39;
 }
 
 footer {

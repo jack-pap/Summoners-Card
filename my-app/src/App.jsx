@@ -75,7 +75,7 @@ function App() {
     <>
       <header className='header'>
         <div className='headerChildren'>PRIVACY</div>
-        <div className='headerChildren'id='minih1'>SUMMONERS CARD</div>
+        <div className='headerChildren' id='minih1'>SUMMONERS CARD</div>
         <div className='headerChildren'>CHAMPIONS</div>
       </header>
       <div id='homeBody'>
