@@ -21,10 +21,15 @@
 
 .line {
   position: absolute;
-  border-left: 1px solid #C89B3C;
+  border-left: 1px solid #ac8533;
   margin-left: 100px;
   margin-right: 100px;
-  height: 60svh
+  height: 60svh;
+  transition: height ease-in-out 0.25s;
+}
+
+.line:hover {
+  height: 80svh;
 }
 
 #leftLine {
@@ -46,10 +51,7 @@ body {
 
 h1 {
   color: #F0E6D2;
-  background-color: #010A13;
-  text-shadow: 
-    4px 4px 0px #785A28, 
-    7px 7px 0px #010A13;
+  text-shadow: 4.5px 4px 0px #785A28;
   margin: auto;
   margin-bottom: 20px;
   letter-spacing: 0.02em;
@@ -58,11 +60,11 @@ h1 {
   font-size: 6em;
   line-height: 0.8;
   cursor: default;
-  transition: transform ease 0.2s, text-shadow ease 0.4s;
+  transition: transform ease 0.2s, text-shadow ease 0.2s;
 }
 
 h1:hover {
-  text-shadow: #785A28 0 0 25px
+  text-shadow: #dfdede 0 0 8px;
 }
 
 a:focus {

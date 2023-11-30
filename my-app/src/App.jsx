@@ -16,6 +16,7 @@ const customStyles = {
     width: '100px',
     borderRadius: '9px',
     border: '1px solid transparent',
+    boxShadow: 'none',
     fontSize: '1em',
     fontWeight: '500',
     fontFamily: 'Spiegel',
@@ -23,7 +24,7 @@ const customStyles = {
     backgroundColor: '#1a1a1a',
     cursor: 'pointer',
     transition: 'border-color 0.25s, transform 300ms ease-in-out',
-    outline: state.isFocused ? '2px solid #C89B3C' : '1px solid transparent', // Outline color on focus
+    outline: state.isFocused ? '1px solid #C89B3C' : 'none', // Outline color on focus
     '&:hover': {
       borderColor: '#C89B3C', // Outline color on hover
     },
@@ -62,7 +63,6 @@ const customStyles = {
   }),
 }
 
-
 function App() {
   const [selectedServer, setSelectedServer] = useState(options[0]); // Initialize with the default value
 
@@ -73,6 +73,11 @@ function App() {
 
   return (
     <>
+      <header className='header'>
+        <div className='headerChildren'>PRIVACY</div>
+        <div className='headerChildren'id='minih1'>SUMMONERS CARD</div>
+        <div className='headerChildren'>CHAMPIONS</div>
+      </header>
       <div id='homeBody'>
         <h1>SUMMONERS <br /> CARD</h1>
         <input type="text" className="summonerField" id="summonerName" placeholder='Enter summoner name: Gamename + #EUW' autoFocus={true} onKeyDown={(event) => {
@@ -88,7 +93,7 @@ function App() {
             defaultValue={options[0]}
             isSearchable={false}
           />
-        <button id="search" onClick={() => getInput(selectedServer.value)}> Search </button>
+          <button id="search" onClick={() => getInput(selectedServer.value)}> Search </button>
         </div>
         <div id='patcher'>Patch Version: 13.23</div>
       </div>

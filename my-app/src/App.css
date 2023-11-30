@@ -3,7 +3,6 @@
   margin: 0 auto;
   padding: 1rem;
   text-align: center;
-  
 }
 
 #homeBody.dissapear {
@@ -19,14 +18,62 @@
   src: url(./Fonts_Package/BeaufortForLoL-OTF/BeaufortforLOL-Bold.otf);
   font-weight: normal;
   font-style: normal;
-  }
+}
 
 @font-face {
   font-family: 'Spiegel';
   src: url(./Fonts_Package/Spiegel-OTF/Spiegel-Regular.otf);
   font-weight: normal;
   font-style: normal;
-  }
+}
+
+#minih1 {
+  color: #F0E6D2;
+  text-shadow: 1.5px 1px 0px #785A28;
+  font-size: 1.4em;
+  letter-spacing: 0.02em;
+  transition: transform ease 0.2s, text-shadow ease 0.2s;
+}
+
+#minih1:hover {
+  text-shadow: #dfdede 0 0 8px;
+}
+
+
+header {
+  color: #C89B3C;
+  background-color: #010a13;
+  border-bottom: 1px solid #705822;
+  font-family: Beaufort;
+  font-size: 1.09em;
+  position: absolute;
+  transform: translateX(-50%);
+  left: 50%;
+  top: 0;
+  width: 100%;
+  height: 50px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.headerChildren {
+  height: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+
+}
+
+.headerChildren:hover {
+  border-bottom: 2px solid #C89B3C;
+  color: #ecb846;
+}
 
 footer {
   color: #A09B8C;
@@ -107,7 +154,7 @@ select:focus {
 }
 
 .summonerField::placeholder {
-  color: #5B5A56; 
+  color: #5B5A56;
 }
 
 .summonerField {
@@ -135,8 +182,3 @@ select:focus {
   font-size: 0.85em;
   padding-top: 10px;
 }
-
-
-
-
-
