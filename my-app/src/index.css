@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: #F0E6D2;
-  background: #010A13;
+  background-image: radial-gradient(circle farthest-side, #020f1f, #01070e);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -16,6 +16,7 @@
 *::selection {
   color: #010A13;
   background-color: #C89B3C;
+  text-shadow: none;
 }
 
 
@@ -53,11 +54,11 @@ h1 {
   color: #F0E6D2;
   text-shadow: 4.5px 4px 0px #785A28;
   margin: auto;
-  margin-bottom: 20px;
+  margin-bottom: 45px;
   letter-spacing: 0.02em;
   width: 100%;
   font-family: Beaufort;
-  font-size: 6em;
+  font-size: 6.3em;
   line-height: 0.8;
   cursor: default;
   transition: transform ease 0.2s, text-shadow ease 0.2s;

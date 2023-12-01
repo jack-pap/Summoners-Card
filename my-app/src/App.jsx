@@ -3,10 +3,25 @@ import jsonKeyData from '../../config.json'
 import Select from 'react-select'
 import { useState } from 'react'
 
+const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
+
 const options = [
   { value: 'EUW1', label: 'EUW' },
-  { value: 'EUNE1', label: 'EUNE' },
-  { value: 'NA1', label: 'NA' }
+  { value: 'EUN1', label: 'EUNE' },
+  { value: 'NA1', label: 'NA' },
+  { value: 'KR', label: 'KR' },
+  { value: 'JP1', label: 'JP' },
+  { value: 'BR1', label: 'BR' },
+  { value: 'LA1', label: 'LAN' },
+  { value: 'LA2', label: 'LAS' },
+  { value: 'OC1', label: 'OC' },
+  { value: 'TR1', label: 'TR' },
+  { value: 'RU', label: 'RU' },
+  { value: 'PH2', label: 'PH' },
+  { value: 'SG2', label: 'SG' },
+  { value: 'TH2', label: 'TH' },
+  { value: 'TW2', label: 'TW' },
+  { value: 'VN2', label: 'VN' },
 ]
 
 const customStyles = {
@@ -118,13 +133,12 @@ function App() {
  */
 
 async function getInput(serverValue) {
-  const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
   const gameName = document.getElementById("summonerName").value.split("#")[0];
   const tagLine = document.getElementById("summonerName").value.split("#")[1];
   const server = serverValue;
 
   // Checks for valid input and plays animation
-  if (gameName.match(/^[0-9a-zA-Z#]+$/) && tagLine) {
+  if (gameName.match(/^[^#]*#?[^#]*$/) && tagLine) {
     document.getElementById("summonerName").value = "";
     /*alert(summonerName + " " + server)
     document.getElementById("rightLine").classList.add('horizMoveLeft');
@@ -137,7 +151,7 @@ async function getInput(serverValue) {
     const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
     const winrate = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10
     alert(winrate + "%")
-  }
+  } else alert("Please ensure that the summoner name follows the specified format and has no whitespace or special symbols")
 }
 
 /**
