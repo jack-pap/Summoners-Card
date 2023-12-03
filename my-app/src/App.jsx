@@ -1,7 +1,7 @@
 import './App.css'
 import jsonKeyData from '../../config.json'
 import Select from 'react-select'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
 
@@ -80,11 +80,23 @@ const customStyles = {
 
 function App() {
   const [selectedServer, setSelectedServer] = useState(options[0]); // Initialize with the default value
+  const [patchVersion, setPatchVersion] = useState('Loading version...'); // Initialize patch version
 
   const handleChange = (server) => {
     setSelectedServer(server);
     console.log(`Option selected:`, server);
   };
+
+  useEffect(() => {
+    loadVersion()
+      .then(version => {
+        // Update the patch version state
+        setPatchVersion(version);
+      })
+      .catch(error => {
+        console.error('Error loading version:', error);
+      });
+  });
 
   return (
     <>
@@ -110,7 +122,7 @@ function App() {
           />
           <button id="search" onClick={() => getInput(selectedServer.value)}> Search </button>
         </div>
-        <div id='patcher'>Patch Version: 13.23</div>
+        <div id='patcher'>Patch Version: {patchVersion}</div>
       </div>
       <footer className='footer'>
         <div id="footerLine" />
@@ -126,6 +138,32 @@ function App() {
   )
 }
 
+/**
+ * API call to Riot  Data Dragon
+ * for retrieving latest patch version number
+ * 
+ * @returns {Promise}
+ */
+async function loadVersion() {
+  const apiURL = "https://ddragon.leagueoflegends.com/api/versions.json";
+
+  return new Promise((resolve, reject) => {
+    fetch(apiURL)
+      .then(response => {
+        if (!response.ok) {
+          alert(`Cannot retrieve version number`);
+          throw new Error(`Network response was not ok: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        resolve(data[0].split('.')[0] + "." + data[0].split('.')[1]);
+      })
+      .catch(error => {
+        reject(error);
+      });
+  });
+}
 
 /**
  * Gathers input from field, executes Riot API call 
@@ -163,7 +201,6 @@ async function getInput(serverValue) {
 function makeApiCall(apiURL) {
   // Return a Promise to allow the use of async/await
   return new Promise((resolve, reject) => {
-    // API call
     fetch(apiURL)
       .then(response => {
         if (!response.ok) {

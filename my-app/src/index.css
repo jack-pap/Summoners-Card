@@ -1,11 +1,11 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Spiegel;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
   color: #F0E6D2;
-  background-image: radial-gradient(circle farthest-side, #020f1f, #01070e);
+  background: radial-gradient(circle farthest-side, #020f1f, #01070e);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -61,11 +61,7 @@ h1 {
   font-size: 6.3em;
   line-height: 0.8;
   cursor: default;
-  transition: transform ease 0.2s, text-shadow ease 0.2s;
-}
-
-h1:hover {
-  text-shadow: #dfdede 0 0 8px;
+  transition: transform ease 0.2s, text-shadow ease-in-out 0.2s;
 }
 
 a:focus {

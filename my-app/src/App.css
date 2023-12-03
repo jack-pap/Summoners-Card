@@ -37,7 +37,7 @@
 }
 
 #minih1:hover {
-  text-shadow: #dfdede 0 0 8px;
+  text-shadow: #dfdede 0 0 6px, 1.5px 1px 0px #785A28;
 }
 
 
@@ -66,15 +66,16 @@ header {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: color 0.28s, background-color 0.28s ease-in-out;
-
+  transition: color 0.28s, background-color 0.45s ease-out;
 }
 
 .headerChildren:hover {
   border-bottom: 2px solid #f7ba39;
+  background: linear-gradient(to top, #3d341f, #1d1a18);
   background-color: #1b1917;
   color: #f7ba39;
 }
+
 
 footer {
   color: #A09B8C;
@@ -166,6 +167,7 @@ select:focus {
   border-radius: 3px;
   background-color: #1E2328;
   font-family: Spiegel;
+  font-size: 16px;
   transition: border-color 0.3s ease-in-out;
 }
 
