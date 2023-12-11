@@ -2,6 +2,11 @@ import './App.css'
 import jsonKeyData from '../../config.json'
 import Select from 'react-select'
 import { useState, useEffect } from 'react'
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useNavigate
+} from "react-router-dom";
 
 const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
 
@@ -81,6 +86,7 @@ const customStyles = {
 function App() {
   const [selectedServer, setSelectedServer] = useState(options[0]); // Initialize with the default value
   const [patchVersion, setPatchVersion] = useState('Loading version...'); // Initialize patch version
+  const navigate = useNavigate();
 
   const handleChange = (server) => {
     setSelectedServer(server);
@@ -120,7 +126,7 @@ function App() {
             defaultValue={options[0]}
             isSearchable={false}
           />
-          <button id="search" onClick={() => getInput(selectedServer.value)}> Search </button>
+          <button id="search" onClick={() => getInput(selectedServer.value, navigate)}> Search </button>
         </div>
         <div id='patcher'>Patch Version: {patchVersion}</div>
       </div>
@@ -171,7 +177,7 @@ async function loadVersion() {
  * @param {string} serverValue
  */
 
-async function getInput(serverValue) {
+async function getInput(serverValue, navigate) {
   const gameName = document.getElementById("summonerName").value.split("#")[0];
   const tagLine = document.getElementById("summonerName").value.split("#")[1];
   const server = serverValue;
@@ -193,6 +199,7 @@ async function getInput(serverValue) {
     alert("Flex W/R " + winrateF + "%")
     alert("Solo W/R " + winrateS + "%")
   } else alert("Please ensure that the summoner name follows the specified format and has no whitespace or special symbols")
+  navigate('/dash');
 }
 
 /**

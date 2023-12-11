@@ -159,14 +159,15 @@ select:focus {
 
 .summonerField {
   padding: 0.5em;
-  width: 15cm;
-  height: 0.5cm;
-  border-color: transparent;
-  border-radius: 3px;
+  width: 15.2cm;
+  height: 1cm;
+  border: 1px solid #5B5A56;
+  border-radius: 5px;
   background-color: #1E2328;
   font-family: Spiegel;
   font-size: 16px;
   transition: border-color 0.3s ease-in-out;
+  box-sizing: border-box;
 }
 
 .summonerField:hover {
@@ -175,7 +176,7 @@ select:focus {
 
 .summonerField:focus {
   outline: none;
-  border: 2px solid #C89B3C;
+  border: 1px solid #C89B3C;
 }
 
 #patcher {
