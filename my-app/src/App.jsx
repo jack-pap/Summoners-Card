@@ -125,9 +125,8 @@ function App() {
         <div id='patcher'>Patch Version: {patchVersion}</div>
       </div>
       <footer className='footer'>
-        <div id="footerLine" />
         <div className='image-container'>
-          © 2023 JACK PAPAIOANNOU
+          <div id='copyright'>© 2023 JACK PAPAIOANNOU</div>
           <a href="https://github.com/jack-pap" target="_blank"><img id="image" src="src\assets\git.png" alt="Github Icon" /></a>
         </div>
         Summoners Card isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or
@@ -168,6 +167,8 @@ async function loadVersion() {
 /**
  * Gathers input from field, executes Riot API call 
  * based on input to gather user account data
+ * 
+ * @param {string} serverValue
  */
 
 async function getInput(serverValue) {
@@ -187,8 +188,10 @@ async function getInput(serverValue) {
     const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner ID, summoner level and profile picture
     const masteryInfo = await getMasteryInfo(API_KEY, server, puiid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
     const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
-    const winrate = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10
-    alert(winrate + "%")
+    const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10
+    const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10
+    alert("Flex W/R " + winrateF + "%")
+    alert("Solo W/R " + winrateS + "%")
   } else alert("Please ensure that the summoner name follows the specified format and has no whitespace or special symbols")
 }
 
@@ -281,7 +284,7 @@ async function getMasteryInfo(API_KEY, server, puuid) {
  * @param {string} API_KEY 
  * @param {string} server
  * @param {string} id
- * @returns {[string]} 
+ * @returns {[[string]]} 
  */
 async function getRankedInfo(API_KEY, server, id) {
   const rankedApiURL = `https://${server}.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`;
@@ -290,12 +293,21 @@ async function getRankedInfo(API_KEY, server, id) {
   var rankedFlexInfo = [];
   var rankedInfo = [rankedFlexInfo, rankedSoloInfo]
   for (let i = 0; i < data.length; i++) {
-    rankedInfo[i].push(data[i].queueType); // Solo/duo or Flex queue
-    rankedInfo[i].push(data[i].tier); // Iron - Challenger
-    rankedInfo[i].push(data[i].rank); // Roman numerical value IV - I
-    rankedInfo[i].push(data[i].leaguePoints); // Points out of 100 in current rank
-    rankedInfo[i].push(data[i].wins); // Wins in current ranked season
-    rankedInfo[i].push(data[i].losses); // Losses in current ranked season
+    const queueType = data[i].queueType;  // Solo/duo or Flex queue (RANKED_SOLO_5x5, RANKED_FLEX_SR)
+    const currentRankedInfo = [
+      queueType,
+      data[i].tier, // Iron - Challenger
+      data[i].rank, // Roman numerical value IV - I
+      data[i].leaguePoints, // Points out of 100 in current rank
+      data[i].wins, // Wins in current ranked season
+      data[i].losses // Losses in current ranked season
+    ];
+
+    if (queueType === "RANKED_SOLO_5x5") {
+      rankedInfo[1].push(...currentRankedInfo);
+    } else if (queueType === "RANKED_FLEX_SR") {
+      rankedInfo[0].push(...currentRankedInfo);
+    }
   }
   return rankedInfo;
 }

@@ -29,7 +29,7 @@
 
 #minih1 {
   color: #F0E6D2;
-  width: 18%;
+  width: 342px;
   text-shadow: 1.5px 1px 0px #785A28;
   font-size: 1.4em;
   letter-spacing: 0.02em;
@@ -71,45 +71,43 @@ header {
 
 .headerChildren:hover {
   border-bottom: 2px solid #f7ba39;
-  background: linear-gradient(to top, #3d341f, #1d1a18);
+  background: linear-gradient(to top, #2e2819, #1b1917);
   background-color: #1b1917;
   color: #f7ba39;
 }
 
 
 footer {
-  color: #A09B8C;
+  color: #79756a;
   font-family: Beaufort;
-  font-size: 0.6em;
-  position: absolute;
+  font-size: 12px;
+  position: fixed;
   left: 50%;
   transform: translateX(-50%);
   bottom: 0;
-  width: 50%;
-  height: 50px;
+  width: 100%; /* Ensures size doesnt change on diff viewport */
+  min-height: 50px;
   text-align: center;
+  border-top: 1px solid #A09B8C;
+  max-width: 800px
 }
 
-#footerLine {
-  width: auto;
-  border-top: 1px solid #A09B8C;
-  margin-bottom: 10px;
-}
 
 .image-container {
-  color: #c4beae;
+  color: #ada89b;
   font-size: 1.09em;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 13px;
   gap: 7px;
+  margin-top: 9px;
 }
 
 #image {
   height: 17px;
   width: 17px;
-  background-color: #c4beae;
+  background-color: #ada89b;
   background-size: 1px;
   border-radius: 100px;
   border: 1px solid transparent;
