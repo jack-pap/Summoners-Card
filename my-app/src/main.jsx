@@ -4,22 +4,46 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import App from './App.jsx'
-import Dashboard from './Dashboard.jsx'
+import Header from './Header.jsx';
+import Footer from './Footer.jsx';
+import App from './pages/App.jsx'
+import Dashboard from './pages/Dashboard.jsx'
+import Champions from './pages/Champions.jsx';
+import Privacy from './pages/Privacy.jsx';
+import Error from './pages/Error.jsx';
 import './index.css'
+import './app.css'
+
+const Layout = ({ children }) => (
+  <>
+    <Header />
+    {children}
+    <Footer />
+  </>
+);
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Layout><App /></Layout>,
+    errorElement: <Error />,
   },
   {
-    path: "/dash",
-    element: <Dashboard />,
+    path: "/player",
+    element: <Layout><Dashboard /></Layout>,
+  },
+  {
+    path: "/champions",
+    element: <Layout><Champions /></Layout>,
+  },
+  {
+    path: "/privacy",
+    element: <Layout><Privacy /></Layout>,
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
+
   <React.StrictMode>
     <RouterProvider router={router} />
   </React.StrictMode>,

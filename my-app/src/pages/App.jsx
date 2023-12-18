@@ -1,5 +1,5 @@
-import './App.css'
-import jsonKeyData from '../../config.json'
+import '../App.css'
+import jsonKeyData from '../../../config.json'
 import Select from 'react-select'
 import { useState, useEffect } from 'react'
 import {
@@ -86,6 +86,7 @@ const customStyles = {
 function App() {
   const [selectedServer, setSelectedServer] = useState(options[0]); // Initialize with the default value
   const [patchVersion, setPatchVersion] = useState('Loading version...'); // Initialize patch version
+
   const navigate = useNavigate();
 
   const handleChange = (server) => {
@@ -106,11 +107,6 @@ function App() {
 
   return (
     <>
-      <header className='header'>
-        <div className='headerChildren'>PRIVACY</div>
-        <div className='headerChildren' id='minih1'>SUMMONERS CARD</div>
-        <div className='headerChildren'>CHAMPIONS</div>
-      </header>
       <div id='homeBody'>
         <h1>SUMMONERS <br /> CARD</h1>
         <input type="text" className="summonerField" id="summonerName" placeholder='Enter summoner name: Gamename + #EUW' autoFocus={true} onKeyDown={(event) => {
@@ -130,15 +126,6 @@ function App() {
         </div>
         <div id='patcher'>Patch Version: {patchVersion}</div>
       </div>
-      <footer className='footer'>
-        <div className='image-container'>
-          <div id='copyright'>© 2023 JACK PAPAIOANNOU</div>
-          <a href="https://github.com/jack-pap" target="_blank"><img id="image" src="src\assets\git.png" alt="Github Icon" /></a>
-        </div>
-        Summoners Card isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or
-        anyone officially involved in producing or managing Riot Games properties.
-        Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
-      </footer>
     </>
   )
 }
@@ -196,10 +183,12 @@ async function getInput(serverValue, navigate) {
     const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
     const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10
     const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10
+    navigate('/player');
     alert("Flex W/R " + winrateF + "%")
     alert("Solo W/R " + winrateS + "%")
+
   } else alert("Please ensure that the summoner name follows the specified format and has no whitespace or special symbols")
-  navigate('/dash');
+
 }
 
 /**
