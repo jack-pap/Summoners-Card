@@ -6,8 +6,8 @@ function Header() {
   return (
     <>
       <header className="header">
-        <Link to='/privacy' style={{ color: 'inherit', textDecoration: 'inherit' }} className="headerChildren">
-          PRIVACY
+        <Link to='/about' style={{ color: 'inherit', textDecoration: 'inherit' }} className="headerChildren">
+          ABOUT
         </Link>
         <a style={{textDecoration: 'inherit' }} href='/' className="headerChildren" id="minih1">
             SUMMONERS CARD

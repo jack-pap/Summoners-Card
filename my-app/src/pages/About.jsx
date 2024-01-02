@@ -1,16 +1,16 @@
 import '../App.css'
 import { useState, useEffect } from 'react'
 
-function Privacy() {
+function About() {
 
   return (
     <>
       <div id='homeBody'>
-        <h1>Privacy</h1>
+        <h1>About & Privacy</h1>
       </div>
     </>
   )
 }
 
 
-export default Privacy
+export default About

@@ -9,10 +9,11 @@ import Footer from './Footer.jsx';
 import App from './pages/App.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Champions from './pages/Champions.jsx';
-import Privacy from './pages/Privacy.jsx';
+import Privacy from './pages/About.jsx';
 import Error from './pages/Error.jsx';
 import './index.css'
 import './app.css'
+import About from './pages/About.jsx';
 
 const Layout = ({ children }) => (
   <>
@@ -37,8 +38,8 @@ const router = createBrowserRouter([
     element: <Layout><Champions /></Layout>,
   },
   {
-    path: "/privacy",
-    element: <Layout><Privacy /></Layout>,
+    path: "/about",
+    element: <Layout><About /></Layout>,
   },
 ]);
 

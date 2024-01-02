@@ -7,6 +7,7 @@ import {
   RouterProvider,
   useNavigate
 } from "react-router-dom";
+import GridLoader from "react-spinners/GridLoader";
 
 const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
 
@@ -83,9 +84,17 @@ const customStyles = {
   }),
 }
 
+const spinnerStyles = {
+  position: "absolute",
+  top: "45%",
+  left: "50%",
+  transform: "translateX(-50%)"
+}
+
 function App() {
   const [selectedServer, setSelectedServer] = useState(options[0]); // Initialize with the default value
   const [patchVersion, setPatchVersion] = useState('Loading version...'); // Initialize patch version
+  const [isLoading, setIsLoading] = useState(false); // Spinner state for when data is loading 
 
   const navigate = useNavigate();
 
@@ -110,7 +119,7 @@ function App() {
       <div id='homeBody'>
         <h1>SUMMONERS <br /> CARD</h1>
         <input type="text" className="summonerField" id="summonerName" placeholder='Enter summoner name: Gamename + #EUW' autoFocus={true} onKeyDown={(event) => {
-          if (event.key == "Enter") getInput();
+          if (event.key == "Enter") getInput(selectedServer.value, navigate, setIsLoading);
         }} />
         <div className="box">
           <Select
@@ -122,10 +131,21 @@ function App() {
             defaultValue={options[0]}
             isSearchable={false}
           />
-          <button id="search" onClick={() => getInput(selectedServer.value, navigate)}> Search </button>
+          <button id="search" onClick={() => getInput(selectedServer.value, navigate, setIsLoading)}> Search </button>
         </div>
         <div id='patcher'>Patch Version: {patchVersion}</div>
       </div>
+      <GridLoader
+        color={'#9b792f'}
+        loading={isLoading}
+        cssOverride={spinnerStyles}
+        height={110}
+        width={5}
+        size={27}
+        speedMultiplier={0.8}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+      />
     </>
   )
 }
@@ -164,10 +184,11 @@ async function loadVersion() {
  * @param {string} serverValue
  */
 
-async function getInput(serverValue, navigate) {
+async function getInput(serverValue, navigate, setIsLoading) {
   const gameName = document.getElementById("summonerName").value.split("#")[0];
   const tagLine = document.getElementById("summonerName").value.split("#")[1];
   const server = serverValue;
+  
 
   // Checks for valid input and plays animation
   if (gameName.match(/^[^#]*#?[^#]*$/) && tagLine) {
@@ -177,14 +198,23 @@ async function getInput(serverValue, navigate) {
     document.getElementById("leftLine").classList.add('horizMoveRight');
     document.getElementById("homeBody").classList.add('dissapear');*/
 
+    document.getElementById("homeBody").style.display = "none";
+    setIsLoading(true);
+
+    try{
     const puiid = await getPUUID(API_KEY, tagLine, gameName); // PUIID identifier for summoner
     const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner ID, summoner level and profile picture
     const masteryInfo = await getMasteryInfo(API_KEY, server, puiid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
     const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
     const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10
     const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10
+    } catch (error) {
+      setIsLoading(false);
+      document.getElementById("homeBody").style.display = "contents";
+      return
+    }
     navigate('/player');
-    alert("Flex W/R " + winrateF + "%")
+    //alert("Flex W/R " + winrateF + "%")
     alert("Solo W/R " + winrateS + "%")
 
   } else alert("Please ensure that the summoner name follows the specified format and has no whitespace or special symbols")
