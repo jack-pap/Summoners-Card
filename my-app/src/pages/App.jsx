@@ -86,7 +86,7 @@ const customStyles = {
 
 const spinnerStyles = {
   position: "absolute",
-  top: "45%",
+  top: "43%",
   left: "50%",
   transform: "translateX(-50%)"
 }
@@ -139,9 +139,8 @@ function App() {
         color={'#9b792f'}
         loading={isLoading}
         cssOverride={spinnerStyles}
-        height={110}
-        width={5}
-        size={27}
+        margin={6}
+        size={26}
         speedMultiplier={0.8}
         aria-label="Loading Spinner"
         data-testid="loader"
@@ -185,14 +184,15 @@ async function loadVersion() {
  */
 
 async function getInput(serverValue, navigate, setIsLoading) {
-  const gameName = document.getElementById("summonerName").value.split("#")[0];
-  const tagLine = document.getElementById("summonerName").value.split("#")[1];
+  const summonerName = document.getElementById("summonerName").value
+  const gameName = summonerName.split("#")[0];
+  const tagLine = summonerName.split("#")[1];
   const server = serverValue;
   
 
   // Checks for valid input and plays animation
-  if (gameName.match(/^[^#]*#?[^#]*$/) && tagLine) {
-    document.getElementById("summonerName").value = "";
+  if (summonerName.match(/^[a-zA-Z0-9]+#[a-zA-Z0-9]+$/)) {
+    
     /*alert(summonerName + " " + server)
     document.getElementById("rightLine").classList.add('horizMoveLeft');
     document.getElementById("leftLine").classList.add('horizMoveRight');
@@ -213,7 +213,8 @@ async function getInput(serverValue, navigate, setIsLoading) {
       document.getElementById("homeBody").style.display = "contents";
       return
     }
-    navigate('/player');
+    alert(summonerName)
+    navigate(`/player/${server}/${summonerName.replace("#", "-")}`, {server, summonerName});
     //alert("Flex W/R " + winrateF + "%")
     alert("Solo W/R " + winrateS + "%")
 

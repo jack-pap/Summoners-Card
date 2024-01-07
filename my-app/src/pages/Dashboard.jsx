@@ -1,13 +1,18 @@
 import '../App.css'
 import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom';
+
 
 function Dashboard() {
   const [patchVersion, setPatchVersion] = useState('Loading version...'); // Initialize patch version
+  const { server, summonerName } = useParams();
 
   return (
     <>
       <div id='homeBody'>
         <h1>CARDS</h1>
+        <h2>{summonerName}{server}</h2>
+
       </div>
     </>
   )
