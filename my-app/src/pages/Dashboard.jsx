@@ -1,18 +1,39 @@
 import '../App.css'
+import Error from './Error.jsx';
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom';
+import { useParams,
+         useNavigate } from 'react-router-dom';
 
+const options = [
+  { label: 'EUW' },
+  { label: 'EUNE' },
+  { label: 'NA' },
+  { label: 'KR' },
+  { label: 'JP' },
+  { label: 'BR' },
+  { label: 'LAN' },
+  { label: 'LAS' },
+  { label: 'OC' },
+  { label: 'TR' },
+  { label: 'RU' },
+  { label: 'PH' },
+  { label: 'SG' },
+  { label: 'TH' },
+  { label: 'TW' }]
 
 function Dashboard() {
   const [patchVersion, setPatchVersion] = useState('Loading version...'); // Initialize patch version
   const { server, summonerName } = useParams();
+  
+  const navigate = useNavigate();
 
-  return (
+  if (!options.some(option => option.label === server)) {
+    return  <Error errorMessage={`Invalid server "${server}"`} />
+  } else return (
     <>
       <div id='homeBody'>
         <h1>CARDS</h1>
         <h2>{summonerName}{server}</h2>
-
       </div>
     </>
   )

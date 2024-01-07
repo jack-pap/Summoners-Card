@@ -27,7 +27,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout><App /></Layout>,
-    errorElement: <Error />,
+    errorElement: <Layout><Error /></Layout>,
   },
   {
     path: "/player/:server/:summonerName",

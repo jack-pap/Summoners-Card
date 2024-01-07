@@ -93,7 +93,7 @@ const spinnerStyles = {
 
 function App() {
   const [selectedServer, setSelectedServer] = useState(options[0]); // Initialize with the default value
-  const [patchVersion, setPatchVersion] = useState('Loading version...'); // Initialize patch version
+  const [patchVersion, setPatchVersion] = useState("    "); // Initialize patch version
   const [isLoading, setIsLoading] = useState(false); // Spinner state for when data is loading 
 
   const navigate = useNavigate();
@@ -119,7 +119,7 @@ function App() {
       <div id='homeBody'>
         <h1>SUMMONERS <br /> CARD</h1>
         <input type="text" className="summonerField" id="summonerName" placeholder='Enter summoner name: Gamename + #EUW' autoFocus={true} onKeyDown={(event) => {
-          if (event.key == "Enter") getInput(selectedServer.value, navigate, setIsLoading);
+          if (event.key == "Enter") getInput(selectedServer.value, selectedServer.label, navigate, setIsLoading);
         }} />
         <div className="box">
           <Select
@@ -131,7 +131,7 @@ function App() {
             defaultValue={options[0]}
             isSearchable={false}
           />
-          <button id="search" onClick={() => getInput(selectedServer.value, navigate, setIsLoading)}> Search </button>
+          <button id="search" onClick={() => getInput(selectedServer.value, selectedServer.label, navigate, setIsLoading)}> Search </button>
         </div>
         <div id='patcher'>Patch Version: {patchVersion}</div>
       </div>
@@ -183,7 +183,7 @@ async function loadVersion() {
  * @param {string} serverValue
  */
 
-async function getInput(serverValue, navigate, setIsLoading) {
+async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
   const summonerName = document.getElementById("summonerName").value
   const gameName = summonerName.split("#")[0];
   const tagLine = summonerName.split("#")[1];
@@ -214,7 +214,7 @@ async function getInput(serverValue, navigate, setIsLoading) {
       return
     }
     alert(summonerName)
-    navigate(`/player/${server}/${summonerName.replace("#", "-")}`, {server, summonerName});
+    navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, {serverLabel, summonerName});
     //alert("Flex W/R " + winrateF + "%")
     alert("Solo W/R " + winrateS + "%")
 
