@@ -188,11 +188,11 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
   const gameName = summonerName.split("#")[0];
   const tagLine = summonerName.split("#")[1];
   const server = serverValue;
-  
+
 
   // Checks for valid input and plays animation
   if (summonerName.match(/^[a-zA-Z0-9]+#[a-zA-Z0-9]+$/)) {
-    
+
     /*alert(summonerName + " " + server)
     document.getElementById("rightLine").classList.add('horizMoveLeft');
     document.getElementById("leftLine").classList.add('horizMoveRight');
@@ -201,22 +201,26 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
     document.getElementById("homeBody").style.display = "none";
     setIsLoading(true);
 
-    try{
-    const puiid = await getPUUID(API_KEY, tagLine, gameName); // PUIID identifier for summoner
-    const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner ID, summoner level and profile picture
-    const masteryInfo = await getMasteryInfo(API_KEY, server, puiid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
-    const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
-    const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10
-    const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10
+    try {
+      const puiid = await getPUUID(API_KEY, tagLine, gameName); // PUIID identifier for summoner
+      const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner ID, summoner level and profile picture
+      const masteryInfo = await getMasteryInfo(API_KEY, server, puiid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
+      const matchList = await getMatchInfo(API_KEY, server, puiid); // Array constisting of match IDs
+      const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
+      const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10 // Rounded winrate percentage calculated from total games played in Flex queue
+      const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10 // Rounded winrate percentage calculated from total games played in Solo queue
+
+      alert(matchList)
+      navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, { serverLabel, summonerName });
+      //alert("Flex W/R " + winrateF + "%")
+      alert("Solo W/R " + winrateS + "%")
     } catch (error) {
       setIsLoading(false);
       document.getElementById("homeBody").style.display = "contents";
       return
     }
-    alert(summonerName)
-    navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, {serverLabel, summonerName});
-    //alert("Flex W/R " + winrateF + "%")
-    alert("Solo W/R " + winrateS + "%")
+
+
 
   } else alert("Please ensure that the summoner name follows the specified format and has no whitespace or special symbols")
 
@@ -301,6 +305,16 @@ async function getMasteryInfo(API_KEY, server, puuid) {
     champInfo.push(champList);
   }
   return champInfo;
+}
+
+async function getMatchInfo(API_KEY, server, puuid) {
+  const matchInfoApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=20&api_key=${API_KEY}`;
+  const data = await makeApiCall(matchInfoApiURL)
+  var matchList = []
+  for (const match of data) {
+    matchList.push(match)
+  }
+  return matchList;
 }
 
 /**
