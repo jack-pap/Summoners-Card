@@ -205,12 +205,18 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
       const puiid = await getPUUID(API_KEY, tagLine, gameName); // PUIID identifier for summoner
       const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner ID, summoner level and profile picture
       const masteryInfo = await getMasteryInfo(API_KEY, server, puiid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
-      const matchList = await getMatchInfo(API_KEY, server, puiid); // Array constisting of match IDs
+      const matchList = await getMatchList(API_KEY, puiid); // Array constisting of match IDs
+      var matches = []
+      for (const matchID of matchList) {
+          const match = await getMatchInfo(API_KEY,matchID);
+          matches.push(match)
+      }
       const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
       const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10 // Rounded winrate percentage calculated from total games played in Flex queue
       const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10 // Rounded winrate percentage calculated from total games played in Solo queue
 
-      alert(matchList)
+      alert(matches)
+      alert(JSON.stringify(matchinf[0]))
       navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, { serverLabel, summonerName });
       //alert("Flex W/R " + winrateF + "%")
       alert("Solo W/R " + winrateS + "%")
@@ -307,9 +313,17 @@ async function getMasteryInfo(API_KEY, server, puuid) {
   return champInfo;
 }
 
-async function getMatchInfo(API_KEY, server, puuid) {
-  const matchInfoApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=20&api_key=${API_KEY}`;
-  const data = await makeApiCall(matchInfoApiURL)
+/**
+ * API call to retrieve an array of 
+ * summoner match IDs based on puuid 
+ * 
+ * @param {string} API_KEY 
+ * @param {string} puuid
+ * @returns {[string]} 
+ */
+async function getMatchList(API_KEY, puuid) {
+  const matchListApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=20&api_key=${API_KEY}`;
+  const data = await makeApiCall(matchListApiURL)
   var matchList = []
   for (const match of data) {
     matchList.push(match)
@@ -317,6 +331,11 @@ async function getMatchInfo(API_KEY, server, puuid) {
   return matchList;
 }
 
+async function getMatchInfo(API_KEY, matchID) {
+  const matchInfoApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
+  const data = await makeApiCall(matchInfoApiURL)
+  return [data.info, data.metadata];
+}
 /**
  * API call to retrieve summoner ranked queue info
  * (wins, losses, rank, tier)
