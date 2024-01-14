@@ -1,4 +1,6 @@
 import '../App.css'
+import infoIcon from '../assets/infoIcon.png';
+import summonerNameIcon from '../assets/summonerName.png';
 import jsonKeyData from '../../../config.json'
 import Select from 'react-select'
 import { useState, useEffect } from 'react'
@@ -118,9 +120,19 @@ function App() {
     <>
       <div id='homeBody'>
         <h1>SUMMONERS <br /> CARD</h1>
-        <input type="text" className="summonerField" id="summonerName" placeholder='Enter summoner name: Gamename + #EUW' autoFocus={true} onKeyDown={(event) => {
-          if (event.key == "Enter") getInput(selectedServer.value, selectedServer.label, navigate, setIsLoading);
-        }} />
+        <div className='fieldBox'>
+          <input type="text" className="summonerField" id="summonerName" placeholder={`Enter summoner name: Gamename + #${selectedServer.label}`} autoFocus={true} onKeyDown={(event) => {
+            if (event.key == "Enter") getInput(selectedServer.value, selectedServer.label, navigate, setIsLoading);
+          }} />
+          <div class="tooltip">
+            <a id="link" href="https://support-leagueoflegends.riotgames.com/hc/en-us/articles/360041788533-Riot-ID-FAQ#:~:text=If%20your%20Riot%20ID%20is,not%20have%20to%20be%20unique." target="_blank">
+              <img id="infoIcon" src={infoIcon} alt="Info Icon" />
+              </a>
+            <div class="tooltip-text">
+              How to get summoner name
+            </div>
+          </div>
+        </div>
         <div className="box">
           <Select
             id='serverList'
