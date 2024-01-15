@@ -85,7 +85,8 @@ footer {
   left: 50%;
   transform: translateX(-50%);
   bottom: 0;
-  width: 100%; /* Ensures size doesnt change on diff viewport */
+  width: 100%;
+  /* Ensures size doesnt change on diff viewport */
   min-height: 50px;
   text-align: center;
   border-top: 1px solid #A09B8C;
@@ -120,37 +121,36 @@ footer {
   transform: scale(1.1);
 }
 
-.tooltip { 
+.tooltip {
   height: 20px;
-}
-  
-#summonerNameIcon {
-  visibility: hidden;
-  margin-left: 40px;
-  width: 180px;
-  height: 90px;
-  border-radius: 6px;
-  padding: 5px 0;
-  position: absolute;
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
 }
 
 .tooltip-text {
-  visibility: hidden;
-  display: flex;
-  align-items: center;
-  width: 190px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  position: absolute;
+  opacity: 0;
+  width: 145px;
+  background-color: #1a1a1a;
+  border: solid 1px #C89B3C;
+  color: #ada89b;
   font-size: 15px;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 3;
+  top: -8px;
+  left: 100%;
+  transition: all ease-in-out 0.3s;
 
 }
 
 .tooltip:hover .tooltip-text {
-  visibility: visible;
+  opacity: 1;
+  left: 150%;
 }
 
 #infoIcon {

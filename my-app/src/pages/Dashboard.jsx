@@ -2,7 +2,8 @@ import '../App.css'
 import Error from './Error.jsx';
 import { useState, useEffect } from 'react'
 import { useParams,
-         useNavigate } from 'react-router-dom';
+         useNavigate, 
+         useLocation} from 'react-router-dom';
 
 const options = [
   { label: 'EUW' },
@@ -23,8 +24,11 @@ const options = [
 
 function Dashboard() {
   const [patchVersion, setPatchVersion] = useState('Loading version...'); // Initialize patch version
-  const { server, summonerName } = useParams();
-  
+  const {state} = useLocation();
+  const {server, summonerName} = useParams();
+  const {match} = state
+  alert(match)
+  alert(JSON.stringify(match))
   const navigate = useNavigate();
 
   if (!options.some(option => option.label === server)) {
@@ -34,6 +38,7 @@ function Dashboard() {
       <div id='homeBody'>
         <h1>CARDS</h1>
         <h2>{summonerName}{server}</h2>
+        <div>{`${match}`}</div>
       </div>
     </>
   )

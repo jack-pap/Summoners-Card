@@ -124,13 +124,13 @@ function App() {
           <input type="text" className="summonerField" id="summonerName" placeholder={`Enter summoner name: Gamename + #${selectedServer.label}`} autoFocus={true} onKeyDown={(event) => {
             if (event.key == "Enter") getInput(selectedServer.value, selectedServer.label, navigate, setIsLoading);
           }} />
-          <div class="tooltip">
+          <div className="tooltip">
             <a id="link" href="https://support-leagueoflegends.riotgames.com/hc/en-us/articles/360041788533-Riot-ID-FAQ#:~:text=If%20your%20Riot%20ID%20is,not%20have%20to%20be%20unique." target="_blank">
               <img id="infoIcon" src={infoIcon} alt="Info Icon" />
               </a>
-            <div class="tooltip-text">
-              How to get summoner name
-            </div>
+            <span className="tooltip-text">
+              Click here for help
+            </span>
           </div>
         </div>
         <div className="box">
@@ -228,7 +228,7 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
       const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10 // Rounded winrate percentage calculated from total games played in Solo queue
 
       alert(JSON.stringify(matches))
-      navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, { serverLabel, summonerName });
+      navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, {state:{serverLabel, summonerName, match: matches}});
       //alert("Flex W/R " + winrateF + "%")
       //alert("Solo W/R " + winrateS + "%")
     } catch (error) {
@@ -385,7 +385,7 @@ async function getMatchInfo(API_KEY, matchID, puiid) {
   //const information = [contents[0].
   //data.info.participants get array of players
   //data.info.participants.puuid scan to find yours
-  return [info];
+  return info;
 
 
 }
