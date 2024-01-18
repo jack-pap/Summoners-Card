@@ -25,22 +25,64 @@
   border-left: 1px solid #9b792f;
   margin-left: 100px;
   margin-right: 100px;
-  height: 60svh;
-  transition: height ease-in-out 0.25s;
-}
-
-.line:hover {
-  height: 80svh;
+  height: 55vh;
 }
 
 #leftLine {
-  left: 5%;
+  left: 10%;
+  top: 25%;
+  animation-fill-mode: forwards;
 }
 
 #rightLine {
-  right: 5%;
+  right: 10%;
+  top: 25%;
+  animation-fill-mode: forwards;
 }
 
+@keyframes moveLeft {
+  0% {
+    height: 55vh;
+    right: 10%;
+  }
+
+  25% {
+    right: 10%;
+    height: 70vh;
+  }
+
+  70% {
+    right: 44.8%;
+    height: 70vh
+  }
+
+  100% {
+    right: 44.8%;
+    height: 0vh
+  }
+}
+
+@keyframes moveRight {
+  0% {
+    height: 55vh;
+    left: 10%;
+  }
+
+  25% {
+    left: 10%;
+    height: 70vh;
+  }
+
+  70% {
+    left: 44.8%;
+    height: 70vh
+  }
+
+  100% {
+    left: 44.8%;
+    height: 0vh
+  }
+}
 
 body {
   margin: 0;

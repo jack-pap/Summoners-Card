@@ -129,7 +129,7 @@ function App() {
               <img id="infoIcon" src={infoIcon} alt="Info Icon" />
               </a>
             <span className="tooltip-text">
-              Click here for help
+              Click for more help
             </span>
           </div>
         </div>
@@ -205,14 +205,16 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
   // Checks for valid input and plays animation
   if (summonerName.match(/^[a-zA-Z0-9]+#[a-zA-Z0-9]+$/)) {
 
-    /*alert(summonerName + " " + server)
-    document.getElementById("rightLine").classList.add('horizMoveLeft');
-    document.getElementById("leftLine").classList.add('horizMoveRight');
-    document.getElementById("homeBody").classList.add('dissapear');*/
-
     document.getElementById("homeBody").style.display = "none";
     setIsLoading(true);
 
+    // document.getElementById("rightLine").style.animation = "moveLeft 1.5s forwards";
+    // document.getElementById("leftLine").style.animation = "moveRight 1.5s forwards";
+    // document.getElementById("leftLine").addEventListener('animationend', () => {
+    //   console.log('Animation is complete');
+    //   setIsLoading(true);
+    // });
+    
     try {
       const puiid = await getPUUID(API_KEY, tagLine, gameName); // PUIID identifier for summoner
       const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner ID, summoner level and profile picture
@@ -227,10 +229,11 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
       const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10 // Rounded winrate percentage calculated from total games played in Flex queue
       const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10 // Rounded winrate percentage calculated from total games played in Solo queue
 
-      alert(JSON.stringify(matches))
+      //alert(JSON.stringify(matches))
       navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, {state:{serverLabel, summonerName, match: matches}});
       //alert("Flex W/R " + winrateF + "%")
       //alert("Solo W/R " + winrateS + "%")
+
     } catch (error) {
       console.log(error);
       setIsLoading(false);
