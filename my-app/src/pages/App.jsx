@@ -215,9 +215,6 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
     //   setIsLoading(true);
     // });
     
-    for (const item of localStorage) {
-      alert(item);
-    }
     try {
       const puiid = await getPUUID(API_KEY, tagLine, gameName); // PUIID identifier for summoner
       const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner ID, summoner level and profile picture
@@ -232,7 +229,6 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
       navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, {state:{serverLabel, summonerName, match: matchInfoList}});
       //alert("Flex W/R " + winrateF + "%")
       //alert("Solo W/R " + winrateS + "%")
-      //alert(masteryInfo);
 
     } catch (error) {
       console.log(error);
@@ -259,7 +255,7 @@ function makeApiCall(apiURL) {
     fetch(apiURL)
       .then(response => {
         if (!response.ok) {
-          alert(`Summoner not found`);
+          //alert(`Summoner not found`);
           throw new Error(`Network response was not ok: ${response.status}`);
         }
         return response.json();
@@ -317,13 +313,15 @@ async function getSummonerInfo(API_KEY, server, puuid) {
 async function getMasteryInfo(API_KEY, server, puuid) {
   const masteryApiURL = `https://${server}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}?api_key=${API_KEY}`;
   const data = await makeApiCall(masteryApiURL);
-  var champInfoList = [];
+  var champInfoList = new Map();
   for (const champion of data) {
-    var champInfo = [];
-    champInfo.push(champion.championId);
-    champInfo.push(champion.championLevel);
-    champInfo.push(champion.championPoints);
-    champInfoList.push(champInfo);
+    var champStats = []
+    champInfoList.set(champion.championId, champStats);
+    champStats.push(champion.championPoints); // Mastery points on champion
+    champStats.push(champion.championLevel); // Mastery level on champion
+    champStats.push(0); // Normal winrate
+    champStats.push(0); // Ranked solo winrate
+    champStats.push(0); // Ranked flex winrate
   }
   return champInfoList;
 }
