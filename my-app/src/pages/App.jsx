@@ -202,7 +202,7 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
   const server = serverValue;
 
 
-  // Checks for valid input and plays animation
+  // Checks for valid input and initiates API calls for data
   if (summonerName.match(/^[a-zA-Z0-9]+#[a-zA-Z0-9]+$/)) {
 
     document.getElementById("homeBody").style.display = "none";
@@ -215,24 +215,24 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
     //   setIsLoading(true);
     // });
     
+    for (const item of localStorage) {
+      alert(item);
+    }
     try {
       const puiid = await getPUUID(API_KEY, tagLine, gameName); // PUIID identifier for summoner
       const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner ID, summoner level and profile picture
       const masteryInfo = await getMasteryInfo(API_KEY, server, puiid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
       const matchList = await getMatchList(API_KEY, puiid); // Array constisting of match IDs
-      var matches = []
-      for (const matchID of matchList) {
-        const match = await getMatchInfo(API_KEY, matchID, puiid);
-        matches.push(match)
-      }
+      const matchInfoList = await getMatchInfoList(API_KEY, matchList, puiid);
+      const champWinrate = await getChampionWinrate(API_KEY, masteryInfo, matchList, puiid);
       const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
-      const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10 // Rounded winrate percentage calculated from total games played in Flex queue
-      const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10 // Rounded winrate percentage calculated from total games played in Solo queue
+      const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Flex queue
+      const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Solo queue
 
-      //alert(JSON.stringify(matches))
-      navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, {state:{serverLabel, summonerName, match: matches}});
+      navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, {state:{serverLabel, summonerName, match: matchInfoList}});
       //alert("Flex W/R " + winrateF + "%")
       //alert("Solo W/R " + winrateS + "%")
+      //alert(masteryInfo);
 
     } catch (error) {
       console.log(error);
@@ -317,15 +317,19 @@ async function getSummonerInfo(API_KEY, server, puuid) {
 async function getMasteryInfo(API_KEY, server, puuid) {
   const masteryApiURL = `https://${server}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}?api_key=${API_KEY}`;
   const data = await makeApiCall(masteryApiURL);
-  var champInfo = [];
-  for (let i = 0; i < 3; i++) {
-    var champList = [];
-    champList.push(data[i].championId);
-    champList.push(data[i].championLevel);
-    champList.push(data[i].championPoints);
-    champInfo.push(champList);
+  var champInfoList = [];
+  for (const champion of data) {
+    var champInfo = [];
+    champInfo.push(champion.championId);
+    champInfo.push(champion.championLevel);
+    champInfo.push(champion.championPoints);
+    champInfoList.push(champInfo);
   }
-  return champInfo;
+  return champInfoList;
+}
+
+async function getChampionWinrate(API_KEY, masteryInfo, matchList, puiid) {
+
 }
 
 /**
@@ -337,7 +341,7 @@ async function getMasteryInfo(API_KEY, server, puuid) {
  * @returns {[string]} 
  */
 async function getMatchList(API_KEY, puuid) {
-  const matchListApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=10&api_key=${API_KEY}`;
+  const matchListApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&api_key=${API_KEY}`;
   const data = await makeApiCall(matchListApiURL)
   var matchList = []
   for (const match of data) {
@@ -350,48 +354,47 @@ async function getMatchList(API_KEY, puuid) {
  * API call to retrieve all match information from a matchID
  * 
  * @param {string} API_KEY 
- * @param {string} matchID
+ * @param {[string]} matchIDs
  * @param {string} puuid
  * @returns {[string]} 
  */
-async function getMatchInfo(API_KEY, matchID, puiid) {
-  const matchInfoApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
-  const data = await makeApiCall(matchInfoApiURL)
-  const contents = [new Date(data.info.gameCreation), data.info.gameDuration / 60, data.info.queueid];
-  const participants = data.info.participants
-  const participantIDs = [data.metadata.participants]
-  var info = []
-  for (const participantInfo of participants) {
-    if (participantInfo.puuid == puiid) {
-      info = [participantInfo.team,
-      participantInfo.win,
-      participantInfo.kills,
-      participantInfo.deaths,
-      participantInfo.assists,
-      participantInfo.visionScore,
-      participantInfo.championId,
-      participantInfo.championName,
-      participantInfo.champLevel,
-      participantInfo.item0,
-      participantInfo.item1,
-      participantInfo.item2,
-      participantInfo.item3,
-      participantInfo.item4,
-      participantInfo.item5,
-      participantInfo.item6,
-      participantInfo.summoner1Ids,
-      participantInfo.summoner2Ids,
-      participantInfo.perks] //runes array
-      break
+async function getMatchInfoList(API_KEY, matchIDs, puiid) {
+  var matchInfoList = []
+  for (const matchID of matchIDs) {
+    const matchInfoApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
+    const data = await makeApiCall(matchInfoApiURL)
+    const contents = [new Date(data.info.gameCreation), data.info.gameDuration / 60, data.info.queueid];
+    const participants = data.info.participants
+    const participantIDs = [data.metadata.participants]
+    for (const participantInfo of participants) {
+      if (participantInfo.puuid == puiid) {
+        var info = [participantInfo.teamId,
+        participantInfo.win,
+        participantInfo.kills,
+        participantInfo.deaths,
+        participantInfo.assists,
+        participantInfo.visionScore,
+        participantInfo.championId,
+        participantInfo.championName,
+        participantInfo.champLevel,
+        participantInfo.item0,
+        participantInfo.item1,
+        participantInfo.item2,
+        participantInfo.item3,
+        participantInfo.item4,
+        participantInfo.item5,
+        participantInfo.item6,
+        participantInfo.summoner1Id,
+        participantInfo.summoner2Id,
+        participantInfo.perks] //runes array
+        matchInfoList.push(info)
+        break
+      }
     }
   }
-  //const information = [contents[0].
-  //data.info.participants get array of players
-  //data.info.participants.puuid scan to find yours
-  return info;
-
-
+  return matchInfoList
 }
+
 /**
  * API call to retrieve summoner ranked queue info
  * (wins, losses, rank, tier)

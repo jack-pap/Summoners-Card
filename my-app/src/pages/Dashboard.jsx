@@ -27,8 +27,7 @@ function Dashboard() {
   const {state} = useLocation();
   const {server, summonerName} = useParams();
   const {match} = state
-  //alert(match)
-  //alert(JSON.stringify(match))
+
   const navigate = useNavigate();
 
   if (!options.some(option => option.label === server)) {

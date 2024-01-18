@@ -76,7 +76,6 @@ header {
   color: #f7ba39;
 }
 
-
 footer {
   color: #79756a;
   font-family: Beaufort;
@@ -92,7 +91,6 @@ footer {
   border-top: 1px solid #A09B8C;
   max-width: 800px
 }
-
 
 .image-container {
   color: #ada89b;
@@ -126,6 +124,7 @@ footer {
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted black;
+  
 }
 
 .tooltip-text {
@@ -138,6 +137,7 @@ footer {
   text-align: center;
   border-radius: 4px;
   padding: 5px 0;
+  pointer-events: none;
 
   /* Position the tooltip */
   position: absolute;
