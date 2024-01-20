@@ -127,7 +127,7 @@ function App() {
           <div className="tooltip">
             <a id="link" href="https://support-leagueoflegends.riotgames.com/hc/en-us/articles/360041788533-Riot-ID-FAQ#:~:text=If%20your%20Riot%20ID%20is,not%20have%20to%20be%20unique." target="_blank">
               <img id="infoIcon" src={infoIcon} alt="Info Icon" />
-              </a>
+            </a>
             <span className="tooltip-text">
               Click for more help
             </span>
@@ -214,19 +214,19 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
     //   console.log('Animation is complete');
     //   setIsLoading(true);
     // });
-    
+
     try {
       const puiid = await getPUUID(API_KEY, tagLine, gameName); // PUIID identifier for summoner
       const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner ID, summoner level and profile picture
       const masteryInfo = await getMasteryInfo(API_KEY, server, puiid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
       const matchList = await getMatchList(API_KEY, puiid); // Array constisting of match IDs
       const matchInfoList = await getMatchInfoList(API_KEY, matchList, puiid);
-      const champWinrate = await getChampionWinrate(API_KEY, masteryInfo, matchList, puiid);
+      const champWinrate = await getChampionWinrate(masteryInfo, matchInfoList);
       const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
       const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Flex queue
       const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Solo queue
 
-      navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, {state:{serverLabel, summonerName, match: matchInfoList}});
+      navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, { state: { serverLabel, summonerName, match: matchInfoList } });
       //alert("Flex W/R " + winrateF + "%")
       //alert("Solo W/R " + winrateS + "%")
 
@@ -236,9 +236,6 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
       document.getElementById("homeBody").style.display = "contents";
       return
     }
-
-
-
   } else alert("Please ensure that the summoner name follows the specified format and has no whitespace or special symbols")
 
 }
@@ -308,7 +305,7 @@ async function getSummonerInfo(API_KEY, server, puuid) {
  * @param {string} API_KEY 
  * @param {string} server
  * @param {string} puuid
- * @returns {[[string]]} 
+ * @returns {Map} 
  */
 async function getMasteryInfo(API_KEY, server, puuid) {
   const masteryApiURL = `https://${server}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}?api_key=${API_KEY}`;
@@ -319,17 +316,37 @@ async function getMasteryInfo(API_KEY, server, puuid) {
     champInfoList.set(champion.championId, champStats);
     champStats.push(champion.championPoints); // Mastery points on champion
     champStats.push(champion.championLevel); // Mastery level on champion
-    champStats.push(0); // Normal winrate
-    champStats.push(0); // Ranked solo winrate
-    champStats.push(0); // Ranked flex winrate
+    champStats.push(0); // Games
+    champStats.push(0); // Wins
+    champStats.push(0); // Ranked solo winrate WR = W/GAMES --- W = WR*GAMES
   }
   return champInfoList;
 }
 
-async function getChampionWinrate(API_KEY, masteryInfo, matchList, puiid) {
-
+/**
+ * Method that iterates through matches
+ * and calculates champion winrate values
+ * 
+ * @param {Map} masteryInfo
+ * @param {[string]} matchInfoList
+ * @returns {[string,[string]]} 
+ */
+async function getChampionWinrate(masteryInfo, matchInfoList) {
+  for (const matchInfo of matchInfoList) {
+    var champInfo = masteryInfo.get(matchInfo.championId)
+    if (matchInfo.win == true) champInfo[3] += 1
+    champInfo[2] += 1
+    champInfo[4] = Math.ceil((champInfo[3] / champInfo[2]) * 100) // W/R percentage rounded up to nearest second decimal
+    masteryInfo.set(matchInfo.championId, champInfo)
+  }
+  var masteries = []
+  for (let [key, value] of masteryInfo.entries()) {
+    if (value[2] != 0) masteries.push([key, value])
+    return masteries
+  }
 }
 
+//TODO MAKE IT GET ALL MATCHES FROM THIS SEASON ONLY ?? OR SPECIFY TIME PERIOD IN PARAMS
 /**
  * API call to retrieve an array of 
  * summoner match IDs based on puuid 
@@ -366,26 +383,26 @@ async function getMatchInfoList(API_KEY, matchIDs, puiid) {
     const participantIDs = [data.metadata.participants]
     for (const participantInfo of participants) {
       if (participantInfo.puuid == puiid) {
-        var info = [participantInfo.teamId,
-        participantInfo.win,
-        participantInfo.kills,
-        participantInfo.deaths,
-        participantInfo.assists,
-        participantInfo.visionScore,
-        participantInfo.championId,
-        participantInfo.championName,
-        participantInfo.champLevel,
-        participantInfo.item0,
-        participantInfo.item1,
-        participantInfo.item2,
-        participantInfo.item3,
-        participantInfo.item4,
-        participantInfo.item5,
-        participantInfo.item6,
-        participantInfo.summoner1Id,
-        participantInfo.summoner2Id,
-        participantInfo.perks] //runes array
-        matchInfoList.push(info)
+        // var info = [participantInfo.teamId,
+        // participantInfo.win,
+        // participantInfo.kills,
+        // participantInfo.deaths,
+        // participantInfo.assists,
+        // participantInfo.visionScore,
+        // participantInfo.championId,
+        // participantInfo.championName,
+        // participantInfo.champLevel,
+        // participantInfo.item0,
+        // participantInfo.item1,
+        // participantInfo.item2,
+        // participantInfo.item3,
+        // participantInfo.item4,
+        // participantInfo.item5,
+        // participantInfo.item6,
+        // participantInfo.summoner1Id,
+        // participantInfo.summoner2Id,
+        // participantInfo.perks] //runes array
+        matchInfoList.push(participantInfo)
         break
       }
     }
