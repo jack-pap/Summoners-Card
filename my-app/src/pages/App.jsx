@@ -223,8 +223,8 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
       const matchInfoList = await getMatchInfoList(API_KEY, matchList, puiid);
       const champWinrate = await getChampionWinrate(masteryInfo, matchInfoList);
       const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
-      const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Flex queue
-      const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Solo queue
+      //const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Flex queue
+      //const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Solo queue
 
       navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, { state: { serverLabel, summonerName, match: matchInfoList } });
       //alert("Flex W/R " + winrateF + "%")
@@ -298,29 +298,39 @@ async function getSummonerInfo(API_KEY, server, puuid) {
 }
 
 /**
- * API call to retrieve arrays of summoner mastery info on the top 3 champions
+ * API call to retrieve arrays of summoner mastery info on all champions played
  * (champion ID, champion mastery level, champion mastery points)
  * based on puuid and server 
  * 
  * @param {string} API_KEY 
  * @param {string} server
  * @param {string} puuid
- * @returns {Map} 
+ * @returns {Promise<Array<Object>>} An array of objects representing champion mastery information.
+ * Each object includes:
+ *   - championId {number} - The ID of the champion.
+ *   - championPoints {number} - The champion mastery points.
+ *   - championLevel {number} - The champion mastery level.
+ *   - normalWinrate {Map} - Map with key 490 for normal game win rate (e.g., Map([NORMAL_GAME_MODE, [0, 0]])).
+ *   - rankedSoloWinrate {Map} - Map with key 420 for ranked solo game win rate (e.g., Map([RANKED_SOLO_GAME_MODE, [0, 0]])).
+ *   - rankedFlexWinrate {Map} - Map with key 440 for ranked flex game win rate (e.g., Map([RANKED_FLEX_GAME_MODE, [0, 0]])).
  */
 async function getMasteryInfo(API_KEY, server, puuid) {
   const masteryApiURL = `https://${server}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}?api_key=${API_KEY}`;
   const data = await makeApiCall(masteryApiURL);
-  var champInfoList = new Map();
+  const NORMAL_GAME_MODE = 490; // QueueId for normal game mode
+  const RANKED_SOLO_GAME_MODE = 420; // QueueId for ranked solo game mode
+  const RANKED_FLEX_GAME_MODE = 440; // QueueId for ranked flex game mode
+  var championStatsMapping = new Map(); // Mapping of championId to JSON stats
+
   for (const champion of data) {
-    var champStats = []
-    champInfoList.set(champion.championId, champStats);
-    champStats.push(champion.championPoints); // Mastery points on champion
-    champStats.push(champion.championLevel); // Mastery level on champion
-    champStats.push(0); // Games
-    champStats.push(0); // Wins
-    champStats.push(0); // Ranked solo winrate WR = W/GAMES --- W = WR*GAMES
+    var champStats = {
+      championPoints: champion.championPoints,
+      championLevel: champion.championLevel,
+      winrateMapping: new Map([[NORMAL_GAME_MODE, [0, 0, 0]], [RANKED_SOLO_GAME_MODE, [0, 0, 0]], [RANKED_FLEX_GAME_MODE, [0, 0, 0]]]) // [games played, wins, winrate]
+    };
+    championStatsMapping.set(champion.championId, champStats);
   }
-  return champInfoList;
+  return championStatsMapping;
 }
 
 /**
@@ -331,18 +341,18 @@ async function getMasteryInfo(API_KEY, server, puuid) {
  * @param {[string]} matchInfoList
  * @returns {[string,[string]]} 
  */
-async function getChampionWinrate(masteryInfo, matchInfoList) {
+function getChampionWinrate(masteryInfo, matchInfoList) {
   for (const matchInfo of matchInfoList) {
-    var champInfo = masteryInfo.get(matchInfo.championId)
-    if (matchInfo.win == true) champInfo[3] += 1
-    champInfo[2] += 1
-    champInfo[4] = Math.ceil((champInfo[3] / champInfo[2]) * 100) // W/R percentage rounded up to nearest second decimal
-    masteryInfo.set(matchInfo.championId, champInfo)
+    const queueId = matchInfo[0][2];
+    var champInfo = masteryInfo.get(matchInfo[1].championId);
+
+    champInfo.winrateMapping.get(queueId)[0] += 1
+    if (matchInfo[1].win == true) champInfo.winrateMapping.get(queueId)[1] += 1
   }
-  var masteries = []
-  for (let [key, value] of masteryInfo.entries()) {
-    if (value[2] != 0) masteries.push([key, value])
-    return masteries
+  for (const champInfo of masteryInfo.values()) {
+    champInfo.winrateMapping.get(490)[2] = Math.ceil((champInfo.winrateMapping.get(490)[1] / champInfo.winrateMapping.get(490)[0]) * 100); // Normal W/R percentage rounded up to nearest second decimal
+    champInfo.winrateMapping.get(420)[2] = Math.ceil((champInfo.winrateMapping.get(420)[1] / champInfo.winrateMapping.get(420)[0]) * 100); // Ranked Solo W/R percentage rounded up to nearest second decimal
+    champInfo.winrateMapping.get(440)[2] = Math.ceil((champInfo.winrateMapping.get(440)[1] / champInfo.winrateMapping.get(440)[0]) * 100); // Ranked Flex W/R percentage rounded up to nearest second decimal 
   }
 }
 
@@ -353,7 +363,7 @@ async function getChampionWinrate(masteryInfo, matchInfoList) {
  * 
  * @param {string} API_KEY 
  * @param {string} puuid
- * @returns {[string]} 
+ * @returns {Promise<Array<Object>>} 
  */
 async function getMatchList(API_KEY, puuid) {
   const matchListApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&api_key=${API_KEY}`;
@@ -365,44 +375,26 @@ async function getMatchList(API_KEY, puuid) {
   return matchList;
 }
 
+//TODO Maybe adjust data structure for better readability. Beware dependencies
 /**
  * API call to retrieve all match information from a matchID
  * 
  * @param {string} API_KEY 
  * @param {[string]} matchIDs
  * @param {string} puuid
- * @returns {[string]} 
+ * @returns {[[string],[string]]} 
  */
 async function getMatchInfoList(API_KEY, matchIDs, puiid) {
   var matchInfoList = []
   for (const matchID of matchIDs) {
     const matchInfoApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
     const data = await makeApiCall(matchInfoApiURL)
-    const contents = [new Date(data.info.gameCreation), data.info.gameDuration / 60, data.info.queueid];
+    const contents = [new Date(data.info.gameCreation), data.info.gameDuration / 60, data.info.queueId];
     const participants = data.info.participants
     const participantIDs = [data.metadata.participants]
     for (const participantInfo of participants) {
       if (participantInfo.puuid == puiid) {
-        // var info = [participantInfo.teamId,
-        // participantInfo.win,
-        // participantInfo.kills,
-        // participantInfo.deaths,
-        // participantInfo.assists,
-        // participantInfo.visionScore,
-        // participantInfo.championId,
-        // participantInfo.championName,
-        // participantInfo.champLevel,
-        // participantInfo.item0,
-        // participantInfo.item1,
-        // participantInfo.item2,
-        // participantInfo.item3,
-        // participantInfo.item4,
-        // participantInfo.item5,
-        // participantInfo.item6,
-        // participantInfo.summoner1Id,
-        // participantInfo.summoner2Id,
-        // participantInfo.perks] //runes array
-        matchInfoList.push(participantInfo)
+        matchInfoList.push([contents, participantInfo])
         break
       }
     }
@@ -425,25 +417,23 @@ async function getRankedInfo(API_KEY, server, id) {
   const data = await makeApiCall(rankedApiURL);
   var rankedSoloInfo = [];
   var rankedFlexInfo = [];
-  var rankedInfo = [rankedFlexInfo, rankedSoloInfo]
   for (let i = 0; i < data.length; i++) {
-    const queueType = data[i].queueType;  // Solo/duo or Flex queue (RANKED_SOLO_5x5, RANKED_FLEX_SR)
-    const currentRankedInfo = [
-      queueType,
-      data[i].tier, // Iron - Challenger
-      data[i].rank, // Roman numerical value IV - I
-      data[i].leaguePoints, // Points out of 100 in current rank
-      data[i].wins, // Wins in current ranked season
-      data[i].losses // Losses in current ranked season
-    ];
+    const currentRankedInfo = {
+      queueType: data[i].queueType, // Solo/duo or Flex queue (RANKED_SOLO_5x5, RANKED_FLEX_SR)
+      rankedTier: data[i].tier, // Iron - Challenger
+      rankedDivision: data[i].rank, // Roman numerical value IV - I
+      rankedPoints: data[i].leaguePoints, // Points out of 100 in current rank
+      rankedWins: data[i].wins, // Wins in current ranked season
+      rankedLosses: data[i].losses // Losses in current ranked season
+    };
 
-    if (queueType === "RANKED_SOLO_5x5") {
-      rankedInfo[1].push(...currentRankedInfo);
+    if (currentRankedInfo.queueType === "RANKED_SOLO_5x5") {
+      rankedSoloInfo.push(currentRankedInfo);
     } else if (queueType === "RANKED_FLEX_SR") {
-      rankedInfo[0].push(...currentRankedInfo);
+      rankedFlexInfo.push(currentRankedInfo);
     }
   }
-  return rankedInfo;
+  return [rankedFlexInfo, rankedSoloInfo];
 }
 
 export default App
