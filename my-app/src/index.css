@@ -19,6 +19,15 @@
   text-shadow: none;
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 100;
+  }
+}
+
 
 .line {
   position: absolute;

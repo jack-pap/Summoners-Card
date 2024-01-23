@@ -1,9 +1,11 @@
 import '../App.css'
 import Error from './Error.jsx';
 import { useState, useEffect } from 'react'
-import { useParams,
-         useNavigate, 
-         useLocation} from 'react-router-dom';
+import {
+  useParams,
+  useNavigate,
+  useLocation
+} from 'react-router-dom';
 
 const options = [
   { label: 'EUW' },
@@ -24,23 +26,37 @@ const options = [
 
 function Dashboard() {
   const [patchVersion, setPatchVersion] = useState('Loading version...'); // Initialize patch version
-  const {state} = useLocation();
-  const {server, summonerName} = useParams();
-  const {match} = state
+  const { state } = useLocation();
+  const { server, summonerName } = useParams();
+  const { match } = state
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.getElementById("homeBody").style.animation = "fade-in 1s forwards";
+    loadVersion()
+      .then(version => {
+        // Update the patch version state
+        setPatchVersion(version);
+      })
+      .catch(error => {
+        console.error('Error loading version:', error);
+      });
+  });
+
   if (!options.some(option => option.label === server)) {
-    return  <Error errorMessage={`Invalid server "${server}"`} />
-  } else return (
-    <>
-      <div id='homeBody'>
-        <h1>CARDS</h1>
-        <h2>{summonerName}{server}</h2>
-        <div>{`${match}`}</div>
-      </div>
-    </>
-  )
+    return <Error errorMessage={`Invalid server "${server}"`} />
+  } else {
+    return (
+      <>
+        <div id='homeBody'>
+          <h1>CARDS</h1>
+          <h2>{summonerName}{server}</h2>
+          <div>{`${match}`}</div>
+        </div>
+      </>
+    )
+  }
 }
 
 /**

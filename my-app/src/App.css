@@ -13,6 +13,28 @@
   pointer-events: none;
 }
 
+@keyframes moveRight {
+  0% {
+    height: 55vh;
+    left: 10%;
+  }
+
+  25% {
+    left: 10%;
+    height: 70vh;
+  }
+
+  70% {
+    left: 44.8%;
+    height: 70vh
+  }
+
+  100% {
+    left: 44.8%;
+    height: 0vh
+  }
+}
+
 @font-face {
   font-family: 'Beaufort';
   src: url(./Fonts_Package/BeaufortForLoL-OTF/BeaufortforLOL-Bold.otf);

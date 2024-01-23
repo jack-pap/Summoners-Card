@@ -106,10 +106,10 @@ function App() {
   };
 
   useEffect(() => {
+    document.getElementById("homeBody").style.animation = "fade-in 1s forwards"; // Play fade in animation
     loadVersion()
       .then(version => {
-        // Update the patch version state
-        setPatchVersion(version);
+        setPatchVersion(version); // Update the patch version state
       })
       .catch(error => {
         console.error('Error loading version:', error);
@@ -203,7 +203,7 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
 
 
   // Checks for valid input and initiates API calls for data
-  if (summonerName.match(/^[a-zA-Z0-9]+#[a-zA-Z0-9]+$/)) {
+  if (summonerName.match(/\s*#[^\s]*\S+$/)) {
 
     document.getElementById("homeBody").style.display = "none";
     setIsLoading(true);
