@@ -9,7 +9,6 @@ function Error({ errorMessage }) {
     <>
       <div id='homeBody'>
         <h2>Error: {error?.statusText || error?.message || errorMessage}</h2>
-        An unexpected error occured
       </div>
     </>
   )

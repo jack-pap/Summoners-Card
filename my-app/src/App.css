@@ -265,3 +265,11 @@ select:focus {
   font-size: 0.85em;
   padding-top: 10px;
 }
+
+#master {
+  width: 500px;
+}
+
+#summonerIcon {
+  width: 100px;
+}

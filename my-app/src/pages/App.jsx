@@ -109,12 +109,12 @@ function App() {
     document.getElementById("homeBody").style.animation = "fade-in 1s forwards"; // Play fade in animation
     loadVersion()
       .then(version => {
-        setPatchVersion(version); // Update the patch version state
+        setPatchVersion(version[0].split('.')[0] + "." + version[0].split('.')[1]); // Update the patch version state
       })
       .catch(error => {
         console.error('Error loading version:', error);
       });
-  });
+  }, []);
 
   return (
     <>
@@ -180,7 +180,7 @@ async function loadVersion() {
         return response.json();
       })
       .then(data => {
-        resolve(data[0].split('.')[0] + "." + data[0].split('.')[1]);
+        resolve(data);
       })
       .catch(error => {
         reject(error);
@@ -226,7 +226,7 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
       //const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Flex queue
       //const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Solo queue
 
-      navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, { state: { serverLabel, summonerName, match: matchInfoList } });
+      navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, { state: { serverLabel, summonerName, summonerInfo: summonerInfo, summonerRankedInfo: rankedInfo, summonerMatchInfo: matchInfoList } });
       //alert("Flex W/R " + winrateF + "%")
       //alert("Solo W/R " + winrateS + "%")
 
@@ -415,8 +415,8 @@ async function getMatchInfoList(API_KEY, matchIDs, puiid) {
 async function getRankedInfo(API_KEY, server, id) {
   const rankedApiURL = `https://${server}.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`;
   const data = await makeApiCall(rankedApiURL);
-  var rankedSoloInfo = [];
-  var rankedFlexInfo = [];
+  var rankedSoloInfo;
+  var rankedFlexInfo;
   for (let i = 0; i < data.length; i++) {
     const currentRankedInfo = {
       queueType: data[i].queueType, // Solo/duo or Flex queue (RANKED_SOLO_5x5, RANKED_FLEX_SR)
@@ -428,9 +428,9 @@ async function getRankedInfo(API_KEY, server, id) {
     };
 
     if (currentRankedInfo.queueType === "RANKED_SOLO_5x5") {
-      rankedSoloInfo.push(currentRankedInfo);
+      rankedSoloInfo = currentRankedInfo;
     } else if (queueType === "RANKED_FLEX_SR") {
-      rankedFlexInfo.push(currentRankedInfo);
+      rankedFlexInfo = currentRankedInfo;
     }
   }
   return [rankedFlexInfo, rankedSoloInfo];
