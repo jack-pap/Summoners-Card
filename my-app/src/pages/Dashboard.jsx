@@ -25,7 +25,7 @@ function Dashboard() {
   const [patchVersion, setPatchVersion] = useState("Loading version..."); // Initialize patch version
   const { server, summonerName } = useParams(); // Summoner name and server
   const { state } = useLocation();
-  const { summonerInfo, summonerRankedInfo, summonerMatchInfo } = state; // Summoner info
+  const { summonerInfo, gameName, summonerRankedInfo, summonerMatchInfo } = state; // Summoner info
   const [leagueImages, setleagueImages] = useState(""); // Images
 
   const navigate = useNavigate();
@@ -52,15 +52,22 @@ function Dashboard() {
       <>
         <div id="homeBody">
           <div id="summonerBlock">
-            <div className="profileIconGroup">
-              <img id="summonerIcon" src={leagueImages[0]} alt="Image" />
-              <div id="level">{summonerInfo[1]}</div>
-              <div id="summonerName">{summonerName.replace("-", "#")}</div>
+            <div className="profileGroup">
+              <div className="profileIconGroup">
+                <img id="summonerIcon" src={leagueImages[0]} alt="Image" />
+                <div id="level">{summonerInfo[1]}</div>
+              </div>
+              <div id="name">
+                <div id="gameName"> {gameName} </div>
+                <div id="server"> #{server} </div>
+              </div>
             </div>
-
-            <div id="rankedSolo">Rank {summonerRankedInfo[1].rankedTier}</div>
-            <div id="rankedFlex">Rank {summonerRankedInfo[0].rankedTier}</div>
-            <img id="master" src={leagueImages[1]} alt="Image" />
+            <div className="rankedInfo">
+              <div id="rankedSolo">{summonerRankedInfo[1] === "Unranked" ? 'Unranked' : `${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}
+              </div>
+              <div id="rankedFlex">{summonerRankedInfo[0] === "Unranked" ? 'Unranked' : `${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision}`}
+              </div>
+            </div>
           </div>
           <div id="winrateBlock"></div>
           <div id="championBlock"></div>

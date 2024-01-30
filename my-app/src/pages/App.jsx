@@ -226,7 +226,7 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
       //const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Flex queue
       //const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Solo queue
 
-      navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, { state: { serverLabel, summonerName, summonerInfo: summonerInfo, summonerRankedInfo: rankedInfo, summonerMatchInfo: matchInfoList } });
+      navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, { state: { serverLabel, gameName: gameName, summonerInfo: summonerInfo, summonerRankedInfo: rankedInfo, summonerMatchInfo: matchInfoList } });
       //alert("Flex W/R " + winrateF + "%")
       //alert("Solo W/R " + winrateS + "%")
 
@@ -434,8 +434,8 @@ async function getRankedInfo(API_KEY, server, id) {
     }
   }
   return [
-    rankedFlexInfo || { rankedTier: 'N/A' },
-    rankedSoloInfo || { rankedTier: 'N/A' }
+    rankedFlexInfo || 'Unranked',
+    rankedSoloInfo || 'Unranked'
   ];
 }
 
