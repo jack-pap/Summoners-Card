@@ -26,48 +26,47 @@
 
   70% {
     left: 44.8%;
-    height: 70vh
+    height: 70vh;
   }
 
   100% {
     left: 44.8%;
-    height: 0vh
+    height: 0vh;
   }
 }
 
 @font-face {
-  font-family: 'Beaufort';
+  font-family: "Beaufort";
   src: url(./Fonts_Package/BeaufortForLoL-OTF/BeaufortforLOL-Bold.otf);
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Spiegel';
+  font-family: "Spiegel";
   src: url(./Fonts_Package/Spiegel-OTF/Spiegel-Regular.otf);
   font-weight: normal;
   font-style: normal;
 }
 
 #minih1 {
-  color: #F0E6D2;
+  color: #f0e6d2;
   width: 342px;
-  text-shadow: 1.5px 1px 0px #785A28;
+  text-shadow: 1.5px 1px 0px #785a28;
   font-size: 1.4em;
   letter-spacing: 0.02em;
   transition: background-color 0.28s, text-shadow ease 0.28s;
 }
 
 #minih1:hover {
-  text-shadow: #dfdede 0 0 6px, 1.5px 1px 0px #785A28;
+  text-shadow: #dfdede 0 0 6px, 1.5px 1px 0px #785a28;
 }
 
-
 header {
-  color: #C89B3C;
+  color: #c89b3c;
   border-bottom: 2px solid #9b792f;
   font-family: Beaufort;
-  font-size: 1.0em;
+  font-size: 1em;
   position: absolute;
   transform: translateX(-50%);
   left: 50%;
@@ -110,8 +109,8 @@ footer {
   /* Ensures size doesnt change on diff viewport */
   min-height: 50px;
   text-align: center;
-  border-top: 1px solid #A09B8C;
-  max-width: 800px
+  border-top: 1px solid #a09b8c;
+  max-width: 800px;
 }
 
 .image-container {
@@ -146,14 +145,13 @@ footer {
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted black;
-  
 }
 
 .tooltip-text {
   opacity: 0;
   width: 145px;
   background-color: #1a1a1a;
-  border: solid 1px #C89B3C;
+  border: solid 1px #c89b3c;
   color: #ada89b;
   font-size: 15px;
   text-align: center;
@@ -167,7 +165,6 @@ footer {
   top: -8px;
   left: 100%;
   transition: all ease-in-out 0.3s;
-
 }
 
 .tooltip:hover .tooltip-text {
@@ -210,34 +207,34 @@ select {
   font-size: 1em;
   font-weight: 500;
   font-family: Spiegel;
-  color: #A09B8C;
+  color: #a09b8c;
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s, transform 300ms ease-in-out;
 }
 
 select:hover {
-  border-color: #C89B3C;
+  border-color: #c89b3c;
   transform: scale(1.02);
 }
 
 select:focus {
   transform: scale(1.02);
   outline: none;
-  border: 2px solid #C89B3C;
+  border: 2px solid #c89b3c;
 }
 
 .summonerField::placeholder {
-  color: #5B5A56;
+  color: #5b5a56;
 }
 
 .summonerField {
   padding: 0.5em;
   width: 15.2cm;
   height: 1cm;
-  border: 1px solid #5B5A56;
+  border: 1px solid #5b5a56;
   border-radius: 5px;
-  background-color: #1E2328;
+  background-color: #1e2328;
   font-family: Spiegel;
   font-size: 16px;
   transition: border-color 0.3s ease-in-out;
@@ -245,18 +242,17 @@ select:focus {
 }
 
 .summonerField:hover {
-  border-color: #C89B3C;
+  border-color: #c89b3c;
 }
 
 .summonerField:focus {
   outline: none;
-  border: 1px solid #C89B3C;
+  border: 1px solid #c89b3c;
 }
 
 .fieldBox {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 10px;
 }
 
@@ -270,6 +266,40 @@ select:focus {
   width: 500px;
 }
 
+#summonerBlock{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: #1e2328;
+  max-width: 500px; 
+  margin: 0 auto; 
+  border-radius: 3%;
+  padding: 10px;
+  gap: 10px;
+}
+
+.profileIconGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100px;
+  padding: 5px;
+}
+
 #summonerIcon {
   width: 100px;
+  border: 1px solid #c89b3c;
+  border-radius: 8%;
+}
+
+#level {
+  display: block;
+  width: 45px;
+  margin-top: -15px;
+  text-align: center;
+  background-color: #1b1917;
+  border: 1px solid #c89b3c;
+  border-radius: 4px;
 }

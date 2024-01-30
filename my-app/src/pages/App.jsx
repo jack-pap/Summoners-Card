@@ -1,6 +1,6 @@
+/* eslint-disable no-unused-vars */
 import '../App.css'
-import infoIcon from '../assets/infoIcon.png';
-import summonerNameIcon from '../assets/summonerName.png';
+import infoIcon from '../../assets/infoIcon.png';
 import jsonKeyData from '../../../config.json'
 import Select from 'react-select'
 import { useState, useEffect } from 'react'
@@ -125,7 +125,7 @@ function App() {
             if (event.key == "Enter") getInput(selectedServer.value, selectedServer.label, navigate, setIsLoading);
           }} />
           <div className="tooltip">
-            <a id="link" href="https://support-leagueoflegends.riotgames.com/hc/en-us/articles/360041788533-Riot-ID-FAQ#:~:text=If%20your%20Riot%20ID%20is,not%20have%20to%20be%20unique." target="_blank">
+            <a id="link" href="https://support-leagueoflegends.riotgames.com/hc/en-us/articles/360041788533-Riot-ID-FAQ#:~:text=If%20your%20Riot%20ID%20is,not%20have%20to%20be%20unique." target="_blank" rel="noreferrer">
               <img id="infoIcon" src={infoIcon} alt="Info Icon" />
             </a>
             <span className="tooltip-text">
@@ -415,8 +415,8 @@ async function getMatchInfoList(API_KEY, matchIDs, puiid) {
 async function getRankedInfo(API_KEY, server, id) {
   const rankedApiURL = `https://${server}.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`;
   const data = await makeApiCall(rankedApiURL);
-  var rankedSoloInfo;
-  var rankedFlexInfo;
+  var rankedSoloInfo = null;
+  var rankedFlexInfo = null;
   for (let i = 0; i < data.length; i++) {
     const currentRankedInfo = {
       queueType: data[i].queueType, // Solo/duo or Flex queue (RANKED_SOLO_5x5, RANKED_FLEX_SR)
@@ -429,11 +429,14 @@ async function getRankedInfo(API_KEY, server, id) {
 
     if (currentRankedInfo.queueType === "RANKED_SOLO_5x5") {
       rankedSoloInfo = currentRankedInfo;
-    } else if (queueType === "RANKED_FLEX_SR") {
+    } else if (currentRankedInfo.queueType === "RANKED_FLEX_SR") {
       rankedFlexInfo = currentRankedInfo;
     }
   }
-  return [rankedFlexInfo, rankedSoloInfo];
+  return [
+    rankedFlexInfo || { rankedTier: 'N/A' },
+    rankedSoloInfo || { rankedTier: 'N/A' }
+  ];
 }
 
 export default App
