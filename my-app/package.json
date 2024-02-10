@@ -25,22 +25,22 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
-    "vite": "^5.0.0"
+    "vite": "^5.0.12"
   },
   "eslintConfig": {
-  "root": true,
-  "env": {
+    "root": true,
+    "env": {
       "node": true
-  },
-  "extends": [
+    },
+    "extends": [
       "plugin:vue/essential",
       "eslint:recommended"
-  ],
-  "parserOptions": {
+    ],
+    "parserOptions": {
       "parser": "babel-eslint"
-  },
-  "rules": { 
-      "no-unused-vars": "off" 
+    },
+    "rules": {
+      "no-unused-vars": "off"
+    }
   }
-}
 }

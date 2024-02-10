@@ -220,13 +220,14 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
       const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner ID, summoner level and profile picture
       const masteryInfo = await getMasteryInfo(API_KEY, server, puiid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
       const matchList = await getMatchList(API_KEY, puiid); // Array constisting of match IDs
-      const matchInfoList = await getMatchInfoList(API_KEY, matchList, puiid);
-      const champWinrate = await getChampionWinrate(masteryInfo, matchInfoList);
+      const matchInfoList = await getMatchInfoList(API_KEY, matchList, puiid); // Returns array that contains match information for all matches in a list
       const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
+      const summonerWinrate = getSummonerWinrates(rankedInfo); // Returns JSON object for all game mode winrates
+      const champWinrate = await getChampionWinrate(masteryInfo, matchInfoList); // Returns JSON object for all champion and their respective game mode winrates
       //const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Flex queue
       //const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Solo queue
 
-      navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, { state: { serverLabel, gameName: gameName, summonerInfo: summonerInfo, summonerRankedInfo: rankedInfo, summonerMatchInfo: matchInfoList } });
+      navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, { state: { serverLabel, gameName: gameName, summonerInfo: summonerInfo, summonerRankedInfo: rankedInfo, summonerMatchInfo: matchInfoList, summonerWinrateInfo: summonerWinrate } });
       //alert("Flex W/R " + winrateF + "%")
       //alert("Solo W/R " + winrateS + "%")
 
@@ -333,6 +334,16 @@ async function getMasteryInfo(API_KEY, server, puuid) {
   return championStatsMapping;
 }
 
+//TODO GET NORMAL WINRATES
+function getSummonerWinrates(rankedInfo) {
+  const winrates = {
+    normalWinrate: 1, //TODO FIX THIS TO GET NORMAL WINRATE
+    rankedFlexWinrate: Math.round((rankedInfo[0].rankedWins / (rankedInfo[0].rankedWins + rankedInfo[0].rankedLosses)) * 100 * 10) / 10,
+    rankedSoloWinrate: Math.round((rankedInfo[1].rankedWins / (rankedInfo[1].rankedWins + rankedInfo[1].rankedLosses)) * 100 * 10) / 10
+  };
+  return winrates;
+}
+
 /**
  * Method that iterates through matches
  * and calculates champion winrate values
@@ -343,11 +354,11 @@ async function getMasteryInfo(API_KEY, server, puuid) {
  */
 function getChampionWinrate(masteryInfo, matchInfoList) {
   for (const matchInfo of matchInfoList) {
-    const queueId = matchInfo[0][2];
-    var champInfo = masteryInfo.get(matchInfo[1].championId);
+    const queueId = matchInfo[0][2]; // What type of game was played
+    var champInfo = masteryInfo.get(matchInfo[1].championId); // What champion was played
 
-    champInfo.winrateMapping.get(queueId)[0] += 1
-    if (matchInfo[1].win == true) champInfo.winrateMapping.get(queueId)[1] += 1
+    champInfo.winrateMapping.get(queueId)[0] += 1 // Increment game count
+    if (matchInfo[1].win == true) champInfo.winrateMapping.get(queueId)[1] += 1 // If they won increment wins
   }
   for (const champInfo of masteryInfo.values()) {
     champInfo.winrateMapping.get(490)[2] = Math.ceil((champInfo.winrateMapping.get(490)[1] / champInfo.winrateMapping.get(490)[0]) * 100); // Normal W/R percentage rounded up to nearest second decimal
@@ -423,8 +434,9 @@ async function getRankedInfo(API_KEY, server, id) {
       rankedTier: data[i].tier, // Iron - Challenger
       rankedDivision: data[i].rank, // Roman numerical value IV - I
       rankedPoints: data[i].leaguePoints, // Points out of 100 in current rank
+      rankedGames: data[i].wins + data[i].losses, // Total number of games played this season
       rankedWins: data[i].wins, // Wins in current ranked season
-      rankedLosses: data[i].losses // Losses in current ranked season
+      rankedLosses: data[i].losses, // Losses in current ranked season
     };
 
     if (currentRankedInfo.queueType === "RANKED_SOLO_5x5") {

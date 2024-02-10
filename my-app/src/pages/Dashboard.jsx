@@ -25,7 +25,7 @@ function Dashboard() {
   const [patchVersion, setPatchVersion] = useState("Loading version..."); // Initialize patch version
   const { server, summonerName } = useParams(); // Summoner name and server
   const { state } = useLocation();
-  const { summonerInfo, gameName, summonerRankedInfo, summonerMatchInfo } = state; // Summoner info
+  const { summonerInfo, gameName, summonerRankedInfo, summonerMatchInfo, summonerWinrateInfo } = state; // Summoner info
   const [leagueImages, setleagueImages] = useState(""); // Images
 
   const navigate = useNavigate();
@@ -64,9 +64,21 @@ function Dashboard() {
             </div>
             <div className="rankedInfo">
               <div id="rankedSolo">{summonerRankedInfo[1] === "Unranked" ? 'Unranked' : `${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}
+                <div>{`${summonerRankedInfo[1].rankedPoints} LP`}</div>
+                <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`} </div>
+                <div>{`${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L`} </div>
               </div>
-              <div id="rankedFlex">{summonerRankedInfo[0] === "Unranked" ? 'Unranked' : `${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision}`}
+              <div id="rankedFlex">
+                {summonerRankedInfo[0] === "Unranked" ? ('Unranked') : (
+                  <>
+                    <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision} / ${summonerRankedInfo[0].rankedPoints} LP`}</div>
+                    <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
+                    <div>{`${summonerWinrateInfo.rankedFlexWinrate}`}</div>
+                    <div>{`${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L`} </div>
+                  </>
+                )}
               </div>
+
             </div>
           </div>
           <div id="winrateBlock"></div>
