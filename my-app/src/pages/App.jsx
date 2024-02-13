@@ -318,16 +318,24 @@ async function getSummonerInfo(API_KEY, server, puuid) {
 async function getMasteryInfo(API_KEY, server, puuid) {
   const masteryApiURL = `https://${server}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}?api_key=${API_KEY}`;
   const data = await makeApiCall(masteryApiURL);
-  const NORMAL_GAME_MODE = 490; // QueueId for normal game mode
-  const RANKED_SOLO_GAME_MODE = 420; // QueueId for ranked solo game mode
-  const RANKED_FLEX_GAME_MODE = 440; // QueueId for ranked flex game mode
+  const GAME_MODES = {
+    NORMAL: 490,
+    RANKED_SOLO: 420,
+    RANKED_FLEX: 440,
+    URF: 1900,
+  }; // Object that stores queue Ids for different game modes
   var championStatsMapping = new Map(); // Mapping of championId to JSON stats
 
   for (const champion of data) {
     var champStats = {
       championPoints: champion.championPoints,
       championLevel: champion.championLevel,
-      winrateMapping: new Map([[NORMAL_GAME_MODE, [0, 0, 0]], [RANKED_SOLO_GAME_MODE, [0, 0, 0]], [RANKED_FLEX_GAME_MODE, [0, 0, 0]]]) // [games played, wins, winrate]
+      winrateMapping: new Map([
+        [GAME_MODES.NORMAL, [0, 0, 0]],
+        [GAME_MODES.RANKED_SOLO, [0, 0, 0]],
+        [GAME_MODES.RANKED_FLEX, [0, 0, 0]],
+        [GAME_MODES.URF, [0, 0, 0]],
+      ]), // Mapping between game modes and their winrates data -> [games played, wins, winrate]
     };
     championStatsMapping.set(champion.championId, champStats);
   }
@@ -357,13 +365,17 @@ function getChampionWinrate(masteryInfo, matchInfoList) {
     const queueId = matchInfo[0][2]; // What type of game was played
     var champInfo = masteryInfo.get(matchInfo[1].championId); // What champion was played
 
-    champInfo.winrateMapping.get(queueId)[0] += 1 // Increment game count
+    if (champInfo.winrateMapping.get(queueId)) champInfo.winrateMapping.get(queueId)[0] += 1 // Increment game count on existing queue
     if (matchInfo[1].win == true) champInfo.winrateMapping.get(queueId)[1] += 1 // If they won increment wins
   }
   for (const champInfo of masteryInfo.values()) {
-    champInfo.winrateMapping.get(490)[2] = Math.ceil((champInfo.winrateMapping.get(490)[1] / champInfo.winrateMapping.get(490)[0]) * 100); // Normal W/R percentage rounded up to nearest second decimal
-    champInfo.winrateMapping.get(420)[2] = Math.ceil((champInfo.winrateMapping.get(420)[1] / champInfo.winrateMapping.get(420)[0]) * 100); // Ranked Solo W/R percentage rounded up to nearest second decimal
-    champInfo.winrateMapping.get(440)[2] = Math.ceil((champInfo.winrateMapping.get(440)[1] / champInfo.winrateMapping.get(440)[0]) * 100); // Ranked Flex W/R percentage rounded up to nearest second decimal 
+    for (const [queueId, winrateData] of champInfo.winrateMapping.entries()) {
+      const gamesPlayed = winrateData[0];
+      const wins = winrateData[1];
+      var winrate = winrateData[2];
+
+      if (winrateData[0] > 0) winrate = Math.ceil((wins / gamesPlayed) * 100); // W/R percentage rounded up to nearest second decimal
+    }
   }
 }
 

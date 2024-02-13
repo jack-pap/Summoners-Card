@@ -43,7 +43,7 @@ function Dashboard() {
       .catch((error) => {
         console.error("Error loading version:", error);
       });
-  }, []);
+  }, [summonerInfo, summonerMatchInfo]);
 
   if (!options.find((option) => option.label === server)) {
     return <Error errorMessage={`Invalid server "${server}"`} />;
