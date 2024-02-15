@@ -205,17 +205,12 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
   // Checks for valid input and initiates API calls for data
   if (summonerName.match(/\s*#[^\s]*\S+$/)) {
 
-    document.getElementById("homeBody").style.display = "none";
-    setIsLoading(true);
-
-    // document.getElementById("rightLine").style.animation = "moveLeft 1.5s forwards";
-    // document.getElementById("leftLine").style.animation = "moveRight 1.5s forwards";
-    // document.getElementById("leftLine").addEventListener('animationend', () => {
-    //   console.log('Animation is complete');
-    //   setIsLoading(true);
-    // });
 
     try {
+      document.getElementById("homeBody").style.animation = "fade-out 0.3s forwards";
+      document.getElementById("homeBody").style.pointerEvents = "none";
+      setIsLoading(true);
+
       const puiid = await getPUUID(API_KEY, tagLine, gameName); // PUIID identifier for summoner
       const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner ID, summoner level and profile picture
       const masteryInfo = await getMasteryInfo(API_KEY, server, puiid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
@@ -233,8 +228,8 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
 
     } catch (error) {
       console.log(error);
+      document.getElementById("homeBody").style.animation = "fade-in 0.5s forwards";
       setIsLoading(false);
-      document.getElementById("homeBody").style.display = "contents";
       return
     }
   } else alert("Please ensure that the summoner name follows the specified format and has no whitespace or special symbols")

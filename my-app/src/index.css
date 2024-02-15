@@ -28,6 +28,14 @@
   }
 }
 
+@keyframes fade-out {
+  from {
+    opacity: 1000;
+  }
+  to {
+    opacity: 0;
+  }
+}
 
 .line {
   position: absolute;
@@ -96,9 +104,14 @@
 body {
   margin: 0;
   display: flex;
+  position: relative;
   place-items: center;
   min-width: 320px;
   min-height: 100svh;
+}
+
+#homeBody {
+  opacity: 1;
 }
 
 

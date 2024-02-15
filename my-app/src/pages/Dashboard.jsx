@@ -31,6 +31,7 @@ function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    makeMatchHistory(summonerMatchInfo);
     document.getElementById("homeBody").style.animation = "fade-in 1s forwards";
     getImages(summonerInfo, summonerMatchInfo, setleagueImages);
     loadVersion()
@@ -81,7 +82,13 @@ function Dashboard() {
 
             </div>
           </div>
-          <div id="winrateBlock"></div>
+          <div id="winrateBlock">
+            <div>WINRATE</div>
+            <div>BUTTONS</div>
+            <div>{`${summonerRankedInfo[1].rankedGames} Games`} </div>
+            <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`} </div>
+
+          </div>
           <div id="championBlock"></div>
           <div id="matchHistoryBlock">
             MATCH HISTORY
@@ -89,6 +96,7 @@ function Dashboard() {
           </div>
           <div id="friendBlock"></div>
         </div>
+
       </>
     );
   }
@@ -145,6 +153,23 @@ function makeApiCall(apiURL) {
       .catch((error) => {
         reject(error);
       });
+  });
+}
+
+function makeMatchHistory(summonerMatchInfo) {
+  const container = document.getElementById('matchList');
+
+  summonerMatchInfo.forEach(entry => {
+    const component = document.createElement('div');
+    component.classList.add('component');
+
+    // Set content based on entry values
+    component.innerHTML = `
+      <p>Date: ${entry.date}</p>
+    `;
+
+    // Append the component to the container
+    container.appendChild(component);
   });
 }
 
