@@ -229,6 +229,7 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
     } catch (error) {
       console.log(error);
       document.getElementById("homeBody").style.animation = "fade-in 0.5s forwards";
+      document.getElementById("homeBody").style.pointerEvents = "all";
       setIsLoading(false);
       return
     }

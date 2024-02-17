@@ -1,7 +1,6 @@
 #root {
   max-width: 100%;
   margin: 0 auto;
-  padding: 1rem;
   text-align: center;
   
 }
@@ -65,10 +64,12 @@
 
 header {
   color: #c89b3c;
+  background: radial-gradient(circle farthest-side, #020f20, #01070e);
   border-bottom: 2px solid #9b792f;
   font-family: Beaufort;
   font-size: 1em;
-  position: absolute;
+  position: fixed;
+  margin-bottom: auto;
   transform: translateX(-50%);
   left: 50%;
   top: 0;
@@ -78,6 +79,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 5;
 }
 
 .headerChildren {
@@ -106,6 +108,20 @@ footer {
   left: 50%;
   transform: translateX(-50%);
   bottom: 0;
+  width: 100%;
+  min-height: 50px;
+  text-align: center;
+  border-top: 1px solid #a09b8c;
+  max-width: 800px;
+}
+
+body .dashboard footer {
+  color: #79756a;
+  font-family: Beaufort;
+  font-size: 12px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
   min-height: 50px;
   text-align: center;
@@ -268,12 +284,15 @@ select:focus {
 }
 
 #summonerBlock{
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   background-color: #1b1f24;
+  border: solid 1px #383838;
   max-width: 500px; 
+  min-width: 500px;
   margin: 0 auto; 
   border-radius: 3%;
   gap: 25px;
@@ -329,14 +348,27 @@ select:focus {
 #winrateBlock {
   position: absolute;
   left: 5%;
-  top: 30%;
+  top: 30svh;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   background-color: #1b1f24;
+  border: solid 1px #383838;
   min-width: 250px; 
   max-width: 250px; 
   border-radius: 3%;
   gap: 25px;
+}
+
+#matchHistoryBlock {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  min-height: 55vh;
+}
+
+.matchHistoryEntry {
+  border: solid 1px #383838;
+  background-color: #1b1f24;
 }

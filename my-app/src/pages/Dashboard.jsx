@@ -2,6 +2,8 @@ import "../App.css";
 import Error from "./Error.jsx";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 const options = [
   { label: "EUW" },
@@ -84,6 +86,11 @@ function Dashboard() {
           </div>
           <div id="winrateBlock">
             <div>WINRATE</div>
+            <ButtonGroup variant="outlined" aria-label="Basic button group">
+              <Button>One</Button>
+              <Button>Two</Button>
+              <Button>Three</Button>
+            </ButtonGroup>
             <div>BUTTONS</div>
             <div>{`${summonerRankedInfo[1].rankedGames} Games`} </div>
             <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`} </div>
@@ -92,7 +99,7 @@ function Dashboard() {
           <div id="championBlock"></div>
           <div id="matchHistoryBlock">
             MATCH HISTORY
-            <div id="matchList">{`${summonerMatchInfo}`}</div>
+            <div id="matchList" />
           </div>
           <div id="friendBlock"></div>
         </div>
@@ -159,18 +166,16 @@ function makeApiCall(apiURL) {
 function makeMatchHistory(summonerMatchInfo) {
   const container = document.getElementById('matchList');
 
-  summonerMatchInfo.forEach(entry => {
+  for (let counter = 0; counter < 20; counter++) {
     const component = document.createElement('div');
     component.classList.add('component');
 
-    // Set content based on entry values
     component.innerHTML = `
-      <p>Date: ${entry.date}</p>
+      <div class="matchHistoryEntry">Win: ${summonerMatchInfo[counter][1].win}</div>
     `;
 
-    // Append the component to the container
     container.appendChild(component);
-  });
+  }
 }
 
 function getImages(summonerInfo, summonerMatchInfo, setleagueImages) {

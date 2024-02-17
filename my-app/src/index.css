@@ -4,7 +4,6 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: #F0E6D2;
   background: radial-gradient(circle farthest-side, #020f1f, #01070e);
 
   font-synthesis: none;
@@ -112,6 +111,10 @@ body {
 
 #homeBody {
   opacity: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
 }
 
 
@@ -158,5 +161,4 @@ button:active {
 
 button:focus {
   outline: none;
-  border-color: #C89B3C;
 }
