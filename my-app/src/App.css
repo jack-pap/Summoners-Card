@@ -355,9 +355,8 @@ select:focus {
   text-align: center;
   background-color: #1b1f24;
   border: solid 1px #383838;
-  min-width: 250px; 
-  max-width: 250px; 
   border-radius: 3%;
+  min-width: 250px;
   gap: 25px;
 }
 

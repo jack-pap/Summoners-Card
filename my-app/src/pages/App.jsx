@@ -143,7 +143,7 @@ function App() {
             defaultValue={options[0]}
             isSearchable={false}
           />
-          <button id="search" onClick={() => getInput(selectedServer.value, selectedServer.label, navigate, setIsLoading)}> Search </button>
+          <button className= "customButton" id="search" onClick={() => getInput(selectedServer.value, selectedServer.label, navigate, setIsLoading)}> Search </button>
         </div>
         <div id='patcher'>Patch Version: {patchVersion}</div>
       </div>

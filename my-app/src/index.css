@@ -136,7 +136,7 @@ a:focus {
   outline: none;
 }
 
-button {
+.customButton {
   height: 40px;
   border-radius: 9px;
   border: 1px solid transparent;
@@ -150,15 +150,15 @@ button {
   transition: border-color 0.25s, transofrm 300ms ease-in-out;
 }
 
-button:hover {
+.customButton:hover {
   border-color: #C89B3C;
 }
 
-button:active {
+.customButton:active {
   outline: none;
   transform: scale(1.04);
 }
 
-button:focus {
+.customButton:focus {
   outline: none;
 }

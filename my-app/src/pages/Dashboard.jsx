@@ -85,13 +85,26 @@ function Dashboard() {
             </div>
           </div>
           <div id="winrateBlock">
-            <div>WINRATE</div>
-            <ButtonGroup variant="outlined" aria-label="Basic button group">
-              <Button>One</Button>
-              <Button>Two</Button>
-              <Button>Three</Button>
+            <ButtonGroup
+              variant="outlined"
+              sx={{
+                ".MuiButtonGroup-grouped": {
+                  "&:hover": {
+                    color: "#C89B3C",
+                    backgroundColor: "#262c33",
+                    borderColor: "#C89B3C"
+                  },
+                  color: "#A09B8C",
+                  backgroundColor: "262c33",
+                  borderColor: "#C89B3C"
+                },
+              }}
+              size="Large"
+              aria-label="Basic button group">
+              <Button>Normal</Button>
+              <Button>Solo</Button>
+              <Button>Flex</Button>
             </ButtonGroup>
-            <div>BUTTONS</div>
             <div>{`${summonerRankedInfo[1].rankedGames} Games`} </div>
             <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`} </div>
 
