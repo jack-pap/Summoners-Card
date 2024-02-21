@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import Chip from '@mui/material/Chip';
 
 const options = [
   { label: "EUW" },
@@ -64,6 +65,17 @@ function Dashboard() {
                 <div id="gameName"> {gameName} </div>
                 <div id="server"> #{server} </div>
               </div>
+              <div id="chips">
+                <Chip label="primary" variant="outlined" sx={{ borderRadius: '12px', borderColor: '#c89b3c', color: '#c89b3c' }} />
+                <Chip label="primary" variant="outlined" sx={{ borderRadius: '12px', borderColor: '#c89b3c', color: '#c89b3c' }} />
+                <Chip label="primary" variant="outlined" sx={{ borderRadius: '12px', borderColor: '#c89b3c', color: '#c89b3c' }} />
+                <Chip label="primary" variant="outlined" sx={{ borderRadius: '12px', borderColor: '#c89b3c', color: '#c89b3c' }} />
+                <Chip label="primary" variant="outlined" sx={{ borderRadius: '12px', borderColor: '#c89b3c', color: '#c89b3c' }} />
+                <Chip label="primary" variant="outlined" sx={{ borderRadius: '12px', borderColor: '#c89b3c', color: '#c89b3c' }} />
+                <Chip label="primary" color="primary" variant="outlined" />
+                <Chip label="primary" color="primary" variant="outlined" />
+                <Chip label="primary" color="primary" variant="outlined" />
+              </div>
             </div>
             <div className="rankedInfo">
               <div id="rankedSolo">{summonerRankedInfo[1] === "Unranked" ? 'Unranked' : `${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}
@@ -109,7 +121,28 @@ function Dashboard() {
             <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`} </div>
 
           </div>
-          <div id="championBlock"></div>
+          <div id="championBlock">
+            <ButtonGroup
+              variant="outlined"
+              sx={{
+                ".MuiButtonGroup-grouped": {
+                  "&:hover": {
+                    color: "#C89B3C",
+                    backgroundColor: "#262c33",
+                    borderColor: "#C89B3C"
+                  },
+                  color: "#A09B8C",
+                  backgroundColor: "262c33",
+                  borderColor: "#C89B3C"
+                },
+              }}
+              size="Large"
+              aria-label="Basic button group">
+              <Button>Normal</Button>
+              <Button>Solo</Button>
+              <Button>Flex</Button>
+            </ButtonGroup>
+          </div>
           <div id="matchHistoryBlock">
             MATCH HISTORY
             <div id="matchList" />
