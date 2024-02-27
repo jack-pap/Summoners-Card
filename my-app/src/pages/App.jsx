@@ -10,6 +10,12 @@ import {
   useNavigate
 } from "react-router-dom";
 import GridLoader from "react-spinners/GridLoader";
+import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
+import Button from '@mui/material/Button';
+import CloseIcon from '@mui/icons-material/Close';
 
 const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
 
@@ -97,6 +103,7 @@ function App() {
   const [selectedServer, setSelectedServer] = useState(options[0]); // Initialize with the default value
   const [patchVersion, setPatchVersion] = useState("    "); // Initialize patch version
   const [isLoading, setIsLoading] = useState(false); // Spinner state for when data is loading 
+  const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -143,9 +150,33 @@ function App() {
             defaultValue={options[0]}
             isSearchable={false}
           />
-          <button className= "customButton" id="search" onClick={() => getInput(selectedServer.value, selectedServer.label, navigate, setIsLoading)}> Search </button>
+          <button className="customButton" id="search" onClick={() => getInput(selectedServer.value, selectedServer.label, navigate, setIsLoading, setOpen)}> Search </button>
         </div>
         <div id='patcher'>Patch Version: {patchVersion}</div>
+        <Box sx={{ width: '100%' }}>
+          <Collapse in={open}>
+            <Alert
+              id='errorPopup'
+              variant='outlined'
+              severity="error"
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              sx={{ mb: 2, color: "#F4C7C7", backgroundColor: "#160B0B", borderColor: "#160B0B" }}
+            >
+              Please ensure that the summoner name has no whitespace or special symbols
+            </Alert>
+          </Collapse>
+        </Box>
       </div>
       <GridLoader
         color={'#9b792f'}
@@ -157,6 +188,7 @@ function App() {
         aria-label="Loading Spinner"
         data-testid="loader"
       />
+
     </>
   )
 }
@@ -195,7 +227,7 @@ async function loadVersion() {
  * @param {string} serverValue
  */
 
-async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
+async function getInput(serverValue, serverLabel, navigate, setIsLoading, setOpen) {
   const summonerName = document.getElementById("summonerName").value
   const gameName = summonerName.split("#")[0];
   const tagLine = summonerName.split("#")[1];
@@ -228,13 +260,15 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading) {
 
     } catch (error) {
       console.log(error);
-      document.getElementById("homeBody").style.animation = "fade-in 0.5s forwards";
+      document.getElementById("homeBody").style.animation = "fade-in 0.5s";
       document.getElementById("homeBody").style.pointerEvents = "all";
       setIsLoading(false);
       return
     }
-  } else alert("Please ensure that the summoner name follows the specified format and has no whitespace or special symbols")
-
+  } else {
+    setOpen(true);
+    return
+  }
 }
 
 /**

@@ -129,6 +129,18 @@ body .dashboard footer {
   max-width: 800px;
 }
 
+#errorPopup {
+  top: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 580px;
+  margin-top: 10px;
+  z-index: 1000;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .image-container {
   color: #ada89b;
   font-size: 1.09em;
