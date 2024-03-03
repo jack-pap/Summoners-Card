@@ -32,7 +32,7 @@ function About() {
           <AccordionSummary
             sx={{
               backgroundColor: "#1a1a1a",
-              color: "#918c7e"
+              color: "#918c7e",
             }}
             expandIcon={<ArrowDropDownIcon sx={{ color: "#918c7e" }} />}
             aria-controls="panel2-content"

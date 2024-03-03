@@ -130,7 +130,6 @@ body .dashboard footer {
 }
 
 #errorPopup {
-  top: 10%;
   display: flex;
   justify-content: center;
   align-items: center;

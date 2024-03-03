@@ -113,12 +113,18 @@ function Dashboard() {
               }}
               size="Large"
               aria-label="Basic button group">
-              <Button>Normal</Button>
-              <Button>Solo</Button>
-              <Button>Flex</Button>
+              <Button onClick={() => {
+                loadWinrate(summonerRankedInfo[1], summonerWinrateInfo.rankedSoloWinrate);
+              }}>Normal</Button>
+              <Button onClick={() => {
+                loadWinrate(summonerRankedInfo[1], summonerWinrateInfo.rankedSoloWinrate);
+              }}>Solo</Button>
+              <Button onClick={() => {
+                loadWinrate(summonerRankedInfo[0], summonerWinrateInfo.rankedFlexWinrate);
+              }}>Flex</Button>
             </ButtonGroup>
-            <div>{`${summonerRankedInfo[1].rankedGames} Games`} </div>
-            <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`} </div>
+            <div id="games">{`${summonerRankedInfo[1].rankedGames} Games`} </div>
+            <div id="winrate">{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`} </div>
 
           </div>
           <div id="championBlock">
@@ -229,5 +235,25 @@ function getImages(summonerInfo, summonerMatchInfo, setleagueImages) {
   const imgURL2 = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/ranked-emblem/emblem-master.png`;
 
   setleagueImages([imgURL, imgURL2]);
+}
+
+function loadWinrate(gameQueue, winrateQueue) {
+  const container = document.getElementById('winrateBlock');
+  const games = document.createElement('div');
+  const winrate = document.createElement('div');
+  games.setAttribute("id", "games");
+  winrate.setAttribute("id", "winrate");
+
+  games.innerHTML = `
+    ${gameQueue.rankedGames} Games
+  `;
+  winrate.innerHTML = `
+    ${winrateQueue}% Winrate
+  `;
+
+  container.removeChild(document.getElementById('games'))
+  container.removeChild(document.getElementById('winrate'))
+  container.appendChild(games);
+  container.appendChild(winrate);
 }
 export default Dashboard;
