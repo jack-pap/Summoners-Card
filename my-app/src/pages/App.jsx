@@ -392,7 +392,7 @@ function getSummonerWinrates(rankedInfo) {
  */
 function getChampionWinrate(masteryInfo, matchInfoList) {
   for (const matchInfo of matchInfoList) {
-    const queueId = matchInfo[0][2]; // What type of game was played
+    const queueId = matchInfo[0].gameQueueID; // What type of game was played
     var champInfo = masteryInfo.get(matchInfo[1].championId); // What champion was played
 
     if (champInfo.winrateMapping.get(queueId)) champInfo.winrateMapping.get(queueId)[0] += 1 // Increment game count on existing queue
@@ -428,7 +428,6 @@ async function getMatchList(API_KEY, puuid) {
   return matchList;
 }
 
-//TODO Maybe adjust data structure for better readability. Beware dependencies
 /**
  * API call to retrieve all match information from a matchID
  * 
@@ -442,9 +441,12 @@ async function getMatchInfoList(API_KEY, matchIDs, puiid) {
   for (const matchID of matchIDs) {
     const matchInfoApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
     const data = await makeApiCall(matchInfoApiURL)
-    const contents = [new Date(data.info.gameCreation), data.info.gameDuration / 60, data.info.queueId];
-    const participants = data.info.participants
-    const participantIDs = [data.metadata.participants]
+    const contents = {
+      gameDate: new Date(data.info.gameCreation),
+      gameDuration: data.info.gameDuration / 60,
+      gameQueueID: data.info.queueId
+    };
+    const participants = data.info.participants;
     for (const participantInfo of participants) {
       if (participantInfo.puuid == puiid) {
         matchInfoList.push([contents, participantInfo])

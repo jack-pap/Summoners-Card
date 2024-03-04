@@ -220,10 +220,14 @@ function makeMatchHistory(summonerMatchInfo) {
 
   for (let counter = 0; counter < 20; counter++) {
     const component = document.createElement('div');
+    component.setAttribute("id", "matchEntry");
     component.classList.add('component');
 
     component.innerHTML = `
-      <div class="matchHistoryEntry">Win: ${summonerMatchInfo[counter][1].win}</div>
+      <div> Win: ${summonerMatchInfo[counter][1].win} </div>
+      <div> ${summonerMatchInfo[counter][0].gameDate} </div>
+      <div> Duration: ${summonerMatchInfo[counter][0].gameDuration} </div>
+      <div> Queue ID: ${summonerMatchInfo[counter][0].gameQueueID} </div>
     `;
 
     container.appendChild(component);

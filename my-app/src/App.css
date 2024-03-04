@@ -305,6 +305,7 @@ select:focus {
   max-width: 500px; 
   min-width: 500px;
   margin: 0 auto; 
+  margin-top: 20px;
   border-radius: 3%;
   gap: 25px;
 }
@@ -376,7 +377,6 @@ select:focus {
   background-color: #1b1f24;
   border: solid 1px #383838;
   border-radius: 3%;
-  min-width: 250px;
   gap: 25px;
   
 }
@@ -386,11 +386,16 @@ select:focus {
   flex-direction: column;
   margin-top: 20px;
   min-height: 55vh;
+  padding: 20px;
 }
 
-.matchHistoryEntry {
+#matchEntry {
+  display: flex;
+  gap: 20px;
   border: solid 1px #383838;
-  background-color: #1b1f24;
+  background: linear-gradient(96deg, rgb(98 235 140 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%);
+  align-items: center;
+  min-height: 100px;
 }
 
 #championBlock{
@@ -404,7 +409,5 @@ select:focus {
   background-color: #1b1f24;
   border: solid 1px #383838;
   border-radius: 3%;
-  min-width: 250px;
-  min-height: 250px;
   gap: 25px;
 }
