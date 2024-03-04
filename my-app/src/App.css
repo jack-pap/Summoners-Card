@@ -147,7 +147,7 @@ body .dashboard footer {
   align-items: center;
   justify-content: center;
   height: 13px;
-  gap: 7px;
+  gap: 5px;
   margin-top: 9px;
 }
 
@@ -158,6 +158,7 @@ body .dashboard footer {
   background-size: 1px;
   border-radius: 100px;
   border: 1px solid transparent;
+  margin-bottom: 2px;
   transition: all 0.3s ease-in-out;
 }
 
@@ -168,10 +169,8 @@ body .dashboard footer {
 }
 
 .tooltip {
-  height: 20px;
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black;
 }
 
 .tooltip-text {
@@ -196,20 +195,22 @@ body .dashboard footer {
 
 .tooltip:hover .tooltip-text {
   opacity: 1;
-  left: 150%;
+  left: 140%;
 }
 
 #infoIcon {
-  height: 20px;
-  width: 20px;
+  height: 21px;
+  width: 21px;
   background-color: #ada89b;
   background-size: 1px;
-  border-radius: 10px;
+  border: #ada89b 2px solid;
+  border-radius: 15px;
   transition: all 0.3s ease-in-out;
 }
 
 #infoIcon:hover {
   background-color: #d8a841;
+  border: #d8a841 2px solid;
   cursor: pointer;
 }
 
@@ -347,6 +348,10 @@ select:focus {
   gap: 5px;
 }
 
+#serverList{
+  z-index: 100;
+}
+
 #server { 
   color: #a5a0a0;
 }
@@ -389,11 +394,18 @@ select:focus {
   padding: 20px;
 }
 
+#matchList {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
 #matchEntry {
   display: flex;
   gap: 20px;
   border: solid 1px #383838;
-  background: linear-gradient(96deg, rgb(98 235 140 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%);
+  border-radius: 5px;
+  background: linear-gradient(96deg, rgb(98 235 140 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%); /*linear-gradient(40deg, rgb(78 255 156 / 55%) 30%, rgb(72 131 75 / 50%) 100%)*/
   align-items: center;
   min-height: 100px;
 }
