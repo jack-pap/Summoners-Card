@@ -39,7 +39,6 @@ function Dashboard() {
     getImages(summonerInfo, summonerMatchInfo, setleagueImages);
     loadVersion()
       .then((version) => {
-        // Update the patch version state
         setPatchVersion(
           version[0].split(".")[0] + "." + version[0].split(".")[1]
         );
@@ -225,11 +224,14 @@ function makeMatchHistory(summonerMatchInfo) {
 
     component.innerHTML = `
       <div> Win: ${summonerMatchInfo[counter][1].win} </div>
-      <div> ${summonerMatchInfo[counter][0].gameDate} </div>
-      <div> Duration: ${summonerMatchInfo[counter][0].gameDuration} </div>
+      <div> ${getMatchTimeAgo(summonerMatchInfo[counter][0].gameDate)} </div>
+      <div> Duration: ${Math.trunc(summonerMatchInfo[counter][0].gameDuration / 60)} mins and ${summonerMatchInfo[counter][0].gameDuration % 60} secs </div>
       <div> Queue ID: ${summonerMatchInfo[counter][0].gameQueueID} </div>
     `;
 
+    if (summonerMatchInfo[counter][1].win == false) {
+      component.style.background = "linear-gradient(96deg, rgb(231 67 67 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%)"
+    }
     container.appendChild(component);
   }
 }
@@ -259,5 +261,20 @@ function loadWinrate(gameQueue, winrateQueue) {
   container.removeChild(document.getElementById('winrate'))
   container.appendChild(games);
   container.appendChild(winrate);
+}
+
+function getMatchTimeAgo(milliseconds) {
+  const seconds = Math.floor(milliseconds / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) {
+    return days === 1 ? 'A day ago' : `${days} days ago`;
+  } else if (hours > 0) {
+    return hours === 1 ? 'An hour ago' : `${hours} hours ago`;
+  } else if (minutes > 0) {
+    return `${minutes} minutes ago`;
+  }
 }
 export default Dashboard;
