@@ -223,10 +223,15 @@ function makeMatchHistory(summonerMatchInfo) {
     component.classList.add('component');
 
     component.innerHTML = `
-      <div> Win: ${summonerMatchInfo[counter][1].win} </div>
+      <div id='win'>${summonerMatchInfo[counter][1].win ? 'Victory' : 'Defeat'}</div>
       <div> ${getMatchTimeAgo(summonerMatchInfo[counter][0].gameDate)} </div>
       <div> Duration: ${Math.trunc(summonerMatchInfo[counter][0].gameDuration / 60)} mins and ${summonerMatchInfo[counter][0].gameDuration % 60} secs </div>
       <div> Queue ID: ${summonerMatchInfo[counter][0].gameQueueID} </div>
+      <div> ${summonerMatchInfo[counter][1].championId} </div>
+      <div> ${summonerMatchInfo[counter][1].champLevel} </div>
+      <div> ${summonerMatchInfo[counter][1].kills} ${summonerMatchInfo[counter][1].deaths} ${summonerMatchInfo[counter][1].assists} </div>
+      <div> ${summonerMatchInfo[counter][1].summoner1Id} ${summonerMatchInfo[counter][1].summoner2Id}</div>
+      <div> ${summonerMatchInfo[counter][1].visionScore} </div>
     `;
 
     if (summonerMatchInfo[counter][1].win == false) {

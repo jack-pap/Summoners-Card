@@ -242,11 +242,11 @@ async function getInput(serverValue, serverLabel, navigate, setIsLoading, setOpe
       document.getElementById("homeBody").style.pointerEvents = "none";
       setIsLoading(true);
 
-      const puiid = await getPUUID(API_KEY, tagLine, gameName); // PUIID identifier for summoner
-      const summonerInfo = await getSummonerInfo(API_KEY, server, puiid); // Array that includes summoner ID, summoner level and profile picture
-      const masteryInfo = await getMasteryInfo(API_KEY, server, puiid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
-      const matchList = await getMatchList(API_KEY, puiid); // Array constisting of match IDs
-      const matchInfoList = await getMatchInfoList(API_KEY, matchList, puiid); // Returns array that contains match information for all matches in a list
+      const puuid = await getPUUID(API_KEY, tagLine, gameName); // puuid identifier for summoner
+      const summonerInfo = await getSummonerInfo(API_KEY, server, puuid); // Array that includes summoner ID, summoner level and profile picture
+      const masteryInfo = await getMasteryInfo(API_KEY, server, puuid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
+      const matchList = await getMatchList(API_KEY, puuid); // Array constisting of match IDs
+      const matchInfoList = await getMatchInfoList(API_KEY, matchList, puuid); // Returns array that contains match information for all matches in a list
       const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
       const summonerWinrate = getSummonerWinrates(rankedInfo); // Returns JSON object for all game mode winrates
       const champWinrate = await getChampionWinrate(masteryInfo, matchInfoList); // Returns JSON object for all champion and their respective game mode winrates
@@ -307,8 +307,8 @@ function makeApiCall(apiURL) {
  * @returns {string} 
  */
 async function getPUUID(API_KEY, tagLine, gameName) {
-  const puiidApiURL = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}?api_key=${API_KEY}`;
-  const data = await makeApiCall(puiidApiURL)
+  const puuidApiURL = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}?api_key=${API_KEY}`;
+  const data = await makeApiCall(puuidApiURL)
   return data.puuid;
 }
 
@@ -433,9 +433,9 @@ async function getMatchList(API_KEY, puuid) {
  * @param {string} API_KEY 
  * @param {[string]} matchIDs
  * @param {string} puuid
- * @returns {[[string],[string]]} 
+ * @returns {[[string],[string], [string]]} 
  */
-async function getMatchInfoList(API_KEY, matchIDs, puiid) {
+async function getMatchInfoList(API_KEY, matchIDs, puuid) {
   var matchInfoList = []
   for (const matchID of matchIDs) {
     const matchInfoApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
@@ -446,9 +446,9 @@ async function getMatchInfoList(API_KEY, matchIDs, puiid) {
       gameQueueID: data.info.queueId
     };
     const participants = data.info.participants;
-    for (const participantInfo of participants) {
-      if (participantInfo.puuid == puiid) {
-        matchInfoList.push([contents, participantInfo])
+    for (const playerInfo of participants) {
+      if (playerInfo.puuid == puuid) {
+        matchInfoList.push([contents, playerInfo, participants])
         break
       }
     }
