@@ -441,8 +441,8 @@ async function getMatchInfoList(API_KEY, matchIDs, puiid) {
     const matchInfoApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
     const data = await makeApiCall(matchInfoApiURL)
     const contents = {
-      gameDate: Date.now() - new Date(data.info.gameCreation),
-      gameDuration: data.info.gameDuration,
+      gameDate: new Date(data.info.gameCreation),
+      gameDuration: data.info.gameDuration / 60,
       gameQueueID: data.info.queueId
     };
     const participants = data.info.participants;
