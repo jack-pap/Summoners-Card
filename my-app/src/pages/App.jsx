@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import '../App.css'
-import infoIcon from '../../assets/infoIcon.png';
 import jsonKeyData from '../../../config.json'
 import Select from 'react-select'
 import { useState, useEffect } from 'react'
@@ -129,12 +128,11 @@ function App() {
         <h1>SUMMONERS <br /> CARD</h1>
         <div className='fieldBox'>
           <input type="text" className="summonerField" id="summonerName" placeholder={`Enter summoner name: Gamename + #${selectedServer.label}`} autoFocus={true} onKeyDown={(event) => {
-            if (event.key == "Enter") getInput(selectedServer.value, selectedServer.label, navigate, setIsLoading);
+            if (event.key == "Enter") getInput(selectedServer.value, selectedServer.label, navigate, setIsLoading, setOpen);
           }} />
           <div className="tooltip">
             <a id="link" href="https://support-leagueoflegends.riotgames.com/hc/en-us/articles/360041788533-Riot-ID-FAQ#:~:text=If%20your%20Riot%20ID%20is,not%20have%20to%20be%20unique." target="_blank" rel="noreferrer">
-              <img id="infoIcon" src={infoIcon} alt="Info Icon" />
-            </a>
+              <svg id="infoIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2.033 16.01c.564-1.789 1.632-3.932 1.821-4.474.273-.787-.211-1.136-1.74.209l-.34-.64c1.744-1.897 5.335-2.326 4.113.613-.763 1.835-1.309 3.074-1.621 4.03-.455 1.393.694.828 1.819-.211.153.25.203.331.356.619-2.498 2.378-5.271 2.588-4.408-.146zm4.742-8.169c-.532.453-1.32.443-1.761-.022-.441-.465-.367-1.208.164-1.661.532-.453 1.32-.442 1.761.022.439.466.367 1.209-.164 1.661z" /></svg>            </a>
             <span className="tooltip-text">
               Click for more help
             </span>
@@ -149,6 +147,7 @@ function App() {
             theme={'primary50'}
             defaultValue={options[0]}
             isSearchable={false}
+            menuPortalTarget={document.body}
           />
           <button className="customButton" id="search" onClick={() => getInput(selectedServer.value, selectedServer.label, navigate, setIsLoading, setOpen)}> Search </button>
         </div>
