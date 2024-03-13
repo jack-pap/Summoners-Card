@@ -35,10 +35,10 @@ const router = createBrowserRouter([
   },
   {
     path: "/player/:server/:summonerName",
-    element: 
-    <div className="dashboard">
-      <Layout><Dashboard /></Layout> 
-    </div>,
+    element:
+      <div className="dashboard">
+        <Layout><Dashboard /></Layout>
+      </div>,
     errorElement: <Layout><Error /></Layout>,
   },
   {
@@ -54,9 +54,6 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>,
+  <RouterProvider router={router} />
 )
 

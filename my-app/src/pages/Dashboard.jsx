@@ -24,8 +24,11 @@ const options = [
   { label: "TW" },
 ];
 
+const patchVersion = loadVersion().catch((error) => {
+  console.error("Error loading version:", error);
+});
+
 function Dashboard() {
-  const [patchVersion, setPatchVersion] = useState("Loading version..."); // Initialize patch version
   const { server, summonerName } = useParams(); // Summoner name and server
   const { state } = useLocation();
   const { summonerInfo, gameName, summonerRankedInfo, summonerMatchInfo, summonerWinrateInfo } = state; // Summoner info
@@ -37,15 +40,6 @@ function Dashboard() {
     makeMatchHistory(summonerMatchInfo);
     document.getElementById("homeBody").style.animation = "fade-in 1s forwards";
     getImages(summonerInfo, summonerMatchInfo, setleagueImages);
-    loadVersion()
-      .then((version) => {
-        setPatchVersion(
-          version[0].split(".")[0] + "." + version[0].split(".")[1]
-        );
-      })
-      .catch((error) => {
-        console.error("Error loading version:", error);
-      });
   }, [summonerInfo, summonerMatchInfo]);
 
   if (!options.find((option) => option.label === server)) {
@@ -199,7 +193,6 @@ function makeApiCall(apiURL) {
     fetch(apiURL)
       .then((response) => {
         if (!response.ok) {
-          //alert(`Summoner not found`);
           throw new Error(`Network response was not ok: ${response.status}`);
         }
         return response.json();
@@ -214,13 +207,14 @@ function makeApiCall(apiURL) {
   });
 }
 
-function makeMatchHistory(summonerMatchInfo) {
+async function makeMatchHistory(summonerMatchInfo) {
   const container = document.getElementById('matchList');
 
   for (let counter = 0; counter < 20; counter++) {
     const component = document.createElement('div');
-    component.setAttribute("id", "matchEntry");
+    component.setAttribute("class", "matchEntry");
     component.classList.add('component');
+
 
     component.innerHTML = `
       <div id='win'>${summonerMatchInfo[counter][1].win ? 'Victory' : 'Defeat'}</div>
@@ -228,16 +222,25 @@ function makeMatchHistory(summonerMatchInfo) {
       <div> Duration: ${Math.trunc(summonerMatchInfo[counter][0].gameDuration / 60)} mins and ${summonerMatchInfo[counter][0].gameDuration % 60} secs </div>
       <div> Queue ID: ${summonerMatchInfo[counter][0].gameQueueID} </div>
       <div> ${summonerMatchInfo[counter][1].championId} </div>
+      <div class="championImage"></div>
       <div> ${summonerMatchInfo[counter][1].champLevel} </div>
       <div> ${summonerMatchInfo[counter][1].kills} ${summonerMatchInfo[counter][1].deaths} ${summonerMatchInfo[counter][1].assists} </div>
       <div> ${summonerMatchInfo[counter][1].summoner1Id} ${summonerMatchInfo[counter][1].summoner2Id}</div>
       <div> ${summonerMatchInfo[counter][1].visionScore} </div>
     `;
 
+    const championImage = component.querySelector('.championImage');
+    const championImageUrl = await getChampionAssets(summonerMatchInfo[counter][1].championId);
+    const img = document.createElement('img');
+    img.src = championImageUrl;
+    championImage.appendChild(img);
+
     if (summonerMatchInfo[counter][1].win == false) {
       component.style.background = "linear-gradient(96deg, rgb(231 67 67 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%)"
     }
+
     container.appendChild(component);
+
   }
 }
 
@@ -246,6 +249,32 @@ function getImages(summonerInfo, summonerMatchInfo, setleagueImages) {
   const imgURL2 = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/ranked-emblem/emblem-master.png`;
 
   setleagueImages([imgURL, imgURL2]);
+}
+
+async function getChampionAssets(championId) {
+  const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`
+  const championData = await makeApiCall(championDataURL);
+  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`
+  const champImageURL = championData.squarePortraitPath
+  const extractedPath = champImageURL.replace('/lol-game-data/assets/', '').toLowerCase();
+  const finalURL = baseImageURL + extractedPath
+  //const championImage = await makeApiCall(finalURL);
+  return new Promise((resolve, reject) => {
+    fetch(finalURL)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.status}`);
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        resolve(url);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
 
 function loadWinrate(gameQueue, winrateQueue) {
@@ -282,4 +311,5 @@ function getMatchTimeAgo(milliseconds) {
     return `${minutes} minutes ago`;
   }
 }
+
 export default Dashboard;

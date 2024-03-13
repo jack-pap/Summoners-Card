@@ -400,7 +400,7 @@ select:focus {
   gap: 7px;
 }
 
-#matchEntry {
+.matchEntry {
   display: flex;
   gap: 20px;
   border: solid 1px #383838;
