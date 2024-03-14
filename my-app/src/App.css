@@ -408,6 +408,7 @@ select:focus {
   background: linear-gradient(96deg, rgb(98 235 140 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%); /*linear-gradient(40deg, rgb(78 255 156 / 55%) 30%, rgb(72 131 75 / 50%) 100%)*/
   align-items: center;
   min-height: 100px;
+  min-width: 1300px;
 }
 
 #championBlock{

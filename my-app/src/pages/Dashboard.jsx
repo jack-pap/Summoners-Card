@@ -188,7 +188,6 @@ async function loadVersion() {
  * @returns {Promise}
  */
 function makeApiCall(apiURL) {
-  // Return a Promise to allow the use of async/await
   return new Promise((resolve, reject) => {
     fetch(apiURL)
       .then((response) => {
@@ -200,6 +199,31 @@ function makeApiCall(apiURL) {
       .then((data) => {
         resolve(data);
         console.log(data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
+/**
+ * API call to imageURL to get image data
+ *
+ * @param {string} imageURL
+ * @returns {Promise}
+ */
+function makeImageApiCall(imageURL) {
+  return new Promise((resolve, reject) => {
+    fetch(imageURL)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Image data failed to request: ${response.status}`);
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        resolve(url);
       })
       .catch((error) => {
         reject(error);
@@ -221,19 +245,22 @@ async function makeMatchHistory(summonerMatchInfo) {
       <div> ${getMatchTimeAgo(summonerMatchInfo[counter][0].gameDate)} </div>
       <div> Duration: ${Math.trunc(summonerMatchInfo[counter][0].gameDuration / 60)} mins and ${summonerMatchInfo[counter][0].gameDuration % 60} secs </div>
       <div> Queue ID: ${summonerMatchInfo[counter][0].gameQueueID} </div>
-      <div> ${summonerMatchInfo[counter][1].championId} </div>
       <div class="championImage"></div>
-      <div> ${summonerMatchInfo[counter][1].champLevel} </div>
-      <div> ${summonerMatchInfo[counter][1].kills} ${summonerMatchInfo[counter][1].deaths} ${summonerMatchInfo[counter][1].assists} </div>
-      <div> ${summonerMatchInfo[counter][1].summoner1Id} ${summonerMatchInfo[counter][1].summoner2Id}</div>
-      <div> ${summonerMatchInfo[counter][1].visionScore} </div>
+      <div> Champion Level: ${summonerMatchInfo[counter][1].champLevel} </div>
+      <div> ${summonerMatchInfo[counter][1].kills} / ${summonerMatchInfo[counter][1].deaths} / ${summonerMatchInfo[counter][1].assists} </div>
+      <div class="spellsImages"></div>
+      <div> Vision score: ${summonerMatchInfo[counter][1].visionScore} </div>
     `;
 
-    const championImage = component.querySelector('.championImage');
-    const championImageUrl = await getChampionAssets(summonerMatchInfo[counter][1].championId);
-    const img = document.createElement('img');
-    img.src = championImageUrl;
-    championImage.appendChild(img);
+
+    const championImageComponent = component.querySelector('.championImage');
+    const championImage = await getChampionAssets(summonerMatchInfo[counter][1].championId);
+    championImageComponent.appendChild(championImage);
+
+    const spellsImagesComponent = component.querySelector('.spellsImages');
+    const spellsImages = await getSummonerAssets(summonerMatchInfo[counter][1].summoner1Id, summonerMatchInfo[counter][1].summoner2Id)
+    spellsImagesComponent.append(spellsImages[0], spellsImages[1]);
+
 
     if (summonerMatchInfo[counter][1].win == false) {
       component.style.background = "linear-gradient(96deg, rgb(231 67 67 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%)"
@@ -258,23 +285,50 @@ async function getChampionAssets(championId) {
   const champImageURL = championData.squarePortraitPath
   const extractedPath = champImageURL.replace('/lol-game-data/assets/', '').toLowerCase();
   const finalURL = baseImageURL + extractedPath
-  //const championImage = await makeApiCall(finalURL);
-  return new Promise((resolve, reject) => {
-    fetch(finalURL)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.status}`);
-        }
-        return response.blob();
-      })
-      .then((blob) => {
-        const url = URL.createObjectURL(blob);
-        resolve(url);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+
+  const championImage = await makeImageApiCall(finalURL)
+  const img = document.createElement('img');
+  img.src = championImage;
+  return img;
+}
+
+/**
+ * Driver method that gets JSON data from a URL
+ * and uses it to get summoner image assets
+ *
+ * @param {string} summoner1Id
+ * @param {string} summoner2Id
+ * @returns {[HTMLImageElement, HTMLImageElement]}
+ */
+async function getSummonerAssets(summoner1Id, summoner2Id) {
+  const summonerSpellsURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/summoner-spells.json`
+  const summonerSpellsData = await makeApiCall(summonerSpellsURL);
+  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`
+
+  const img1 = await getSummonerSpellImage(summonerSpellsData, summoner1Id, baseImageURL);
+  const img2 = await getSummonerSpellImage(summonerSpellsData, summoner2Id, baseImageURL);
+
+  return [img1, img2];
+}
+
+/**
+ * Executes API call to get image data
+ * and creates image component from it
+ *
+ * @param {JSON} summonerSpellsData
+ * @param {string} spellID
+ * @param {string} baseImageURL
+ * @returns {HTMLImageElement}
+ */
+async function getSummonerSpellImage(summonerSpellsData, spellID, baseImageURL) {
+  const summonerSpellImageURL = summonerSpellsData.find(spell => spell.id === spellID).iconPath;
+  const extractedPath = summonerSpellImageURL.replace('/lol-game-data/assets/', '').toLowerCase();
+  const finalURL = baseImageURL + extractedPath;
+
+  const summonerSpellImage = await makeImageApiCall(finalURL);
+  const img = document.createElement('img');
+  img.src = summonerSpellImage;
+  return img;
 }
 
 function loadWinrate(gameQueue, winrateQueue) {
