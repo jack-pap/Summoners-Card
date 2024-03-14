@@ -403,12 +403,23 @@ select:focus {
 .matchEntry {
   display: flex;
   gap: 20px;
-  border: solid 1px #383838;
+  border: solid 2px #383838;
   border-radius: 5px;
   background: linear-gradient(96deg, rgb(98 235 140 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%); /*linear-gradient(40deg, rgb(78 255 156 / 55%) 30%, rgb(72 131 75 / 50%) 100%)*/
   align-items: center;
   min-height: 100px;
   min-width: 1300px;
+  transition: all ease-in-out 0.2s;
+  will-change: transform;
+  image-rendering: auto;
+}
+
+.matchEntry:hover {
+  transform: scale(1.03);
+}
+
+img {
+  border-radius: 5px;
 }
 
 #championBlock{

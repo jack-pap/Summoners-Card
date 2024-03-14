@@ -245,29 +245,25 @@ async function makeMatchHistory(summonerMatchInfo) {
       <div> ${getMatchTimeAgo(summonerMatchInfo[counter][0].gameDate)} </div>
       <div> Duration: ${Math.trunc(summonerMatchInfo[counter][0].gameDuration / 60)} mins and ${summonerMatchInfo[counter][0].gameDuration % 60} secs </div>
       <div> Queue ID: ${summonerMatchInfo[counter][0].gameQueueID} </div>
-      <div class="championImage"></div>
       <div> Champion Level: ${summonerMatchInfo[counter][1].champLevel} </div>
       <div> ${summonerMatchInfo[counter][1].kills} / ${summonerMatchInfo[counter][1].deaths} / ${summonerMatchInfo[counter][1].assists} </div>
-      <div class="spellsImages"></div>
       <div> Vision score: ${summonerMatchInfo[counter][1].visionScore} </div>
+      <div class="championImage"></div>
+      <div class="spellsImages"></div>
+      <div class="runeImages"></div>
+      <div class="otherPlayers"></div>
+
     `;
-
-
-    const championImageComponent = component.querySelector('.championImage');
-    const championImage = await getChampionAssets(summonerMatchInfo[counter][1].championId);
-    championImageComponent.appendChild(championImage);
-
-    const spellsImagesComponent = component.querySelector('.spellsImages');
-    const spellsImages = await getSummonerAssets(summonerMatchInfo[counter][1].summoner1Id, summonerMatchInfo[counter][1].summoner2Id)
-    spellsImagesComponent.append(spellsImages[0], spellsImages[1]);
-
 
     if (summonerMatchInfo[counter][1].win == false) {
       component.style.background = "linear-gradient(96deg, rgb(231 67 67 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%)"
     }
 
-    container.appendChild(component);
+    await getChampionAssets(summonerMatchInfo[counter][1].championId, component);
+    await getSummonerSpellAssets(summonerMatchInfo[counter][1].summoner1Id, summonerMatchInfo[counter][1].summoner2Id, component)
+    await getSummonerRuneAssets(summonerMatchInfo[counter][1].perks.styles[0].selections[0].perk, component)
 
+    container.appendChild(component);
   }
 }
 
@@ -278,7 +274,7 @@ function getImages(summonerInfo, summonerMatchInfo, setleagueImages) {
   setleagueImages([imgURL, imgURL2]);
 }
 
-async function getChampionAssets(championId) {
+async function getChampionAssets(championId, component) {
   const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`
   const championData = await makeApiCall(championDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`
@@ -289,7 +285,9 @@ async function getChampionAssets(championId) {
   const championImage = await makeImageApiCall(finalURL)
   const img = document.createElement('img');
   img.src = championImage;
-  return img;
+
+  const championImageComponent = component.querySelector('.championImage');
+  championImageComponent.appendChild(img);
 }
 
 /**
@@ -300,7 +298,7 @@ async function getChampionAssets(championId) {
  * @param {string} summoner2Id
  * @returns {[HTMLImageElement, HTMLImageElement]}
  */
-async function getSummonerAssets(summoner1Id, summoner2Id) {
+async function getSummonerSpellAssets(summoner1Id, summoner2Id, component) {
   const summonerSpellsURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/summoner-spells.json`
   const summonerSpellsData = await makeApiCall(summonerSpellsURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`
@@ -308,7 +306,9 @@ async function getSummonerAssets(summoner1Id, summoner2Id) {
   const img1 = await getSummonerSpellImage(summonerSpellsData, summoner1Id, baseImageURL);
   const img2 = await getSummonerSpellImage(summonerSpellsData, summoner2Id, baseImageURL);
 
-  return [img1, img2];
+  const spellsImagesComponent = component.querySelector('.spellsImages');
+  spellsImagesComponent.append(img1, img2);
+
 }
 
 /**
@@ -330,6 +330,25 @@ async function getSummonerSpellImage(summonerSpellsData, spellID, baseImageURL) 
   img.src = summonerSpellImage;
   return img;
 }
+
+async function getSummonerRuneAssets(mainRuneID, component) {
+  const runeDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perks.json`
+  const summonerRuneData = await makeApiCall(runeDataURL);
+  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`
+  const runeImageURL = summonerRuneData.find(rune => rune.id === mainRuneID).iconPath;
+  const extractedPath = runeImageURL.replace('/lol-game-data/assets/', '').toLowerCase();
+  const finalURL = baseImageURL + extractedPath
+
+  const summonerRuneImage = await makeImageApiCall(finalURL);
+  const img = document.createElement('img');
+  img.src = summonerRuneImage;
+
+
+  const summonerRunesImagesComponent = component.querySelector('.runeImages');
+  summonerRunesImagesComponent.appendChild(img);
+
+}
+
 
 function loadWinrate(gameQueue, winrateQueue) {
   const container = document.getElementById('winrateBlock');
