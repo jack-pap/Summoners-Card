@@ -2,9 +2,9 @@ import "../App.css";
 import Error from "./Error.jsx";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import Chip from '@mui/material/Chip';
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import Chip from "@mui/material/Chip";
 
 const options = [
   { label: "EUW" },
@@ -31,7 +31,13 @@ const patchVersion = loadVersion().catch((error) => {
 function Dashboard() {
   const { server, summonerName } = useParams(); // Summoner name and server
   const { state } = useLocation();
-  const { summonerInfo, gameName, summonerRankedInfo, summonerMatchInfo, summonerWinrateInfo } = state; // Summoner info
+  const {
+    summonerInfo,
+    gameName,
+    summonerRankedInfo,
+    summonerMatchInfo,
+    summonerWinrateInfo,
+  } = state; // Summoner info
   const [leagueImages, setleagueImages] = useState(""); // Images
 
   const navigate = useNavigate();
@@ -59,34 +65,92 @@ function Dashboard() {
                 <div id="server"> #{server} </div>
               </div>
               <div id="chips">
-                <Chip label="primary" variant="outlined" sx={{ borderRadius: '12px', borderColor: '#c89b3c', color: '#c89b3c' }} />
-                <Chip label="primary" variant="outlined" sx={{ borderRadius: '12px', borderColor: '#c89b3c', color: '#c89b3c' }} />
-                <Chip label="primary" variant="outlined" sx={{ borderRadius: '12px', borderColor: '#c89b3c', color: '#c89b3c' }} />
-                <Chip label="primary" variant="outlined" sx={{ borderRadius: '12px', borderColor: '#c89b3c', color: '#c89b3c' }} />
-                <Chip label="primary" variant="outlined" sx={{ borderRadius: '12px', borderColor: '#c89b3c', color: '#c89b3c' }} />
-                <Chip label="primary" variant="outlined" sx={{ borderRadius: '12px', borderColor: '#c89b3c', color: '#c89b3c' }} />
+                <Chip
+                  label="primary"
+                  variant="outlined"
+                  sx={{
+                    borderRadius: "12px",
+                    borderColor: "#c89b3c",
+                    color: "#c89b3c",
+                  }}
+                />
+                <Chip
+                  label="primary"
+                  variant="outlined"
+                  sx={{
+                    borderRadius: "12px",
+                    borderColor: "#c89b3c",
+                    color: "#c89b3c",
+                  }}
+                />
+                <Chip
+                  label="primary"
+                  variant="outlined"
+                  sx={{
+                    borderRadius: "12px",
+                    borderColor: "#c89b3c",
+                    color: "#c89b3c",
+                  }}
+                />
+                <Chip
+                  label="primary"
+                  variant="outlined"
+                  sx={{
+                    borderRadius: "12px",
+                    borderColor: "#c89b3c",
+                    color: "#c89b3c",
+                  }}
+                />
+                <Chip
+                  label="primary"
+                  variant="outlined"
+                  sx={{
+                    borderRadius: "12px",
+                    borderColor: "#c89b3c",
+                    color: "#c89b3c",
+                  }}
+                />
+                <Chip
+                  label="primary"
+                  variant="outlined"
+                  sx={{
+                    borderRadius: "12px",
+                    borderColor: "#c89b3c",
+                    color: "#c89b3c",
+                  }}
+                />
                 <Chip label="primary" color="primary" variant="outlined" />
                 <Chip label="primary" color="primary" variant="outlined" />
                 <Chip label="primary" color="primary" variant="outlined" />
               </div>
             </div>
             <div className="rankedInfo">
-              <div id="rankedSolo">{summonerRankedInfo[1] === "Unranked" ? 'Unranked' : `${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}
+              <div id="rankedSolo">
+                {summonerRankedInfo[1] === "Unranked"
+                  ? "Unranked"
+                  : `${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}
                 <div>{`${summonerRankedInfo[1].rankedPoints} LP`}</div>
-                <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`} </div>
-                <div>{`${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L`} </div>
+                <div>
+                  {`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}{" "}
+                </div>
+                <div>
+                  {`${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L`}{" "}
+                </div>
               </div>
               <div id="rankedFlex">
-                {summonerRankedInfo[0] === "Unranked" ? ('Unranked') : (
+                {summonerRankedInfo[0] === "Unranked" ? (
+                  "Unranked"
+                ) : (
                   <>
                     <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision} / ${summonerRankedInfo[0].rankedPoints} LP`}</div>
                     <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
                     <div>{`${summonerWinrateInfo.rankedFlexWinrate}`}</div>
-                    <div>{`${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L`} </div>
+                    <div>
+                      {`${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L`}{" "}
+                    </div>
                   </>
                 )}
               </div>
-
             </div>
           </div>
           <div id="winrateBlock">
@@ -97,28 +161,53 @@ function Dashboard() {
                   "&:hover": {
                     color: "#C89B3C",
                     backgroundColor: "#262c33",
-                    borderColor: "#C89B3C"
+                    borderColor: "#C89B3C",
                   },
                   color: "#A09B8C",
                   backgroundColor: "262c33",
-                  borderColor: "#C89B3C"
+                  borderColor: "#C89B3C",
                 },
               }}
               size="Large"
-              aria-label="Basic button group">
-              <Button onClick={() => {
-                loadWinrate(summonerRankedInfo[1], summonerWinrateInfo.rankedSoloWinrate);
-              }}>Normal</Button>
-              <Button onClick={() => {
-                loadWinrate(summonerRankedInfo[1], summonerWinrateInfo.rankedSoloWinrate);
-              }}>Solo</Button>
-              <Button onClick={() => {
-                loadWinrate(summonerRankedInfo[0], summonerWinrateInfo.rankedFlexWinrate);
-              }}>Flex</Button>
+              aria-label="Basic button group"
+            >
+              <Button
+                onClick={() => {
+                  loadWinrate(
+                    summonerRankedInfo[1],
+                    summonerWinrateInfo.rankedSoloWinrate
+                  );
+                }}
+              >
+                Normal
+              </Button>
+              <Button
+                onClick={() => {
+                  loadWinrate(
+                    summonerRankedInfo[1],
+                    summonerWinrateInfo.rankedSoloWinrate
+                  );
+                }}
+              >
+                Solo
+              </Button>
+              <Button
+                onClick={() => {
+                  loadWinrate(
+                    summonerRankedInfo[0],
+                    summonerWinrateInfo.rankedFlexWinrate
+                  );
+                }}
+              >
+                Flex
+              </Button>
             </ButtonGroup>
-            <div id="games">{`${summonerRankedInfo[1].rankedGames} Games`} </div>
-            <div id="winrate">{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`} </div>
-
+            <div id="games">
+              {`${summonerRankedInfo[1].rankedGames} Games`}{" "}
+            </div>
+            <div id="winrate">
+              {`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}{" "}
+            </div>
           </div>
           <div id="championBlock">
             <ButtonGroup
@@ -128,15 +217,16 @@ function Dashboard() {
                   "&:hover": {
                     color: "#C89B3C",
                     backgroundColor: "#262c33",
-                    borderColor: "#C89B3C"
+                    borderColor: "#C89B3C",
                   },
                   color: "#A09B8C",
                   backgroundColor: "262c33",
-                  borderColor: "#C89B3C"
+                  borderColor: "#C89B3C",
                 },
               }}
               size="Large"
-              aria-label="Basic button group">
+              aria-label="Basic button group"
+            >
               <Button>Normal</Button>
               <Button>Solo</Button>
               <Button>Flex</Button>
@@ -148,7 +238,6 @@ function Dashboard() {
           </div>
           <div id="friendBlock"></div>
         </div>
-
       </>
     );
   }
@@ -232,39 +321,66 @@ function makeImageApiCall(imageURL) {
 }
 
 async function makeMatchHistory(summonerMatchInfo) {
-  const container = document.getElementById('matchList');
+  const container = document.getElementById("matchList");
 
   for (let counter = 0; counter < 20; counter++) {
-    const component = document.createElement('div');
+    const component = document.createElement("div");
     component.setAttribute("class", "matchEntry");
-    component.classList.add('component');
-
+    component.classList.add("component");
 
     component.innerHTML = `
-      <div id='win'>${summonerMatchInfo[counter][1].win ? 'Victory' : 'Defeat'}</div>
+      <div id='win'>${
+        summonerMatchInfo[counter][1].win ? "Victory" : "Defeat"
+      }</div>
       <div> ${getMatchTimeAgo(summonerMatchInfo[counter][0].gameDate)} </div>
-      <div> Duration: ${Math.trunc(summonerMatchInfo[counter][0].gameDuration / 60)} mins and ${summonerMatchInfo[counter][0].gameDuration % 60} secs </div>
+      <div> Duration: ${Math.trunc(
+        summonerMatchInfo[counter][0].gameDuration / 60
+      )} mins and ${summonerMatchInfo[counter][0].gameDuration % 60} secs </div>
       <div> Queue ID: ${summonerMatchInfo[counter][0].gameQueueID} </div>
       <div> Champion Level: ${summonerMatchInfo[counter][1].champLevel} </div>
-      <div> ${summonerMatchInfo[counter][1].kills} / ${summonerMatchInfo[counter][1].deaths} / ${summonerMatchInfo[counter][1].assists} </div>
+      <div> ${summonerMatchInfo[counter][1].kills} / ${
+      summonerMatchInfo[counter][1].deaths
+    } / ${summonerMatchInfo[counter][1].assists} </div>
       <div> Vision score: ${summonerMatchInfo[counter][1].visionScore} </div>
-      <div class="championImage"></div>
+      <div class="championImages"></div>
       <div class="spellsImages"></div>
       <div class="runeImages"></div>
       <div class="otherPlayers"></div>
-
     `;
 
     if (summonerMatchInfo[counter][1].win == false) {
-      component.style.background = "linear-gradient(96deg, rgb(231 67 67 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%)"
+      component.style.background =
+        "linear-gradient(96deg, rgb(231 67 67 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%)";
     }
 
-    await getChampionAssets(summonerMatchInfo[counter][1].championId, component);
-    await getSummonerSpellAssets(summonerMatchInfo[counter][1].summoner1Id, summonerMatchInfo[counter][1].summoner2Id, component)
-    await getSummonerRuneAssets(summonerMatchInfo[counter][1].perks.styles[0].selections[0].perk, component)
+    await getAllAssets(summonerMatchInfo, counter, component);
 
     container.appendChild(component);
   }
+}
+
+async function getAllAssets(summonerMatchInfo, counter, component) {
+  await getChampionAssets(
+    summonerMatchInfo[counter][1].championId,
+    ".championImages",
+    component
+  );
+  await getSummonerSpellAssets(
+    summonerMatchInfo[counter][1].summoner1Id,
+    summonerMatchInfo[counter][1].summoner2Id,
+    ".spellsImages",
+    component
+  );
+  await getSummonerRuneAssets(
+    summonerMatchInfo[counter][1].perks.styles[0].selections[0].perk,
+    ".runeImages",
+    component
+  );
+  await getOtherPlayerAssets(
+    summonerMatchInfo[counter][2],
+    ".otherPlayers",
+    component
+  );
 }
 
 function getImages(summonerInfo, summonerMatchInfo, setleagueImages) {
@@ -274,19 +390,21 @@ function getImages(summonerInfo, summonerMatchInfo, setleagueImages) {
   setleagueImages([imgURL, imgURL2]);
 }
 
-async function getChampionAssets(championId, component) {
-  const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`
+async function getChampionAssets(championId, divClass, component) {
+  const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
   const championData = await makeApiCall(championDataURL);
-  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`
-  const champImageURL = championData.squarePortraitPath
-  const extractedPath = champImageURL.replace('/lol-game-data/assets/', '').toLowerCase();
-  const finalURL = baseImageURL + extractedPath
+  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+  const champImageURL = championData.squarePortraitPath;
+  const extractedPath = champImageURL
+    .replace("/lol-game-data/assets/", "")
+    .toLowerCase();
+  const finalURL = baseImageURL + extractedPath;
 
-  const championImage = await makeImageApiCall(finalURL)
-  const img = document.createElement('img');
+  const championImage = await makeImageApiCall(finalURL);
+  const img = document.createElement("img");
   img.src = championImage;
 
-  const championImageComponent = component.querySelector('.championImage');
+  const championImageComponent = component.querySelector(divClass);
   championImageComponent.appendChild(img);
 }
 
@@ -298,17 +416,29 @@ async function getChampionAssets(championId, component) {
  * @param {string} summoner2Id
  * @returns {[HTMLImageElement, HTMLImageElement]}
  */
-async function getSummonerSpellAssets(summoner1Id, summoner2Id, component) {
-  const summonerSpellsURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/summoner-spells.json`
+async function getSummonerSpellAssets(
+  summoner1Id,
+  summoner2Id,
+  divClass,
+  component
+) {
+  const summonerSpellsURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/summoner-spells.json`;
   const summonerSpellsData = await makeApiCall(summonerSpellsURL);
-  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`
+  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
 
-  const img1 = await getSummonerSpellImage(summonerSpellsData, summoner1Id, baseImageURL);
-  const img2 = await getSummonerSpellImage(summonerSpellsData, summoner2Id, baseImageURL);
+  const img1 = await getSummonerSpellImage(
+    summonerSpellsData,
+    summoner1Id,
+    baseImageURL
+  );
+  const img2 = await getSummonerSpellImage(
+    summonerSpellsData,
+    summoner2Id,
+    baseImageURL
+  );
 
-  const spellsImagesComponent = component.querySelector('.spellsImages');
+  const spellsImagesComponent = component.querySelector(divClass);
   spellsImagesComponent.append(img1, img2);
-
 }
 
 /**
@@ -320,40 +450,56 @@ async function getSummonerSpellAssets(summoner1Id, summoner2Id, component) {
  * @param {string} baseImageURL
  * @returns {HTMLImageElement}
  */
-async function getSummonerSpellImage(summonerSpellsData, spellID, baseImageURL) {
-  const summonerSpellImageURL = summonerSpellsData.find(spell => spell.id === spellID).iconPath;
-  const extractedPath = summonerSpellImageURL.replace('/lol-game-data/assets/', '').toLowerCase();
+async function getSummonerSpellImage(
+  summonerSpellsData,
+  spellID,
+  baseImageURL
+) {
+  const summonerSpellImageURL = summonerSpellsData.find(
+    (spell) => spell.id === spellID
+  ).iconPath;
+  const extractedPath = summonerSpellImageURL
+    .replace("/lol-game-data/assets/", "")
+    .toLowerCase();
   const finalURL = baseImageURL + extractedPath;
 
   const summonerSpellImage = await makeImageApiCall(finalURL);
-  const img = document.createElement('img');
+  const img = document.createElement("img");
   img.src = summonerSpellImage;
   return img;
 }
 
-async function getSummonerRuneAssets(mainRuneID, component) {
-  const runeDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perks.json`
+async function getSummonerRuneAssets(mainRuneID, divClass, component) {
+  const runeDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perks.json`;
   const summonerRuneData = await makeApiCall(runeDataURL);
-  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`
-  const runeImageURL = summonerRuneData.find(rune => rune.id === mainRuneID).iconPath;
-  const extractedPath = runeImageURL.replace('/lol-game-data/assets/', '').toLowerCase();
-  const finalURL = baseImageURL + extractedPath
+  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+  const runeImageURL = summonerRuneData.find(
+    (rune) => rune.id === mainRuneID
+  ).iconPath;
+  const extractedPath = runeImageURL
+    .replace("/lol-game-data/assets/", "")
+    .toLowerCase();
+  const finalURL = baseImageURL + extractedPath;
 
   const summonerRuneImage = await makeImageApiCall(finalURL);
-  const img = document.createElement('img');
+  const img = document.createElement("img");
   img.src = summonerRuneImage;
 
-
-  const summonerRunesImagesComponent = component.querySelector('.runeImages');
+  const summonerRunesImagesComponent = component.querySelector(divClass);
   summonerRunesImagesComponent.appendChild(img);
-
 }
 
+//TODO make a HTML component so you can place names aswell
+async function getOtherPlayerAssets(participantsInfo, divClass, component) {
+  participantsInfo.forEach(async function (participantInfo) {
+    await getChampionAssets(participantInfo.championId, divClass, component);
+  });
+}
 
 function loadWinrate(gameQueue, winrateQueue) {
-  const container = document.getElementById('winrateBlock');
-  const games = document.createElement('div');
-  const winrate = document.createElement('div');
+  const container = document.getElementById("winrateBlock");
+  const games = document.createElement("div");
+  const winrate = document.createElement("div");
   games.setAttribute("id", "games");
   winrate.setAttribute("id", "winrate");
 
@@ -364,8 +510,8 @@ function loadWinrate(gameQueue, winrateQueue) {
     ${winrateQueue}% Winrate
   `;
 
-  container.removeChild(document.getElementById('games'))
-  container.removeChild(document.getElementById('winrate'))
+  container.removeChild(document.getElementById("games"));
+  container.removeChild(document.getElementById("winrate"));
   container.appendChild(games);
   container.appendChild(winrate);
 }
@@ -377,9 +523,9 @@ function getMatchTimeAgo(milliseconds) {
   const days = Math.floor(hours / 24);
 
   if (days > 0) {
-    return days === 1 ? 'A day ago' : `${days} days ago`;
+    return days === 1 ? "A day ago" : `${days} days ago`;
   } else if (hours > 0) {
-    return hours === 1 ? 'An hour ago' : `${hours} hours ago`;
+    return hours === 1 ? "An hour ago" : `${hours} hours ago`;
   } else if (minutes > 0) {
     return `${minutes} minutes ago`;
   }

@@ -403,11 +403,12 @@ select:focus {
 .matchEntry {
   display: flex;
   gap: 20px;
+  padding: 10px;
   border: solid 2px #383838;
   border-radius: 5px;
   background: linear-gradient(96deg, rgb(98 235 140 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%); /*linear-gradient(40deg, rgb(78 255 156 / 55%) 30%, rgb(72 131 75 / 50%) 100%)*/
   align-items: center;
-  min-height: 100px;
+  min-height: 120px;
   min-width: 1300px;
   transition: all ease-in-out 0.2s;
   will-change: transform;
@@ -420,6 +421,22 @@ select:focus {
 
 img {
   border-radius: 5px;
+}
+
+
+.spellsImages {
+  display: flex;
+  gap: 7px;
+}
+
+.runeImages img {
+  width: 60px; 
+  height: 60px;
+}
+
+.otherPlayers img {
+  width: 40px; 
+  height: 40px;
 }
 
 #championBlock{
