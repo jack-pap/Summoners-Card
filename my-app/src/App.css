@@ -429,11 +429,38 @@ img {
   gap: 7px;
 }
 
+.spellsImages img{
+  width: 50px; 
+  height: 50px;
+}
+
 .runeImages img {
   width: 60px; 
   height: 60px;
 }
 
+.itemImages {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  max-width: 210px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.itemImages img{
+  width: 50px; 
+  height: 50px;
+}
+
+.otherPlayers {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  max-height: 250px;
+  gap: 5px;
+}
 .otherPlayers img {
   width: 40px; 
   height: 40px;

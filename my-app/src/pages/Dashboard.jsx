@@ -345,6 +345,7 @@ async function makeMatchHistory(summonerMatchInfo) {
       <div class="championImages"></div>
       <div class="spellsImages"></div>
       <div class="runeImages"></div>
+      <div class="itemImages"></div>
       <div class="otherPlayers"></div>
     `;
 
@@ -354,7 +355,6 @@ async function makeMatchHistory(summonerMatchInfo) {
     }
 
     await getAllAssets(summonerMatchInfo, counter, component);
-
     container.appendChild(component);
   }
 }
@@ -376,6 +376,7 @@ async function getAllAssets(summonerMatchInfo, counter, component) {
     ".runeImages",
     component
   );
+  await getItemAssets(summonerMatchInfo[counter][1], ".itemImages", component);
   await getOtherPlayerAssets(
     summonerMatchInfo[counter][2],
     ".otherPlayers",
@@ -487,6 +488,45 @@ async function getSummonerRuneAssets(mainRuneID, divClass, component) {
 
   const summonerRunesImagesComponent = component.querySelector(divClass);
   summonerRunesImagesComponent.appendChild(img);
+}
+
+async function getItemAssets(summonerInfo, divClass, component) {
+  const itemDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/items.json`;
+  const summonerItemData = await makeApiCall(itemDataURL);
+  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+  var itemIds = [
+    summonerInfo.item0,
+    summonerInfo.item1,
+    summonerInfo.item2,
+    summonerInfo.item3,
+    summonerInfo.item4,
+    summonerInfo.item5,
+    summonerInfo.item6,
+  ];
+  for (const id of itemIds) {
+    if (id != 0) {
+      var image = await getSummonerItemImage(summonerItemData, id, baseImageURL);
+      const itemsImagesComponent = component.querySelector(divClass);
+      itemsImagesComponent.append(image);
+    }
+
+  }
+}
+
+async function getSummonerItemImage(summonerItemData, itemID, baseImageURL) {
+  const summonerItemImageURL = summonerItemData.find(
+    (item) => item.id === itemID
+  ).iconPath;
+
+  const extractedPath = summonerItemImageURL
+    .replace("/lol-game-data/assets/", "")
+    .toLowerCase();
+  const finalURL = baseImageURL + extractedPath;
+  console.log(finalURL);
+  const summonerItemImage = await makeImageApiCall(finalURL);
+  const img = document.createElement("img");
+  img.src = summonerItemImage;
+  return img;
 }
 
 //TODO make a HTML component so you can place names aswell
