@@ -326,7 +326,6 @@ async function makeMatchHistory(summonerMatchInfo) {
   for (let counter = 0; counter < 20; counter++) {
     const component = document.createElement("div");
     component.setAttribute("class", "matchEntry");
-    component.classList.add("component");
 
     component.innerHTML = `
       <div id='win'>${
@@ -505,11 +504,14 @@ async function getItemAssets(summonerInfo, divClass, component) {
   ];
   for (const id of itemIds) {
     if (id != 0) {
-      var image = await getSummonerItemImage(summonerItemData, id, baseImageURL);
+      var image = await getSummonerItemImage(
+        summonerItemData,
+        id,
+        baseImageURL
+      );
       const itemsImagesComponent = component.querySelector(divClass);
       itemsImagesComponent.append(image);
     }
-
   }
 }
 
@@ -522,18 +524,30 @@ async function getSummonerItemImage(summonerItemData, itemID, baseImageURL) {
     .replace("/lol-game-data/assets/", "")
     .toLowerCase();
   const finalURL = baseImageURL + extractedPath;
-  console.log(finalURL);
   const summonerItemImage = await makeImageApiCall(finalURL);
   const img = document.createElement("img");
   img.src = summonerItemImage;
   return img;
 }
 
-//TODO make a HTML component so you can place names aswell
+//CHANGE INNER HTML ORDER WHEN DOING OTHER TEAM
 async function getOtherPlayerAssets(participantsInfo, divClass, component) {
-  participantsInfo.forEach(async function (participantInfo) {
-    await getChampionAssets(participantInfo.championId, divClass, component);
-  });
+  for (let participantInfo of participantsInfo) {
+    const playerComponent = document.createElement("div");
+    playerComponent.setAttribute("class", "player");
+    playerComponent.innerHTML = `
+    <div class="playerImage"> </div>
+    <div>${participantInfo.riotIdGameName}</div> 
+    `;
+    const playerParentComponent = component.querySelector(divClass);
+    playerParentComponent.append(playerComponent);
+
+    await getChampionAssets(
+      participantInfo.championId,
+      ".playerImage",
+      playerComponent
+    );
+  }
 }
 
 function loadWinrate(gameQueue, winrateQueue) {

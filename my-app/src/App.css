@@ -402,7 +402,7 @@ select:focus {
 
 .matchEntry {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   padding: 10px;
   border: solid 2px #383838;
   border-radius: 5px;
@@ -416,7 +416,7 @@ select:focus {
 }
 
 .matchEntry:hover {
-  transform: scale(1.03);
+  transform: scale(1.01);
 }
 
 img {
@@ -459,12 +459,28 @@ img {
   flex-wrap: wrap;
   flex-direction: column;
   max-height: 250px;
-  gap: 5px;
+  gap: 1px;
 }
+
 .otherPlayers img {
   width: 40px; 
   height: 40px;
 }
+
+.player {
+  display: flex;
+  width: 100px;
+  height: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  will-change: transform;
+  align-items: center;
+  text-align: center;
+  image-rendering: auto;
+  gap: 5px;
+}
+
 
 #championBlock{
   position: absolute;
