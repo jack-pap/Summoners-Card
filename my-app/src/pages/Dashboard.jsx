@@ -54,184 +54,187 @@ function Dashboard() {
     return (
       <>
         <div id="homeBody">
-          <div id="summonerBlock">
-            <div className="profileGroup">
-              <div className="profileIconGroup">
-                <img id="summonerIcon" src={leagueImages[0]} alt="Image" />
-                <div id="level">{summonerInfo[1]}</div>
-              </div>
-              <div id="name">
-                <div id="gameName"> {gameName} </div>
-                <div id="server"> #{server} </div>
-              </div>
-              <div id="chips">
-                <Chip
-                  label="primary"
-                  variant="outlined"
-                  sx={{
-                    borderRadius: "12px",
-                    borderColor: "#c89b3c",
-                    color: "#c89b3c",
-                  }}
-                />
-                <Chip
-                  label="primary"
-                  variant="outlined"
-                  sx={{
-                    borderRadius: "12px",
-                    borderColor: "#c89b3c",
-                    color: "#c89b3c",
-                  }}
-                />
-                <Chip
-                  label="primary"
-                  variant="outlined"
-                  sx={{
-                    borderRadius: "12px",
-                    borderColor: "#c89b3c",
-                    color: "#c89b3c",
-                  }}
-                />
-                <Chip
-                  label="primary"
-                  variant="outlined"
-                  sx={{
-                    borderRadius: "12px",
-                    borderColor: "#c89b3c",
-                    color: "#c89b3c",
-                  }}
-                />
-                <Chip
-                  label="primary"
-                  variant="outlined"
-                  sx={{
-                    borderRadius: "12px",
-                    borderColor: "#c89b3c",
-                    color: "#c89b3c",
-                  }}
-                />
-                <Chip
-                  label="primary"
-                  variant="outlined"
-                  sx={{
-                    borderRadius: "12px",
-                    borderColor: "#c89b3c",
-                    color: "#c89b3c",
-                  }}
-                />
-                <Chip label="primary" color="primary" variant="outlined" />
-                <Chip label="primary" color="primary" variant="outlined" />
-                <Chip label="primary" color="primary" variant="outlined" />
-              </div>
-            </div>
-            <div className="rankedInfo">
-              <div id="rankedSolo">
-                {summonerRankedInfo[1] === "Unranked"
-                  ? "Unranked"
-                  : `${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}
-                <div>{`${summonerRankedInfo[1].rankedPoints} LP`}</div>
-                <div>
-                  {`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}{" "}
-                </div>
-                <div>
-                  {`${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L`}{" "}
-                </div>
-              </div>
-              <div id="rankedFlex">
-                {summonerRankedInfo[0] === "Unranked" ? (
-                  "Unranked"
-                ) : (
-                  <>
-                    <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision} / ${summonerRankedInfo[0].rankedPoints} LP`}</div>
-                    <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
-                    <div>{`${summonerWinrateInfo.rankedFlexWinrate}`}</div>
-                    <div>
-                      {`${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L`}{" "}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-          <div id="winrateBlock">
-            <ButtonGroup
-              variant="outlined"
-              sx={{
-                ".MuiButtonGroup-grouped": {
-                  "&:hover": {
-                    color: "#C89B3C",
-                    backgroundColor: "#262c33",
+          <div id="summonerContainer">
+            <div id="winrateBlock">
+              <ButtonGroup
+                variant="outlined"
+                sx={{
+                  ".MuiButtonGroup-grouped": {
+                    "&:hover": {
+                      color: "#C89B3C",
+                      backgroundColor: "#262c33",
+                      borderColor: "#C89B3C",
+                    },
+                    color: "#A09B8C",
+                    backgroundColor: "262c33",
                     borderColor: "#C89B3C",
                   },
-                  color: "#A09B8C",
-                  backgroundColor: "262c33",
-                  borderColor: "#C89B3C",
-                },
-              }}
-              size="Large"
-              aria-label="Basic button group"
-            >
-              <Button
-                onClick={() => {
-                  loadWinrate(
-                    summonerRankedInfo[1],
-                    summonerWinrateInfo.rankedSoloWinrate
-                  );
                 }}
+                size="Large"
+                aria-label="Basic button group"
               >
-                Normal
-              </Button>
-              <Button
-                onClick={() => {
-                  loadWinrate(
-                    summonerRankedInfo[1],
-                    summonerWinrateInfo.rankedSoloWinrate
-                  );
-                }}
-              >
-                Solo
-              </Button>
-              <Button
-                onClick={() => {
-                  loadWinrate(
-                    summonerRankedInfo[0],
-                    summonerWinrateInfo.rankedFlexWinrate
-                  );
-                }}
-              >
-                Flex
-              </Button>
-            </ButtonGroup>
-            <div id="games">
-              {`${summonerRankedInfo[1].rankedGames} Games`}{" "}
+                <Button
+                  onClick={() => {
+                    loadWinrate(
+                      summonerRankedInfo[1],
+                      summonerWinrateInfo.rankedSoloWinrate
+                    );
+                  }}
+                >
+                  Normal
+                </Button>
+                <Button
+                  onClick={() => {
+                    loadWinrate(
+                      summonerRankedInfo[1],
+                      summonerWinrateInfo.rankedSoloWinrate
+                    );
+                  }}
+                >
+                  Solo
+                </Button>
+                <Button
+                  onClick={() => {
+                    loadWinrate(
+                      summonerRankedInfo[0],
+                      summonerWinrateInfo.rankedFlexWinrate
+                    );
+                  }}
+                >
+                  Flex
+                </Button>
+              </ButtonGroup>
+              <div id="games">
+                {`${summonerRankedInfo[1].rankedGames} Games`}{" "}
+              </div>
+              <div id="winrate">
+                {`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}{" "}
+              </div>
             </div>
-            <div id="winrate">
-              {`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}{" "}
+            <div id="summonerBlock">
+              <div className="profileGroup">
+                <div className="profileIconGroup">
+                  <img id="summonerIcon" src={leagueImages[0]} alt="Image" />
+                  <div id="level">{summonerInfo[1]}</div>
+                </div>
+                <div id="name">
+                  <div id="gameName"> {gameName} </div>
+                  <div id="server"> #{server} </div>
+                </div>
+                <div id="chips">
+                  <Chip
+                    label="primary"
+                    variant="outlined"
+                    sx={{
+                      borderRadius: "12px",
+                      borderColor: "#c89b3c",
+                      color: "#c89b3c",
+                    }}
+                  />
+                  <Chip
+                    label="primary"
+                    variant="outlined"
+                    sx={{
+                      borderRadius: "12px",
+                      borderColor: "#c89b3c",
+                      color: "#c89b3c",
+                    }}
+                  />
+                  <Chip
+                    label="primary"
+                    variant="outlined"
+                    sx={{
+                      borderRadius: "12px",
+                      borderColor: "#c89b3c",
+                      color: "#c89b3c",
+                    }}
+                  />
+                  <Chip
+                    label="primary"
+                    variant="outlined"
+                    sx={{
+                      borderRadius: "12px",
+                      borderColor: "#c89b3c",
+                      color: "#c89b3c",
+                    }}
+                  />
+                  <Chip
+                    label="primary"
+                    variant="outlined"
+                    sx={{
+                      borderRadius: "12px",
+                      borderColor: "#c89b3c",
+                      color: "#c89b3c",
+                    }}
+                  />
+                  <Chip
+                    label="primary"
+                    variant="outlined"
+                    sx={{
+                      borderRadius: "12px",
+                      borderColor: "#c89b3c",
+                      color: "#c89b3c",
+                    }}
+                  />
+                  <Chip label="primary" color="primary" variant="outlined" />
+                  <Chip label="primary" color="primary" variant="outlined" />
+                  <Chip label="primary" color="primary" variant="outlined" />
+                </div>
+              </div>
+              <div className="rankedInfo">
+                <div id="rankedSolo">
+                  {summonerRankedInfo[1] === "Unranked"
+                    ? "Unranked"
+                    : `${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}
+                  <div>{`${summonerRankedInfo[1].rankedPoints} LP`}</div>
+                  <div>
+                    {`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}{" "}
+                  </div>
+                  <div>
+                    {`${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L`}{" "}
+                  </div>
+                </div>
+                <div id="rankedFlex">
+                  {summonerRankedInfo[0] === "Unranked" ? (
+                    "Unranked"
+                  ) : (
+                    <>
+                      <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision} / ${summonerRankedInfo[0].rankedPoints} LP`}</div>
+                      <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
+                      <div>{`${summonerWinrateInfo.rankedFlexWinrate}`}</div>
+                      <div>
+                        {`${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L`}{" "}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-          <div id="championBlock">
-            <ButtonGroup
-              variant="outlined"
-              sx={{
-                ".MuiButtonGroup-grouped": {
-                  "&:hover": {
-                    color: "#C89B3C",
-                    backgroundColor: "#262c33",
+            <div id="championBlock">
+              <ButtonGroup
+                variant="outlined"
+                sx={{
+                  ".MuiButtonGroup-grouped": {
+                    "&:hover": {
+                      color: "#C89B3C",
+                      backgroundColor: "#262c33",
+                      borderColor: "#C89B3C",
+                    },
+                    color: "#A09B8C",
+                    backgroundColor: "262c33",
                     borderColor: "#C89B3C",
                   },
-                  color: "#A09B8C",
-                  backgroundColor: "262c33",
-                  borderColor: "#C89B3C",
-                },
-              }}
-              size="Large"
-              aria-label="Basic button group"
-            >
-              <Button>Normal</Button>
-              <Button>Solo</Button>
-              <Button>Flex</Button>
-            </ButtonGroup>
+                }}
+                size="Large"
+                aria-label="Basic button group"
+              >
+                <Button>Normal</Button>
+                <Button>Solo</Button>
+                <Button>Flex</Button>
+              </ButtonGroup>
+            </div>
           </div>
+
           <div id="matchHistoryBlock">
             MATCH HISTORY
             <div id="matchList" />
@@ -328,6 +331,7 @@ async function makeMatchHistory(summonerMatchInfo) {
     component.setAttribute("class", "matchEntry");
 
     component.innerHTML = `
+      <div id="matchStatsContainer">
       <div id='win'>${
         summonerMatchInfo[counter][1].win ? "Victory" : "Defeat"
       }</div>
@@ -336,16 +340,22 @@ async function makeMatchHistory(summonerMatchInfo) {
         summonerMatchInfo[counter][0].gameDuration / 60
       )} mins and ${summonerMatchInfo[counter][0].gameDuration % 60} secs </div>
       <div> Queue ID: ${summonerMatchInfo[counter][0].gameQueueID} </div>
-      <div> Champion Level: ${summonerMatchInfo[counter][1].champLevel} </div>
+      </div>
       <div> ${summonerMatchInfo[counter][1].kills} / ${
       summonerMatchInfo[counter][1].deaths
     } / ${summonerMatchInfo[counter][1].assists} </div>
       <div> Vision score: ${summonerMatchInfo[counter][1].visionScore} </div>
-      <div class="championImages"></div>
+      <div class="championContainer">
+      <div class="championImage"></div>
+      <div class='championLevel'>${
+        summonerMatchInfo[counter][1].champLevel
+      } </div>
+      </div>
       <div class="spellsImages"></div>
       <div class="runeImages"></div>
       <div class="itemImages"></div>
       <div class="otherPlayers"></div>
+      <div class="test"></div>
     `;
 
     if (summonerMatchInfo[counter][1].win == false) {
@@ -361,7 +371,7 @@ async function makeMatchHistory(summonerMatchInfo) {
 async function getAllAssets(summonerMatchInfo, counter, component) {
   await getChampionAssets(
     summonerMatchInfo[counter][1].championId,
-    ".championImages",
+    ".championImage",
     component
   );
   await getSummonerSpellAssets(
@@ -537,7 +547,7 @@ async function getOtherPlayerAssets(participantsInfo, divClass, component) {
     playerComponent.setAttribute("class", "player");
     playerComponent.innerHTML = `
     <div class="playerImage"> </div>
-    <div>${participantInfo.riotIdGameName}</div> 
+    <div class="playerUsername">${participantInfo.riotIdGameName}</div> 
     `;
     const playerParentComponent = component.querySelector(divClass);
     playerParentComponent.append(playerComponent);
