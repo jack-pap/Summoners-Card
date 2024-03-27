@@ -42,10 +42,10 @@ function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    makeSummonerProfile(summonerInfo, summonerMatchInfo);
+    makeSummonerProfile(summonerInfo, summonerRankedInfo);
     makeMatchHistory(summonerMatchInfo);
     document.getElementById("homeBody").style.animation = "fade-in 1s forwards";
-  }, [summonerInfo, summonerMatchInfo]);
+  }, [summonerInfo, summonerRankedInfo, summonerMatchInfo]);
 
   if (!options.find((option) => option.label === server)) {
     return <Error errorMessage={`Invalid server "${server}"`} />;
@@ -390,8 +390,13 @@ async function getAllAssets(summonerMatchInfo, counter, component) {
   );
 }
 
+//TODO make it return the ranked emblems too
+async function makeSummonerProfile(summonerInfo, summonerRankedInfo) {
+  await makeProfileIcon(summonerInfo);
+  await makeRankedEmblems(summonerRankedInfo);
+}
 
-async function makeSummonerProfile(summonerInfo, summonerMatchInfo) {
+async function makeProfileIcon(summonerInfo) {
   const container = document.getElementById("profileIconGroupContainer");
 
   const component = document.createElement("div");
@@ -403,13 +408,34 @@ async function makeSummonerProfile(summonerInfo, summonerMatchInfo) {
     `;
 
   const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${summonerInfo[2]}.jpg`;
-  const profileIconImage = await makeImageApiCall(imgURL)
+  const profileIconImage = await makeImageApiCall(imgURL);
   const img = document.createElement("img");
   img.src = profileIconImage;
 
   const profileIconImageComponent = component.querySelector("#summonerIcon");
   profileIconImageComponent.appendChild(img);
 
+  container.appendChild(component);
+}
+
+async function makeRankedEmblems(summonerRankedInfo) {
+  if (summonerRankedInfo[0] !== "Unranked")
+    await makeRankedEmblem(summonerRankedInfo[0], "rankedFlex");
+  if (summonerRankedInfo[1] !== "Unranked")
+    await makeRankedEmblem(summonerRankedInfo[1], "rankedSolo");
+}
+
+async function makeRankedEmblem(summonerRankedInfo, containerName) {
+  const container = document.getElementById(containerName);
+  const component = document.createElement("div");
+  component.setAttribute("class", "rankedEmblem");
+
+  const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/ranked-emblem/emblem-${summonerRankedInfo.rankedTier.toLowerCase()}.png`;
+  const profileIconImage = await makeImageApiCall(imgURL);
+  const img = document.createElement("img");
+  img.src = profileIconImage;
+
+  component.appendChild(img);
   container.appendChild(component);
 }
 

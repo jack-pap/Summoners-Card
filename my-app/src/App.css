@@ -313,9 +313,9 @@ select:focus {
   background-color: #1b1f24;
   border: solid 1px #383838;
   max-width: 500px; 
-  min-width: 500px;
+  min-width: 570px;
   margin: 0 auto; 
-  margin-top: 20px;
+  margin-top: 25px;
   border-radius: 3%;
   gap: 25px;
 }
@@ -339,14 +339,34 @@ select:focus {
   width: 120px;
   height: 120px;
   border: 1.9px solid #c89b3c;
-    border-radius: 7%;
+  border-radius: 7%;
 }
+
+.rankedEmblem {
+  display: flex;
+  height: 150px;
+  width: 200px;
+  overflow: hidden;
+  justify-content: center;
+}
+
+.rankedEmblem img {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  top: -120px;
+  height: 270%;
+  width: auto;
+  object-fit: cover;
+  object-position: center;
+}
+
 
 #level {
   display: block;
   width: 45px;
   font-size: 14px;
-  margin-top: -15px;
+  margin-top: -20px;
   text-align: center;
   background-color: #1b1917;
   border: 1px solid #c89b3c;
@@ -464,7 +484,6 @@ img {
   text-align: center;
   width: auto;
   padding-top: 10px;
-  margin: 0 auto;
   will-change: transform;
   image-rendering: auto;
 }
