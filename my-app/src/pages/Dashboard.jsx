@@ -38,14 +38,13 @@ function Dashboard() {
     summonerMatchInfo,
     summonerWinrateInfo,
   } = state; // Summoner info
-  const [leagueImages, setleagueImages] = useState(""); // Images
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    makeSummonerProfile(summonerInfo, summonerMatchInfo);
     makeMatchHistory(summonerMatchInfo);
     document.getElementById("homeBody").style.animation = "fade-in 1s forwards";
-    getImages(summonerInfo, summonerMatchInfo, setleagueImages);
   }, [summonerInfo, summonerMatchInfo]);
 
   if (!options.find((option) => option.label === server)) {
@@ -113,10 +112,7 @@ function Dashboard() {
             </div>
             <div id="summonerBlock">
               <div className="profileGroup">
-                <div className="profileIconGroup">
-                  <img id="summonerIcon" src={leagueImages[0]} alt="Image" />
-                  <div id="level">{summonerInfo[1]}</div>
-                </div>
+                <div id="profileIconGroupContainer"></div>
                 <div id="name">
                   <div id="gameName"> {gameName} </div>
                   <div id="server"> #{server} </div>
@@ -359,6 +355,7 @@ async function makeMatchHistory(summonerMatchInfo) {
     `;
 
     if (summonerMatchInfo[counter][1].win == false) {
+      component.setAttribute("class", "matchEntryDefeat");
       component.style.background =
         "linear-gradient(96deg, rgb(231 67 67 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%)";
     }
@@ -393,11 +390,27 @@ async function getAllAssets(summonerMatchInfo, counter, component) {
   );
 }
 
-function getImages(summonerInfo, summonerMatchInfo, setleagueImages) {
-  const imgURL = `https://ddragon.leagueoflegends.com/cdn/14.2.1/img/profileicon/${summonerInfo[2]}.png`;
-  const imgURL2 = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/ranked-emblem/emblem-master.png`;
 
-  setleagueImages([imgURL, imgURL2]);
+async function makeSummonerProfile(summonerInfo, summonerMatchInfo) {
+  const container = document.getElementById("profileIconGroupContainer");
+
+  const component = document.createElement("div");
+  component.setAttribute("class", "profileIconGroup");
+
+  component.innerHTML = `
+    <div id="summonerIcon"></div>
+    <div id="level">${summonerInfo[1]}</div>
+    `;
+
+  const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${summonerInfo[2]}.jpg`;
+  const profileIconImage = await makeImageApiCall(imgURL)
+  const img = document.createElement("img");
+  img.src = profileIconImage;
+
+  const profileIconImageComponent = component.querySelector("#summonerIcon");
+  profileIconImageComponent.appendChild(img);
+
+  container.appendChild(component);
 }
 
 async function getChampionAssets(championId, divClass, component) {
