@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Chip from "@mui/material/Chip";
 
-const options = [
+const serverOptions = [
   { label: "EUW" },
   { label: "EUNE" },
   { label: "NA" },
@@ -24,12 +24,10 @@ const options = [
   { label: "TW" },
 ];
 
-const patchVersion = loadVersion().catch((error) => {
-  console.error("Error loading version:", error);
-});
+const gameQueues = await getGameQueues();
 
 function Dashboard() {
-  const { server, summonerName } = useParams(); // Summoner name and server
+  const { server } = useParams();
   const { state } = useLocation();
   const {
     summonerInfo,
@@ -47,7 +45,7 @@ function Dashboard() {
     document.getElementById("homeBody").style.animation = "fade-in 1s forwards";
   }, [summonerInfo, summonerRankedInfo, summonerMatchInfo]);
 
-  if (!options.find((option) => option.label === server)) {
+  if (!serverOptions.find((option) => option.label === server)) {
     return <Error errorMessage={`Invalid server "${server}"`} />;
   } else {
     return (
@@ -179,10 +177,14 @@ function Dashboard() {
               </div>
               <div className="rankedInfo">
                 <div id="rankedSolo">
-                  {summonerRankedInfo[1] === "Unranked"
-                    ? "Unranked"
-                    : `${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}
-                  <div>{`${summonerRankedInfo[1].rankedPoints} LP`}</div>
+                  <div>
+                    <div>
+                      {summonerRankedInfo[1] === "Unranked"
+                        ? "Unranked"
+                        : `${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}
+                    </div>
+                    <div>{`${summonerRankedInfo[1].rankedPoints} LP`}</div>
+                  </div>
                   <div>
                     {`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}{" "}
                   </div>
@@ -242,31 +244,15 @@ function Dashboard() {
   }
 }
 
-/**
- * API call to Riot  Data Dragon
- * for retrieving latest patch version number
- *
- * @returns {Promise}
- */
-async function loadVersion() {
-  const apiURL = "https://ddragon.leagueoflegends.com/api/versions.json";
-
-  return new Promise((resolve, reject) => {
-    fetch(apiURL)
-      .then((response) => {
-        if (!response.ok) {
-          alert(`Cannot retrieve version number`);
-          throw new Error(`Network response was not ok: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        resolve(data[0].split(".")[0] + "." + data[0].split(".")[1]);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+async function getGameQueues() {
+  const gameQueueURL =
+    "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/queues.json";
+  const gameQueueData = await makeApiCall(gameQueueURL);
+  var queueMapping = new Map();
+  for (var queue in gameQueueData) {
+    queueMapping.set(queue, gameQueueData[queue].name);
+  }
+  return queueMapping;
 }
 
 /**
@@ -332,15 +318,13 @@ async function makeMatchHistory(summonerMatchInfo) {
         summonerMatchInfo[counter][1].win ? "Victory" : "Defeat"
       }</div>
       <div> ${getMatchTimeAgo(summonerMatchInfo[counter][0].gameDate)} </div>
-      <div> Duration: ${Math.trunc(
-        summonerMatchInfo[counter][0].gameDuration / 60
-      )} mins and ${summonerMatchInfo[counter][0].gameDuration % 60} secs </div>
-      <div> Queue ID: ${summonerMatchInfo[counter][0].gameQueueID} </div>
+      <div>${Math.trunc(summonerMatchInfo[counter][0].gameDuration / 60)}m ${
+      summonerMatchInfo[counter][0].gameDuration % 60
+    }s </div>
+      <div>${gameQueues.get(
+        summonerMatchInfo[counter][0].gameQueueID.toString()
+      )} </div>
       </div>
-      <div> ${summonerMatchInfo[counter][1].kills} / ${
-      summonerMatchInfo[counter][1].deaths
-    } / ${summonerMatchInfo[counter][1].assists} </div>
-      <div> Vision score: ${summonerMatchInfo[counter][1].visionScore} </div>
       <div class="championContainer">
       <div class="championImage"></div>
       <div class='championLevel'>${
@@ -349,6 +333,12 @@ async function makeMatchHistory(summonerMatchInfo) {
       </div>
       <div class="spellsImages"></div>
       <div class="runeImages"></div>
+      <div> ${summonerMatchInfo[counter][1].kills} / ${
+      summonerMatchInfo[counter][1].deaths
+    } / ${summonerMatchInfo[counter][1].assists} </div>
+          <div> Vision score: ${
+            summonerMatchInfo[counter][1].visionScore
+          } </div>
       <div class="itemImages"></div>
       <div class="otherPlayers"></div>
       <div class="test"></div>

@@ -18,7 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
 
-const options = [
+const serverOptions = [
   { value: "EUW1", label: "EUW" },
   { value: "EUN1", label: "EUNE" },
   { value: "NA1", label: "NA" },
@@ -101,7 +101,7 @@ const spinnerStyles = {
 };
 
 function App() {
-  const [selectedServer, setSelectedServer] = useState(options[0]); // Initialize with the default value
+  const [selectedServer, setSelectedServer] = useState(serverOptions[0]); // Initialize with the default value
   const [patchVersion, setPatchVersion] = useState("    "); // Initialize patch version
   const [isLoading, setIsLoading] = useState(false); // Spinner state for when data is loading
   const [open, setOpen] = useState(false);
@@ -173,11 +173,11 @@ function App() {
         <div className="box">
           <Select
             id="serverList"
-            options={options}
+            options={serverOptions}
             onChange={handleChange}
             styles={customStyles}
             theme={"primary50"}
-            defaultValue={options[0]}
+            defaultValue={serverOptions[0]}
             isSearchable={false}
             menuPortalTarget={document.body}
           />
