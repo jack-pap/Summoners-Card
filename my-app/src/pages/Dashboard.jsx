@@ -5,6 +5,8 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Chip from "@mui/material/Chip";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 const serverOptions = [
   { label: "EUW" },
@@ -105,7 +107,22 @@ function Dashboard() {
                 {`${summonerRankedInfo[1].rankedGames} Games`}{" "}
               </div>
               <div id="winrate">
-                {`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}{" "}
+                Winrate
+                <CircularProgressbar
+                  strokeWidth={5}
+                  value={summonerWinrateInfo.rankedSoloWinrate}
+                  text={`${summonerWinrateInfo.rankedSoloWinrate}%`}
+                  styles={buildStyles({
+                    strokeLinecap: "butt",
+                    textSize: "16px",
+                    pathTransitionDuration: 0.5,
+                    pathColor: `rgba(221, 156, 15, ${
+                      summonerWinrateInfo.rankedSoloWinrate / 100
+                    })`,
+                    textColor: "#E3E4E4",
+                    trailColor: "#65645E",
+                  })}
+                />
               </div>
             </div>
             <div id="summonerBlock">
@@ -317,13 +334,13 @@ async function makeMatchHistory(summonerMatchInfo) {
       <div id='win'>${
         summonerMatchInfo[counter][1].win ? "Victory" : "Defeat"
       }</div>
+      <div>${gameQueues.get(
+        summonerMatchInfo[counter][0].gameQueueID.toString()
+      )} </div>
       <div> ${getMatchTimeAgo(summonerMatchInfo[counter][0].gameDate)} </div>
       <div>${Math.trunc(summonerMatchInfo[counter][0].gameDuration / 60)}m ${
       summonerMatchInfo[counter][0].gameDuration % 60
     }s </div>
-      <div>${gameQueues.get(
-        summonerMatchInfo[counter][0].gameQueueID.toString()
-      )} </div>
       </div>
       <div class="championContainer">
       <div class="championImage"></div>
@@ -528,6 +545,7 @@ async function getSummonerRuneAssets(mainRuneID, divClass, component) {
   summonerRunesImagesComponent.appendChild(img);
 }
 
+//TODO MAKE IT ADD A BLANK IMAGE IF THERES NO ITEM
 async function getItemAssets(summonerInfo, divClass, component) {
   const itemDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/items.json`;
   const summonerItemData = await makeApiCall(itemDataURL);
@@ -590,23 +608,18 @@ async function getOtherPlayerAssets(participantsInfo, divClass, component) {
 }
 
 function loadWinrate(gameQueue, winrateQueue) {
-  const container = document.getElementById("winrateBlock");
-  const games = document.createElement("div");
-  const winrate = document.createElement("div");
-  games.setAttribute("id", "games");
-  winrate.setAttribute("id", "winrate");
+  const gamesElement = document.getElementById("games");
+  const winrateElement = document.querySelector(".CircularProgressbar-text");
+  const progressbarElement = document.querySelector(
+    ".CircularProgressbar-path"
+  );
 
-  games.innerHTML = `
-    ${gameQueue.rankedGames} Games
-  `;
-  winrate.innerHTML = `
-    ${winrateQueue}% Winrate
-  `;
+  gamesElement.textContent = `${gameQueue.rankedGames} Games`;
+  winrateElement.textContent = `${winrateQueue.toFixed(1)}%`;
 
-  container.removeChild(document.getElementById("games"));
-  container.removeChild(document.getElementById("winrate"));
-  container.appendChild(games);
-  container.appendChild(winrate);
+  progressbarElement.style.strokeDashoffset =
+    298.451 * (1 - winrateQueue / 100);
+  progressbarElement.style.stroke = `rgba(221, 156, 15, ${winrateQueue / 100})`;
 }
 
 function getMatchTimeAgo(milliseconds) {
