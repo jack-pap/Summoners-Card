@@ -455,6 +455,7 @@ select:focus {
   align-items: center;
   justify-content: space-between;
   min-height: 120px;
+  min-width: 1200px;
   transition: all ease-in-out 0.2s;
   will-change: transform;
   image-rendering: auto;
@@ -540,15 +541,22 @@ img {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  max-width: 210px;
+  max-width: 250px;
   align-items: center;
-  justify-content: center;
+
   gap: 7px;
 }
 
 .itemImages img{
   width: 50px; 
   height: 50px;
+}
+
+.emptyItem {
+  width: 50px; 
+  height: 50px;
+  background-color: #252525;
+  border-radius: 5px;
 }
 
 .otherPlayers {
@@ -578,10 +586,26 @@ img {
 }
 
 .playerImage img {
-  vertical-align: middle; /* Add this line */
+  vertical-align: middle;
+}
+
+#ownImage img {
+  vertical-align: middle;
+  border: 1px solid #e4b143;
 }
 
 .player .playerUsername {
+  color: #b3b0b0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  will-change: transform;
+  image-rendering: auto;
+  justify-content: center;
+}
+
+.player .ownUsername {
+  color: #f3b736;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

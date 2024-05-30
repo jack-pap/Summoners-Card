@@ -27,6 +27,7 @@ const serverOptions = [
 ];
 
 const gameQueues = await getGameQueues();
+var ownUsername;
 
 function Dashboard() {
   const { server } = useParams();
@@ -37,7 +38,10 @@ function Dashboard() {
     summonerRankedInfo,
     summonerMatchInfo,
     summonerWinrateInfo,
+    summonerChampionWinrateInfo,
   } = state; // Summoner info
+
+  ownUsername = gameName;
 
   const navigate = useNavigate();
 
@@ -115,7 +119,7 @@ function Dashboard() {
                   styles={buildStyles({
                     strokeLinecap: "butt",
                     textSize: "16px",
-                    pathTransitionDuration: 0.5,
+                    pathTransitionDuration: 0.4,
                     pathColor: `rgba(221, 156, 15, ${
                       summonerWinrateInfo.rankedSoloWinrate / 100
                     })`,
@@ -322,10 +326,17 @@ function makeImageApiCall(imageURL) {
   });
 }
 
+// Loop through the mastery info get most games in queue maybe add filtering and get champion assets,
+//display progress bar for winrate, winrate, games players and champion image
+
+async function makeChampionWinrate(summonerChampionWinrateInfo) {}
+
+//TODO handle other game modes calculation arena doesnt work currently
 async function makeMatchHistory(summonerMatchInfo) {
   const container = document.getElementById("matchList");
 
-  for (let counter = 0; counter < 20; counter++) {
+  for (let counter = 0; counter < 25; counter++) {
+    if (summonerMatchInfo[counter][0].gameQueueID.toString() != "420") continue;
     const component = document.createElement("div");
     component.setAttribute("class", "matchEntry");
 
@@ -397,7 +408,6 @@ async function getAllAssets(summonerMatchInfo, counter, component) {
   );
 }
 
-//TODO make it return the ranked emblems too
 async function makeSummonerProfile(summonerInfo, summonerRankedInfo) {
   await makeProfileIcon(summonerInfo);
   await makeRankedEmblems(summonerRankedInfo);
@@ -545,7 +555,6 @@ async function getSummonerRuneAssets(mainRuneID, divClass, component) {
   summonerRunesImagesComponent.appendChild(img);
 }
 
-//TODO MAKE IT ADD A BLANK IMAGE IF THERES NO ITEM
 async function getItemAssets(summonerInfo, divClass, component) {
   const itemDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/items.json`;
   const summonerItemData = await makeApiCall(itemDataURL);
@@ -559,16 +568,23 @@ async function getItemAssets(summonerInfo, divClass, component) {
     summonerInfo.item5,
     summonerInfo.item6,
   ];
-  for (const id of itemIds) {
-    if (id != 0) {
+  var emptyImagesCounter = 0;
+  for (var i = 0; i < 7; i++) {
+    if (itemIds[i] != 0) {
       var image = await getSummonerItemImage(
         summonerItemData,
-        id,
+        itemIds[i],
         baseImageURL
       );
       const itemsImagesComponent = component.querySelector(divClass);
       itemsImagesComponent.append(image);
-    }
+    } else emptyImagesCounter++;
+  }
+  for (var j = 0; j < emptyImagesCounter; j++) {
+    var emptyImage = document.createElement("div");
+    emptyImage.className = "emptyItem";
+    const itemsImagesComponent = component.querySelector(divClass);
+    itemsImagesComponent.append(emptyImage);
   }
 }
 
@@ -592,10 +608,17 @@ async function getOtherPlayerAssets(participantsInfo, divClass, component) {
   for (let participantInfo of participantsInfo) {
     const playerComponent = document.createElement("div");
     playerComponent.setAttribute("class", "player");
-    playerComponent.innerHTML = `
-    <div class="playerImage"> </div>
-    <div class="playerUsername">${participantInfo.riotIdGameName}</div> 
-    `;
+    if (participantInfo.riotIdGameName == ownUsername) {
+      playerComponent.innerHTML = `
+      <div class="playerImage" id="ownImage"></div>
+      <div class="ownUsername">${participantInfo.riotIdGameName}</div> 
+      `;
+    } else {
+      playerComponent.innerHTML = `
+      <div class="playerImage"></div>
+      <div class="playerUsername">${participantInfo.riotIdGameName}</div> 
+      `;
+    }
     const playerParentComponent = component.querySelector(divClass);
     playerParentComponent.append(playerComponent);
 
@@ -615,11 +638,13 @@ function loadWinrate(gameQueue, winrateQueue) {
   );
 
   gamesElement.textContent = `${gameQueue.rankedGames} Games`;
-  winrateElement.textContent = `${winrateQueue.toFixed(1)}%`;
+  winrateElement.textContent = `${winrateQueue}%`;
 
   progressbarElement.style.strokeDashoffset =
     298.451 * (1 - winrateQueue / 100);
-  progressbarElement.style.stroke = `rgba(221, 156, 15, ${winrateQueue / 100})`;
+  progressbarElement.style.stroke = `rgba(221, 156, 15, 0.5, ${
+    winrateQueue / 100
+  })`;
 }
 
 function getMatchTimeAgo(milliseconds) {

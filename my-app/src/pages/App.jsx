@@ -286,7 +286,7 @@ async function getInput(
   setOpen
 ) {
   const summonerName = document.getElementById("summonerName").value;
-  const gameName = summonerName.split("#")[0];
+  const gameName = summonerName.split("#")[0].trim();
   const tagLine = summonerName.split("#")[1];
   const server = serverValue;
 
@@ -317,6 +317,7 @@ async function getInput(
           summonerRankedInfo: rankedInfo,
           summonerMatchInfo: matchInfoList,
           summonerWinrateInfo: summonerWinrate,
+          summonerChampionWinrateInfo: masteryInfo,
         },
       });
       //alert("Flex W/R " + winrateF + "%")
@@ -391,7 +392,7 @@ async function getSummonerInfo(API_KEY, server, puuid) {
   return [data.id, data.summonerLevel, data.profileIconId];
 }
 
-//TODO change structure so it dynamically adds queues instead of manually from constants
+//TODO change structure so it dynamically adds queues instead of manually from constants and use JSON objects instead of arrays
 /**
  * API call to retrieve arrays of summoner mastery info on all champions played
  * (champion ID, champion mastery level, champion mastery points)
@@ -417,7 +418,7 @@ async function getMasteryInfo(API_KEY, server, puuid) {
     RANKED_SOLO: 420,
     RANKED_FLEX: 440,
     URF: 1900,
-    ONE_FOR_ALL: 1020
+    ONE_FOR_ALL: 1020,
   }; // Object that stores queue Ids for different game modes
   var championStatsMapping = new Map(); // Mapping of championId to JSON stats
 
@@ -430,7 +431,7 @@ async function getMasteryInfo(API_KEY, server, puuid) {
         [GAME_MODES.RANKED_SOLO, [0, 0, 0]],
         [GAME_MODES.RANKED_FLEX, [0, 0, 0]],
         [GAME_MODES.URF, [0, 0, 0]],
-        [GAME_MODES.ONE_FOR_ALL, [0, 0, 0]]
+        [GAME_MODES.ONE_FOR_ALL, [0, 0, 0]],
       ]), // Mapping between game modes and their winrates data -> [games played, wins, winrate]
     };
     championStatsMapping.set(champion.championId, champStats);
