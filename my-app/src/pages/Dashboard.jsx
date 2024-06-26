@@ -1,4 +1,6 @@
 import "../App.css";
+import { getSummonerStats } from "./App.jsx";
+import jsonKeyData from "../../../config.json";
 import Error from "./Error.jsx";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
@@ -8,49 +10,115 @@ import Chip from "@mui/material/Chip";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
+const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
+
 const serverOptions = [
-  { label: "EUW" },
-  { label: "EUNE" },
-  { label: "NA" },
-  { label: "KR" },
-  { label: "JP" },
-  { label: "BR" },
-  { label: "LAN" },
-  { label: "LAS" },
-  { label: "OC" },
-  { label: "TR" },
-  { label: "RU" },
-  { label: "PH" },
-  { label: "SG" },
-  { label: "TH" },
-  { label: "TW" },
+  { value: "EUW1", label: "EUW" },
+  { value: "EUN1", label: "EUNE" },
+  { value: "NA1", label: "NA" },
+  { value: "KR", label: "KR" },
+  { value: "JP1", label: "JP" },
+  { value: "BR1", label: "BR" },
+  { value: "LA1", label: "LAN" },
+  { value: "LA2", label: "LAS" },
+  { value: "OC1", label: "OC" },
+  { value: "TR1", label: "TR" },
+  { value: "RU", label: "RU" },
+  { value: "PH2", label: "PH" },
+  { value: "SG2", label: "SG" },
+  { value: "TH2", label: "TH" },
+  { value: "TW2", label: "TW" },
+  { value: "VN2", label: "VN" },
 ];
+
+const serverDictionary = serverOptions.reduce((acc, option) => {
+  acc[option.label] = option.value;
+  return acc;
+}, {});
 
 const gameQueues = await getGameQueues();
 var ownUsername;
 
 function Dashboard() {
-  const { server } = useParams();
+  const { server, summonerName } = useParams();
   const { state } = useLocation();
-  const {
+  const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [gameName, setGameName] = useState("");
+  const [summonerInfo, setSummonerInfo] = useState(null);
+  const [summonerRankedInfo, setSummonerRankedInfo] = useState(null);
+  const [summonerMatchInfo, setSummonerMatchInfo] = useState(null);
+  const [summonerWinrateInfo, setSummonerWinrateInfo] = useState(null);
+  const [summonerChampionWinrateInfo, setSummonerChampionWinrateInfo] =
+    useState(null);
+  const [gameQueues, setGameQueues] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        let newGameName, result;
+
+        if (state == null) {
+          newGameName = summonerName.split("-")[0].trim();
+          result = await getSummonerStats(
+            summonerName.split("-")[1],
+            newGameName,
+            serverDictionary[server]
+          );
+        } else {
+          newGameName = state.gameName;
+          result = {
+            summonerInfo: state.summonerInfo,
+            rankedInfo: state.summonerRankedInfo,
+            matchInfoList: state.summonerMatchInfo,
+            summonerWinrate: state.summonerWinrateInfo,
+            masteryInfo: state.summonerChampionWinrateInfo,
+          };
+        }
+
+        setGameName(newGameName);
+        setSummonerInfo(result.summonerInfo);
+        setSummonerRankedInfo(result.rankedInfo);
+        setSummonerMatchInfo(result.matchInfoList);
+        setSummonerWinrateInfo(result.summonerWinrate);
+        setSummonerChampionWinrateInfo(result.masteryInfo);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [state, summonerName, server]);
+
+  useEffect(() => {
+    if (
+      !isLoading &&
+      summonerInfo &&
+      summonerRankedInfo &&
+      summonerMatchInfo &&
+      summonerWinrateInfo &&
+      summonerChampionWinrateInfo
+    ) {
+      makeSummonerProfile(summonerInfo, summonerRankedInfo);
+      makeMatchHistory(summonerMatchInfo);
+      document.getElementById("homeBody").style.animation =
+        "fade-in 1s forwards";
+      console.log(summonerMatchInfo);
+    }
+  }, [
+    isLoading,
     summonerInfo,
-    gameName,
     summonerRankedInfo,
     summonerMatchInfo,
     summonerWinrateInfo,
     summonerChampionWinrateInfo,
-  } = state; // Summoner info
+  ]);
 
   ownUsername = gameName;
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    makeSummonerProfile(summonerInfo, summonerRankedInfo);
-    makeMatchHistory(summonerMatchInfo);
-    document.getElementById("homeBody").style.animation = "fade-in 1s forwards";
-  }, [summonerInfo, summonerRankedInfo, summonerMatchInfo]);
-
+  if (isLoading) return <div>Loading...</div>;
   if (!serverOptions.find((option) => option.label === server)) {
     return <Error errorMessage={`Invalid server "${server}"`} />;
   } else {
@@ -213,20 +281,14 @@ function Dashboard() {
                     {`${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L`}{" "}
                   </div>
                 </div>
-                <div id="rankedFlex">
-                  {summonerRankedInfo[0] === "Unranked" ? (
-                    "Unranked"
-                  ) : (
-                    <>
-                      <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision} / ${summonerRankedInfo[0].rankedPoints} LP`}</div>
-                      <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
-                      <div>{`${summonerWinrateInfo.rankedFlexWinrate}`}</div>
-                      <div>
-                        {`${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L`}{" "}
-                      </div>
-                    </>
-                  )}
-                </div>
+                {summonerRankedInfo[0] !== "Unranked" && (
+                  <div id="rankedFlex">
+                    <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision} / ${summonerRankedInfo[0].rankedPoints} LP`}</div>
+                    <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
+                    <div>{`${summonerWinrateInfo.rankedFlexWinrate}`}</div>
+                    <div>{`${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L`}</div>
+                  </div>
+                )}
               </div>
             </div>
             <div id="championBlock">
@@ -603,7 +665,6 @@ async function getSummonerItemImage(summonerItemData, itemID, baseImageURL) {
   return img;
 }
 
-//CHANGE INNER HTML ORDER WHEN DOING OTHER TEAM
 async function getOtherPlayerAssets(participantsInfo, divClass, component) {
   for (let participantInfo of participantsInfo) {
     const playerComponent = document.createElement("div");
@@ -637,13 +698,20 @@ function loadWinrate(gameQueue, winrateQueue) {
     ".CircularProgressbar-path"
   );
 
-  gamesElement.textContent = `${gameQueue.rankedGames} Games`;
-  winrateElement.textContent = `${winrateQueue}%`;
+  var totalGames = 0;
+  var winratePercentage = 0;
+  if (gameQueue.rankedGames != undefined) {
+    totalGames = gameQueue.rankedGames;
+    winratePercentage = winrateQueue;
+  }
+
+  gamesElement.textContent = `${totalGames} Games`;
+  winrateElement.textContent = `${winratePercentage}%`;
 
   progressbarElement.style.strokeDashoffset =
-    298.451 * (1 - winrateQueue / 100);
+    298.451 * (1 - winratePercentage / 100);
   progressbarElement.style.stroke = `rgba(221, 156, 15, 0.5, ${
-    winrateQueue / 100
+    winratePercentage / 100
   })`;
 }
 
