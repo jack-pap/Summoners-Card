@@ -103,6 +103,7 @@ function Dashboard() {
       summonerChampionWinrateInfo
     ) {
       makeSummonerProfile(summonerInfo, summonerRankedInfo);
+      makeChampionWinrate(summonerChampionWinrateInfo);
       makeMatchHistory(summonerMatchInfo);
       document.getElementById("homeBody").style.animation =
         "fade-in 1s forwards";
@@ -209,7 +210,7 @@ function Dashboard() {
                     label="primary"
                     variant="outlined"
                     sx={{
-                      borderRadius: "12px",
+                      borderRadius: "13px",
                       borderColor: "#c89b3c",
                       color: "#c89b3c",
                     }}
@@ -218,7 +219,7 @@ function Dashboard() {
                     label="primary"
                     variant="outlined"
                     sx={{
-                      borderRadius: "12px",
+                      borderRadius: "13px",
                       borderColor: "#c89b3c",
                       color: "#c89b3c",
                     }}
@@ -227,40 +228,11 @@ function Dashboard() {
                     label="primary"
                     variant="outlined"
                     sx={{
-                      borderRadius: "12px",
+                      borderRadius: "13px",
                       borderColor: "#c89b3c",
                       color: "#c89b3c",
                     }}
                   />
-                  <Chip
-                    label="primary"
-                    variant="outlined"
-                    sx={{
-                      borderRadius: "12px",
-                      borderColor: "#c89b3c",
-                      color: "#c89b3c",
-                    }}
-                  />
-                  <Chip
-                    label="primary"
-                    variant="outlined"
-                    sx={{
-                      borderRadius: "12px",
-                      borderColor: "#c89b3c",
-                      color: "#c89b3c",
-                    }}
-                  />
-                  <Chip
-                    label="primary"
-                    variant="outlined"
-                    sx={{
-                      borderRadius: "12px",
-                      borderColor: "#c89b3c",
-                      color: "#c89b3c",
-                    }}
-                  />
-                  <Chip label="primary" color="primary" variant="outlined" />
-                  <Chip label="primary" color="primary" variant="outlined" />
                   <Chip label="primary" color="primary" variant="outlined" />
                 </div>
               </div>
@@ -333,7 +305,7 @@ async function getGameQueues() {
   const gameQueueData = await makeApiCall(gameQueueURL);
   var queueMapping = new Map();
   for (var queue in gameQueueData) {
-    queueMapping.set(queue, gameQueueData[queue].name);
+    queueMapping.set(gameQueueData[queue].id, gameQueueData[queue].name);
   }
   return queueMapping;
 }
@@ -391,25 +363,40 @@ function makeImageApiCall(imageURL) {
 // Loop through the mastery info get most games in queue maybe add filtering and get champion assets,
 //display progress bar for winrate, winrate, games players and champion image
 
-async function makeChampionWinrate(summonerChampionWinrateInfo) {}
+async function makeChampionWinrate(summonerChampionWinrateInfo) {
+  const container = document.getElementById("championBlock");
+
+  for (const champ of summonerChampionWinrateInfo) {
+    if (container.children.length > 5) break
+    const champComponent = document.createElement("div");
+    champComponent.setAttribute("class", "champEntry");
+    // ADD GAMES PLAYED AND WINRATE HTML
+    champComponent.innerHTML = `
+    <div class="champImage"></div>
+    <div class="gamesPlayed"></div>
+    <div class="champWinrate"></div>
+    `;
+    container.append(champComponent);
+    await getChampionAssets(champ[0], ".champImage", champComponent);
+  }
+}
 
 //TODO handle other game modes calculation arena doesnt work currently
 async function makeMatchHistory(summonerMatchInfo) {
   const container = document.getElementById("matchList");
 
   for (let counter = 0; counter < 25; counter++) {
+    if (counter >= summonerMatchInfo.length) return;
     if (summonerMatchInfo[counter][0].gameQueueID.toString() != "420") continue;
     const component = document.createElement("div");
     component.setAttribute("class", "matchEntry");
-
+    console.log(gameQueues.get(summonerMatchInfo[counter][0].gameQueueID));
     component.innerHTML = `
       <div id="matchStatsContainer">
       <div id='win'>${
         summonerMatchInfo[counter][1].win ? "Victory" : "Defeat"
       }</div>
-      <div>${gameQueues.get(
-        summonerMatchInfo[counter][0].gameQueueID.toString()
-      )} </div>
+      <div>${gameQueues.get(summonerMatchInfo[counter][0].gameQueueID)} </div>
       <div> ${getMatchTimeAgo(summonerMatchInfo[counter][0].gameDate)} </div>
       <div>${Math.trunc(summonerMatchInfo[counter][0].gameDuration / 60)}m ${
       summonerMatchInfo[counter][0].gameDuration % 60
@@ -518,7 +505,7 @@ async function makeRankedEmblem(summonerRankedInfo, containerName) {
   container.appendChild(component);
 }
 
-async function getChampionAssets(championId, divClass, component) {
+async function getChampionAssets(championId, insideClass, parentComponent) {
   const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
   const championData = await makeApiCall(championDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
@@ -532,7 +519,7 @@ async function getChampionAssets(championId, divClass, component) {
   const img = document.createElement("img");
   img.src = championImage;
 
-  const championImageComponent = component.querySelector(divClass);
+  const championImageComponent = parentComponent.querySelector(insideClass);
   championImageComponent.appendChild(img);
 }
 
@@ -666,7 +653,7 @@ async function getSummonerItemImage(summonerItemData, itemID, baseImageURL) {
 }
 
 async function getOtherPlayerAssets(participantsInfo, divClass, component) {
-  for (let participantInfo of participantsInfo) {
+  for (const participantInfo of participantsInfo) {
     const playerComponent = document.createElement("div");
     playerComponent.setAttribute("class", "player");
     if (participantInfo.riotIdGameName == ownUsername) {

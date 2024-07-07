@@ -53,7 +53,15 @@ const router = createBrowserRouter([
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router} />
-)
+const container = document.getElementById('root');
+
+if (!container._reactRootContainer) {
+  // Create the root only once
+  const root = ReactDOM.createRoot(container);
+  root.render(<RouterProvider router={router} />);
+} else {
+  // If root is already created update the existing root
+  const root = container._reactRootContainer._internalRoot;
+  root.render(<RouterProvider router={router} />);
+}
 

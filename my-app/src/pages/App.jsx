@@ -37,6 +37,13 @@ const serverOptions = [
   { value: "VN2", label: "VN" },
 ];
 
+const GAME_MODES = {
+  NORMAL: 490,
+  RANKED_SOLO: 420,
+  RANKED_FLEX: 440,
+  URF: 1900,
+  ONE_FOR_ALL: 1020,
+}; // Object that stores queue Ids for different game modes
 
 const customStyles = {
   control: (provided, state) => ({
@@ -299,7 +306,13 @@ async function getInput(
       document.getElementById("homeBody").style.pointerEvents = "none";
       setIsLoading(true);
 
-      const { summonerInfo, rankedInfo, matchInfoList, summonerWinrate, masteryInfo } = await getSummonerStats(tagLine, gameName, server); // Returns JSON object for all champion and their respective game mode winrates
+      const {
+        summonerInfo,
+        rankedInfo,
+        matchInfoList,
+        summonerWinrate,
+        masteryInfo,
+      } = await getSummonerStats(tagLine, gameName, server); // Returns JSON object for all champion and their respective game mode winrates
       //const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Flex queue
       //const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Solo queue
 
@@ -338,7 +351,13 @@ export async function getSummonerStats(tagLine, gameName, server) {
   const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
   const summonerWinrate = getSummonerWinrates(rankedInfo); // Returns JSON object for all game mode winrates
   const champWinrate = await getChampionWinrate(masteryInfo, matchInfoList); // Returns JSON object for all champion and their respective game mode winrates
-  return { summonerInfo, rankedInfo, matchInfoList, summonerWinrate, masteryInfo };
+  return {
+    summonerInfo,
+    rankedInfo,
+    matchInfoList,
+    summonerWinrate,
+    masteryInfo,
+  };
 }
 
 /**
@@ -353,7 +372,6 @@ function makeApiCall(apiURL) {
     fetch(apiURL)
       .then((response) => {
         if (!response.ok) {
-          //alert(`Summoner not found`);
           throw new Error(`Network response was not ok: ${response.status}`);
         }
         return response.json();
@@ -419,15 +437,7 @@ async function getSummonerInfo(API_KEY, server, puuid) {
 async function getMasteryInfo(API_KEY, server, puuid) {
   const masteryApiURL = `https://${server}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}?api_key=${API_KEY}`;
   const data = await makeApiCall(masteryApiURL);
-  const GAME_MODES = {
-    NORMAL: 490,
-    RANKED_SOLO: 420,
-    RANKED_FLEX: 440,
-    URF: 1900,
-    ONE_FOR_ALL: 1020,
-  }; // Object that stores queue Ids for different game modes
   var championStatsMapping = new Map(); // Mapping of championId to JSON stats
-
   for (const champion of data) {
     var champStats = {
       championPoints: champion.championPoints,
@@ -478,12 +488,15 @@ function getSummonerWinrates(rankedInfo) {
 function getChampionWinrate(masteryInfo, matchInfoList) {
   for (const matchInfo of matchInfoList) {
     const queueId = matchInfo[0].gameQueueID; // What type of game was played
-    var champInfo = masteryInfo.get(matchInfo[1].championId); // What champion was played
-    console.info(queueId);
-    if (champInfo.winrateMapping.get(queueId)) {
-      champInfo.winrateMapping.get(queueId)[0] += 1; // Increment game count on existing queue
-      if (matchInfo[1].win == true)
-        champInfo.winrateMapping.get(queueId)[1] += 1; // If they won increment wins
+    for (const mode in GAME_MODES) {
+      if (queueId == mode) {
+        var champInfo = masteryInfo.get(matchInfo[1].championId); // What champion was played
+        if (champInfo.winrateMapping.get(queueId)) {
+          champInfo.winrateMapping.get(queueId)[0] += 1; // Increment game count on existing queue
+          if (matchInfo[1].win == true)
+            champInfo.winrateMapping.get(queueId)[1] += 1; // If they won increment wins
+        }
+      }
     }
   }
   for (const champInfo of masteryInfo.values()) {

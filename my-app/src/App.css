@@ -625,7 +625,12 @@ img {
   border: solid 1px #383838;
   border-radius: 3%;
   margin-top: 100px;
-  gap: 25px;
+  gap: 5px;
+}
+
+#championBlock img {
+  width: 40px; 
+  height: 40px;
 }
 
 
