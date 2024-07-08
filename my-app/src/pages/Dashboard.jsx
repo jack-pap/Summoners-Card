@@ -1,14 +1,17 @@
 import "../App.css";
+import React from "react";
+import ReactDOM from "react-dom";
 import { getSummonerStats } from "./App.jsx";
 import jsonKeyData from "../../../config.json";
 import Error from "./Error.jsx";
-import { useState, useEffect } from "react";
+import { useState, useEffect, createElement } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Chip from "@mui/material/Chip";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import ProgressBar from "@ramonak/react-progress-bar";
 
 const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
 
@@ -54,6 +57,7 @@ function Dashboard() {
   const [summonerChampionWinrateInfo, setSummonerChampionWinrateInfo] =
     useState(null);
   const [gameQueues, setGameQueues] = useState([]);
+  const [championsInfo, setChampions] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,6 +80,7 @@ function Dashboard() {
             matchInfoList: state.summonerMatchInfo,
             summonerWinrate: state.summonerWinrateInfo,
             masteryInfo: state.summonerChampionWinrateInfo,
+            champions: state.championsInfo,
           };
         }
 
@@ -85,6 +90,7 @@ function Dashboard() {
         setSummonerMatchInfo(result.matchInfoList);
         setSummonerWinrateInfo(result.summonerWinrate);
         setSummonerChampionWinrateInfo(result.masteryInfo);
+        setChampions(result.champions);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -100,10 +106,11 @@ function Dashboard() {
       summonerRankedInfo &&
       summonerMatchInfo &&
       summonerWinrateInfo &&
-      summonerChampionWinrateInfo
+      summonerChampionWinrateInfo &&
+      championsInfo
     ) {
       makeSummonerProfile(summonerInfo, summonerRankedInfo);
-      makeChampionWinrate(summonerChampionWinrateInfo);
+      makeChampionWinrate(summonerChampionWinrateInfo, championsInfo);
       makeMatchHistory(summonerMatchInfo);
       document.getElementById("homeBody").style.animation =
         "fade-in 1s forwards";
@@ -280,11 +287,17 @@ function Dashboard() {
                 }}
                 size="Large"
                 aria-label="Basic button group"
+                fullWidth
               >
                 <Button>Normal</Button>
                 <Button>Solo</Button>
                 <Button>Flex</Button>
               </ButtonGroup>
+              <div id="statNames">
+                <div>Name</div>
+                <div>Winrate</div>
+                <div>Games</div>
+              </div>
             </div>
           </div>
 
@@ -363,20 +376,41 @@ function makeImageApiCall(imageURL) {
 // Loop through the mastery info get most games in queue maybe add filtering and get champion assets,
 //display progress bar for winrate, winrate, games players and champion image
 
-async function makeChampionWinrate(summonerChampionWinrateInfo) {
+async function makeChampionWinrate(summonerChampionWinrateInfo, championsInfo) {
   const container = document.getElementById("championBlock");
-
   for (const champ of summonerChampionWinrateInfo) {
-    if (container.children.length > 5) break
+    if (container.children.length > 6) break;
     const champComponent = document.createElement("div");
     champComponent.setAttribute("class", "champEntry");
     // ADD GAMES PLAYED AND WINRATE HTML
     champComponent.innerHTML = `
+    <div id="champContainer">
+    <div class="champName">${championsInfo.get(champ[0])}</div>
     <div class="champImage"></div>
-    <div class="gamesPlayed"></div>
-    <div class="champWinrate"></div>
+    </div>
+    <div class="champWinrate">
+    ${
+      summonerChampionWinrateInfo.get(champ[0]).winrateMapping.get(420)[2]
+    }</div>
+    <div class="gamesPlayed">${
+      summonerChampionWinrateInfo.get(champ[0]).winrateMapping.get(420)[0]
+    }</div>
+ 
     `;
     container.append(champComponent);
+
+    ReactDOM.render(
+      <ProgressBar
+        completed={
+          summonerChampionWinrateInfo.get(champ[0]).winrateMapping.get(420)[2]
+        }
+        width="170px"
+        height="17px"
+        bgColor="#C89B3C"
+      />,
+      champComponent.querySelector(".champWinrate")
+    );
+
     await getChampionAssets(champ[0], ".champImage", champComponent);
   }
 }

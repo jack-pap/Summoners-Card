@@ -45,6 +45,8 @@ const GAME_MODES = {
   ONE_FOR_ALL: 1020,
 }; // Object that stores queue Ids for different game modes
 
+const CHAMPIONS = await getAllChampions();
+
 const customStyles = {
   control: (provided, state) => ({
     ...provided,
@@ -279,6 +281,16 @@ async function loadVersion() {
   });
 }
 
+async function getAllChampions() {
+  const championApiURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-summary.json`;
+  const data = await makeApiCall(championApiURL);
+  var championMapping = new Map()
+  for (const champion of data) {
+    championMapping.set(champion.id, champion.name);
+  }
+  return championMapping;
+}
+
 /**
  * Gathers input from field, executes Riot API call
  * based on input to gather user account data
@@ -325,6 +337,7 @@ async function getInput(
           summonerMatchInfo: matchInfoList,
           summonerWinrateInfo: summonerWinrate,
           summonerChampionWinrateInfo: masteryInfo,
+          championsInfo: CHAMPIONS,
         },
       });
       //alert("Flex W/R " + winrateF + "%")
@@ -350,7 +363,7 @@ export async function getSummonerStats(tagLine, gameName, server) {
   const matchInfoList = await getMatchInfoList(API_KEY, matchList, puuid); // Returns array that contains match information for all matches in a list
   const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
   const summonerWinrate = getSummonerWinrates(rankedInfo); // Returns JSON object for all game mode winrates
-  const champWinrate = await getChampionWinrate(masteryInfo, matchInfoList); // Returns JSON object for all champion and their respective game mode winrates
+  const winrates = await getChampionWinrate(masteryInfo, matchInfoList); // Calculates for every champion their respective game mode winrates
   return {
     summonerInfo,
     rankedInfo,
@@ -488,7 +501,7 @@ function getSummonerWinrates(rankedInfo) {
 function getChampionWinrate(masteryInfo, matchInfoList) {
   for (const matchInfo of matchInfoList) {
     const queueId = matchInfo[0].gameQueueID; // What type of game was played
-    for (const mode in GAME_MODES) {
+    for (const mode of Object.values(GAME_MODES)) {
       if (queueId == mode) {
         var champInfo = masteryInfo.get(matchInfo[1].championId); // What champion was played
         if (champInfo.winrateMapping.get(queueId)) {
@@ -505,7 +518,9 @@ function getChampionWinrate(masteryInfo, matchInfoList) {
       const wins = winrateData[1];
       var winrate = winrateData[2];
 
-      if (winrateData[0] > 0) winrate = Math.ceil((wins / gamesPlayed) * 100); // W/R percentage rounded up to nearest second decimal
+      if (gamesPlayed > 0) winrate = Math.ceil((wins / gamesPlayed) * 100); // W/R percentage rounded up to nearest second decimal
+
+      champInfo.winrateMapping.set(queueId, [gamesPlayed, wins, winrate]); // Update the winrate value in the map
     }
   }
 }

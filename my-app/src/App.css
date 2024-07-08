@@ -617,6 +617,7 @@ img {
 #championBlock{
   height: auto;
   min-height: 200px;
+  width: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -625,13 +626,46 @@ img {
   border: solid 1px #383838;
   border-radius: 3%;
   margin-top: 100px;
-  gap: 5px;
 }
 
 #championBlock img {
   width: 40px; 
   height: 40px;
 }
+
+.champEntry {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  justify-content: space-evenly;
+  width: 100%;
+  border-bottom: 2px solid #785a28;
+  border-radius: 8px;
+}
+
+#champContainer {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#statNames {
+  display: flex;
+  font-size: 15px;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  justify-content: space-around;
+  gap: 15px;
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 40px;
+  border-bottom: 3px solid #785a28;
+}
+
+
+
+
 
 
 
