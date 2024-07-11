@@ -1,7 +1,7 @@
 import "../App.css";
 import React from "react";
-import ReactDOM from "react-dom";
-import { getSummonerStats } from "./App.jsx";
+import { createRoot } from "react-dom/client";
+import { getSummonerStats, getMatchList, getMatchInfoList } from "./App.jsx";
 import jsonKeyData from "../../../config.json";
 import Error from "./Error.jsx";
 import { useState, useEffect, createElement } from "react";
@@ -50,6 +50,7 @@ function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
 
   const [gameName, setGameName] = useState("");
+  const [puuid, setPuuid] = useState(null);
   const [summonerInfo, setSummonerInfo] = useState(null);
   const [summonerRankedInfo, setSummonerRankedInfo] = useState(null);
   const [summonerMatchInfo, setSummonerMatchInfo] = useState(null);
@@ -75,6 +76,7 @@ function Dashboard() {
         } else {
           newGameName = state.gameName;
           result = {
+            puuid: state.puuid,
             summonerInfo: state.summonerInfo,
             rankedInfo: state.summonerRankedInfo,
             matchInfoList: state.summonerMatchInfo,
@@ -85,6 +87,7 @@ function Dashboard() {
         }
 
         setGameName(newGameName);
+        setPuuid(result.puuid);
         setSummonerInfo(result.summonerInfo);
         setSummonerRankedInfo(result.rankedInfo);
         setSummonerMatchInfo(result.matchInfoList);
@@ -110,7 +113,7 @@ function Dashboard() {
       championsInfo
     ) {
       makeSummonerProfile(summonerInfo, summonerRankedInfo);
-      makeChampionWinrate(summonerChampionWinrateInfo, championsInfo);
+      makeChampionWinrate(summonerChampionWinrateInfo, championsInfo, 420);
       makeMatchHistory(summonerMatchInfo);
       document.getElementById("homeBody").style.animation =
         "fade-in 1s forwards";
@@ -120,7 +123,6 @@ function Dashboard() {
     isLoading,
     summonerInfo,
     summonerRankedInfo,
-    summonerMatchInfo,
     summonerWinrateInfo,
     summonerChampionWinrateInfo,
   ]);
@@ -151,6 +153,7 @@ function Dashboard() {
                 }}
                 size="Large"
                 aria-label="Basic button group"
+                fullWidth
               >
                 <Button
                   onClick={() => {
@@ -262,7 +265,7 @@ function Dashboard() {
                 </div>
                 {summonerRankedInfo[0] !== "Unranked" && (
                   <div id="rankedFlex">
-                    <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision} / ${summonerRankedInfo[0].rankedPoints} LP`}</div>
+                    <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision}`}</div>
                     <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
                     <div>{`${summonerWinrateInfo.rankedFlexWinrate}`}</div>
                     <div>{`${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L`}</div>
@@ -289,21 +292,79 @@ function Dashboard() {
                 aria-label="Basic button group"
                 fullWidth
               >
-                <Button>Normal</Button>
-                <Button>Solo</Button>
-                <Button>Flex</Button>
+                makeChampionWinrate
+                <Button
+                  onClick={() => {
+                    makeChampionWinrate(
+                      summonerChampionWinrateInfo,
+                      championsInfo,
+                      490
+                    );
+                  }}
+                >
+                  Normal
+                </Button>
+                <Button
+                  onClick={() => {
+                    makeChampionWinrate(
+                      summonerChampionWinrateInfo,
+                      championsInfo,
+                      420
+                    );
+                  }}
+                >
+                  Solo
+                </Button>
+                <Button
+                  onClick={() => {
+                    makeChampionWinrate(
+                      summonerChampionWinrateInfo,
+                      championsInfo,
+                      440
+                    );
+                  }}
+                >
+                  Flex
+                </Button>
               </ButtonGroup>
               <div id="statNames">
                 <div>Name</div>
                 <div>Winrate</div>
                 <div>Games</div>
               </div>
+              <div id="championEntryList"></div>
             </div>
           </div>
 
           <div id="matchHistoryBlock">
             MATCH HISTORY
             <div id="matchList" />
+            <ButtonGroup
+                variant="outlined"
+                sx={{
+                  ".MuiButtonGroup-grouped": {
+                    "&:hover": {
+                      color: "#C89B3C",
+                      backgroundColor: "#262c33",
+                      borderColor: "#C89B3C",
+                    },
+                    color: "#A09B8C",
+                    backgroundColor: "262c33",
+                    borderColor: "#C89B3C",
+                  },
+                }}
+                size="Large"
+                aria-label="Basic button group"
+                width="300px"
+              >
+            <Button
+                  onClick={() => {
+                    extendMatchHistory(summonerMatchInfo, puuid, setSummonerMatchInfo)
+                  }}
+                >
+                  Load More
+                </Button>
+                </ButtonGroup>
           </div>
           <div id="friendBlock"></div>
         </div>
@@ -373,43 +434,84 @@ function makeImageApiCall(imageURL) {
   });
 }
 
-// Loop through the mastery info get most games in queue maybe add filtering and get champion assets,
-//display progress bar for winrate, winrate, games players and champion image
 
-async function makeChampionWinrate(summonerChampionWinrateInfo, championsInfo) {
-  const container = document.getElementById("championBlock");
+//TODO Add maybe loader while loading winrate and add functionality for All to add up both
+//Filter through champions with most games in that queue
+/**
+ * Function that displays champion winrate stats
+ * for a specific game queue based on champion mastery info
+ *
+ * @param {Map[number, Object]} summonerChampionWinrateInfo
+ * @param {Map[number, string]} championsInfo
+ * @param {number} queueId
+ */
+async function makeChampionWinrate(
+  summonerChampionWinrateInfo,
+  championsInfo,
+  queueId
+) {
+  const container = document.getElementById("championEntryList");
+  container.innerHTML = ``;
+
   for (const champ of summonerChampionWinrateInfo) {
-    if (container.children.length > 6) break;
+    if (container.children.length > 4) break;
+
     const champComponent = document.createElement("div");
     champComponent.setAttribute("class", "champEntry");
-    // ADD GAMES PLAYED AND WINRATE HTML
     champComponent.innerHTML = `
     <div id="champContainer">
-    <div class="champName">${championsInfo.get(champ[0])}</div>
     <div class="champImage"></div>
+    <div class="champName">${championsInfo.get(champ[0])}</div>
+
     </div>
     <div class="champWinrate">
     ${
-      summonerChampionWinrateInfo.get(champ[0]).winrateMapping.get(420)[2]
+      summonerChampionWinrateInfo.get(champ[0]).winrateMapping.get(queueId)[2]
     }</div>
     <div class="gamesPlayed">${
-      summonerChampionWinrateInfo.get(champ[0]).winrateMapping.get(420)[0]
-    }</div>
+      summonerChampionWinrateInfo.get(champ[0]).winrateMapping.get(queueId)[0]
+    } \nPlayed</div>
  
     `;
     container.append(champComponent);
 
-    ReactDOM.render(
-      <ProgressBar
-        completed={
-          summonerChampionWinrateInfo.get(champ[0]).winrateMapping.get(420)[2]
-        }
-        width="170px"
-        height="17px"
-        bgColor="#C89B3C"
-      />,
-      champComponent.querySelector(".champWinrate")
-    );
+    const root = createRoot(champComponent.querySelector(".champWinrate"));
+    if (
+      summonerChampionWinrateInfo
+        .get(champ[0])
+        .winrateMapping.get(queueId)[2] == 0
+    ) {
+      root.render(
+        <ProgressBar
+          completed={1}
+          width="150px"
+          height="17px"
+          bgColor="#C89B3C"
+          baseBgColor="#383838"
+          animateOnRender="true"
+          borderRadius="3px"
+          customLabel="0%"
+          labelAlignment="left"
+        />
+      );
+    } else {
+      root.render(
+        <ProgressBar
+          completed={
+            summonerChampionWinrateInfo
+              .get(champ[0])
+              .winrateMapping.get(queueId)[2]
+          }
+          width="150px"
+          height="17px"
+          bgColor="#C89B3C"
+          baseBgColor="#383838"
+          animateOnRender="true"
+          borderRadius="3px"
+          labelAlignment="right"
+        />
+      );
+    }
 
     await getChampionAssets(champ[0], ".champImage", champComponent);
   }
@@ -418,53 +520,60 @@ async function makeChampionWinrate(summonerChampionWinrateInfo, championsInfo) {
 //TODO handle other game modes calculation arena doesnt work currently
 async function makeMatchHistory(summonerMatchInfo) {
   const container = document.getElementById("matchList");
-
-  for (let counter = 0; counter < 25; counter++) {
-    if (counter >= summonerMatchInfo.length) return;
-    if (summonerMatchInfo[counter][0].gameQueueID.toString() != "420") continue;
-    const component = document.createElement("div");
-    component.setAttribute("class", "matchEntry");
-    console.log(gameQueues.get(summonerMatchInfo[counter][0].gameQueueID));
-    component.innerHTML = `
-      <div id="matchStatsContainer">
-      <div id='win'>${
-        summonerMatchInfo[counter][1].win ? "Victory" : "Defeat"
-      }</div>
-      <div>${gameQueues.get(summonerMatchInfo[counter][0].gameQueueID)} </div>
-      <div> ${getMatchTimeAgo(summonerMatchInfo[counter][0].gameDate)} </div>
-      <div>${Math.trunc(summonerMatchInfo[counter][0].gameDuration / 60)}m ${
-      summonerMatchInfo[counter][0].gameDuration % 60
-    }s </div>
-      </div>
-      <div class="championContainer">
-      <div class="championImage"></div>
-      <div class='championLevel'>${
-        summonerMatchInfo[counter][1].champLevel
-      } </div>
-      </div>
-      <div class="spellsImages"></div>
-      <div class="runeImages"></div>
-      <div> ${summonerMatchInfo[counter][1].kills} / ${
-      summonerMatchInfo[counter][1].deaths
-    } / ${summonerMatchInfo[counter][1].assists} </div>
-          <div> Vision score: ${
-            summonerMatchInfo[counter][1].visionScore
-          } </div>
-      <div class="itemImages"></div>
-      <div class="otherPlayers"></div>
-      <div class="test"></div>
-    `;
-
-    if (summonerMatchInfo[counter][1].win == false) {
-      component.setAttribute("class", "matchEntryDefeat");
-      component.style.background =
-        "linear-gradient(96deg, rgb(231 67 67 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%)";
-    }
-
-    await getAllAssets(summonerMatchInfo, counter, component);
-    container.appendChild(component);
+  for (let counter = 0; counter < summonerMatchInfo.length; counter++) {
+    if (summonerMatchInfo[counter][0].gameQueueID.toString() != "420" && summonerMatchInfo[counter][0].gameQueueID.toString() != "440" ) continue;
+    await createMatchEntry(summonerMatchInfo, container, counter);
   }
 }
+
+async function createMatchEntry(summonerMatchInfo, container, counter) {
+  const component = document.createElement("div");
+  component.setAttribute("class", "matchEntry");
+  console.log(gameQueues.get(summonerMatchInfo[counter][0].gameQueueID));
+  component.innerHTML = `
+    <div id="matchStatsContainer">
+    <div id='win'>${summonerMatchInfo[counter][1].win ? "Victory" : "Defeat"}</div>
+    <div>${gameQueues.get(summonerMatchInfo[counter][0].gameQueueID)} </div>
+    <div> ${getMatchTimeAgo(summonerMatchInfo[counter][0].gameDate)} </div>
+    <div>${Math.trunc(summonerMatchInfo[counter][0].gameDuration / 60)}m ${summonerMatchInfo[counter][0].gameDuration % 60}s </div>
+    </div>
+    <div class="championContainer">
+    <div class="championImage"></div>
+    <div class='championLevel'>${summonerMatchInfo[counter][1].champLevel} </div>
+    </div>
+    <div class="spellsImages"></div>
+    <div class="runeImages"></div>
+    <div> ${summonerMatchInfo[counter][1].kills} / ${summonerMatchInfo[counter][1].deaths} / ${summonerMatchInfo[counter][1].assists} </div>
+        <div> Vision score: ${summonerMatchInfo[counter][1].visionScore} </div>
+    <div class="itemImages"></div>
+    <div class="otherPlayers"></div>
+    <div class="test"></div>
+  `;
+
+  if (summonerMatchInfo[counter][1].win == false) {
+    component.setAttribute("class", "matchEntryDefeat");
+    component.style.background =
+      "linear-gradient(96deg, rgb(231 67 67 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%)";
+  }
+
+  await getAllAssets(summonerMatchInfo, counter, component);
+  container.appendChild(component);
+}
+
+async function extendMatchHistory(summonerMatchInfo, puuid, setSummonerMatchInfo) {
+  //RETRIEVE MORE MATCHES HERE
+  const container = document.getElementById("matchList");
+  const newMatchList = await getMatchList(API_KEY, puuid, summonerMatchInfo.length, 10)
+  const newMatchInfoList = await getMatchInfoList(API_KEY, newMatchList, puuid)
+
+  for (let counter = 0; counter < newMatchInfoList.length-1; counter++) {
+    if (newMatchInfoList[counter][0].gameQueueID.toString() != "420" && newMatchInfoList[counter][0].gameQueueID.toString() != "440" ) continue;
+    await createMatchEntry(newMatchInfoList, container, counter);
+  }
+
+  setSummonerMatchInfo(summonerMatchInfo.concat(newMatchInfoList))
+}
+
 
 async function getAllAssets(summonerMatchInfo, counter, component) {
   await getChampionAssets(

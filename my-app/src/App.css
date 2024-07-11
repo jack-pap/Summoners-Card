@@ -4,6 +4,11 @@
   text-align: center;
 }
 
+#homebody {
+  display: flex;
+  justify-content: center;
+}
+
 #homeBody.dissapear {
   transition: transform 1s, opacity 0.5s, translate 2s ease-in;
   opacity: 0;
@@ -298,8 +303,8 @@ select:focus {
   display: flex;
   align-items: center;
   text-align: center;
-  justify-content: space-between;
-  min-width: 1300px;
+  justify-content: space-evenly;
+  min-width: 1600px;
   width: 100%;
 }
 
@@ -311,9 +316,8 @@ select:focus {
   text-align: center;
   background-color: #1b1f24;
   border: solid 1px #383838;
-  max-width: 500px; 
   min-width: 570px;
-  margin: 0 auto; 
+  margin: 0 auto;
   margin-top: 25px;
   border-radius: 3%;
   gap: 25px;
@@ -419,8 +423,11 @@ select:focus {
   border-radius: 3%;
   margin-top: 100px;
   gap: 25px;
-  
+  width: 300px;
+  margin-left: 100px;
 }
+
+
 
 #winrate {
   padding: 10px;
@@ -434,9 +441,11 @@ select:focus {
 #matchHistoryBlock {
   display: flex;
   flex-direction: column;
+  align-items: center;
   margin-top: 20px;
   min-height: 55vh;
   padding: 20px;
+  gap: 10px;
 }
 
 #matchList {
@@ -617,7 +626,8 @@ img {
 #championBlock{
   height: auto;
   min-height: 200px;
-  width: 300px;
+  width: 400px;
+  min-height: 380px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -629,8 +639,13 @@ img {
 }
 
 #championBlock img {
-  width: 40px; 
-  height: 40px;
+  width: 45px; 
+  height: 45px;
+  vertical-align: middle;
+}
+
+#championEntryList{
+  width: 100%;
 }
 
 .champEntry {
@@ -642,25 +657,36 @@ img {
   width: 100%;
   border-bottom: 2px solid #785a28;
   border-radius: 8px;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 
 #champContainer {
-  padding-left: 5px;
-  padding-right: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  width: 120px;
+  gap: 5px;
 }
 
 #statNames {
   display: flex;
-  font-size: 15px;
+  font-size: 17px;
   flex-direction: row;
   align-items: center;
   text-align: center;
   justify-content: space-around;
   gap: 15px;
   width: 100%;
-  padding-top: 20px;
-  padding-bottom: 40px;
-  border-bottom: 3px solid #785a28;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #785a28;
+}
+
+.gamesPlayed {
+  font-size: 15px;
+  width: fit-content;
 }
 
 

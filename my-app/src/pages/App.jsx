@@ -284,7 +284,7 @@ async function loadVersion() {
 async function getAllChampions() {
   const championApiURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-summary.json`;
   const data = await makeApiCall(championApiURL);
-  var championMapping = new Map()
+  var championMapping = new Map();
   for (const champion of data) {
     championMapping.set(champion.id, champion.name);
   }
@@ -319,6 +319,7 @@ async function getInput(
       setIsLoading(true);
 
       const {
+        puuid,
         summonerInfo,
         rankedInfo,
         matchInfoList,
@@ -331,6 +332,7 @@ async function getInput(
       navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, {
         state: {
           serverLabel,
+          puuid: puuid,
           gameName: gameName,
           summonerInfo: summonerInfo,
           summonerRankedInfo: rankedInfo,
@@ -359,12 +361,13 @@ export async function getSummonerStats(tagLine, gameName, server) {
   const puuid = await getPUUID(API_KEY, tagLine, gameName); // puuid identifier for summoner
   const summonerInfo = await getSummonerInfo(API_KEY, server, puuid); // Array that includes summoner ID, summoner level and profile picture
   const masteryInfo = await getMasteryInfo(API_KEY, server, puuid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
-  const matchList = await getMatchList(API_KEY, puuid); // Array constisting of match IDs
+  const matchList = await getMatchList(API_KEY, puuid, 0, 40); // Array constisting of match IDs
   const matchInfoList = await getMatchInfoList(API_KEY, matchList, puuid); // Returns array that contains match information for all matches in a list
   const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
   const summonerWinrate = getSummonerWinrates(rankedInfo); // Returns JSON object for all game mode winrates
   const winrates = await getChampionWinrate(masteryInfo, matchInfoList); // Calculates for every champion their respective game mode winrates
   return {
+    puuid,
     summonerInfo,
     rankedInfo,
     matchInfoList,
@@ -525,7 +528,6 @@ function getChampionWinrate(masteryInfo, matchInfoList) {
   }
 }
 
-//TODO MAKE IT GET ALL MATCHES FROM THIS SEASON ONLY ?? OR SPECIFY TIME PERIOD IN PARAMS
 /**
  * API call to retrieve an array of
  * summoner match IDs based on puuid
@@ -534,8 +536,8 @@ function getChampionWinrate(masteryInfo, matchInfoList) {
  * @param {string} puuid
  * @returns {Promise<Array<Object>>}
  */
-async function getMatchList(API_KEY, puuid) {
-  const matchListApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&api_key=${API_KEY}`;
+export async function getMatchList(API_KEY, puuid, matchAmountStart, matchAmount) {
+  const matchListApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${matchAmountStart}&count=${matchAmount}&api_key=${API_KEY}`;
   const data = await makeApiCall(matchListApiURL);
   var matchList = [];
   for (const match of data) {
@@ -552,7 +554,7 @@ async function getMatchList(API_KEY, puuid) {
  * @param {string} puuid
  * @returns {[[string],[string], [string]]}
  */
-async function getMatchInfoList(API_KEY, matchIDs, puuid) {
+export async function getMatchInfoList(API_KEY, matchIDs, puuid) {
   var matchInfoList = [];
   for (const matchID of matchIDs) {
     const matchInfoApiURL = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
