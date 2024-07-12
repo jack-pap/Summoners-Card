@@ -16,22 +16,22 @@ import ProgressBar from "@ramonak/react-progress-bar";
 const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
 
 const serverOptions = [
-  { value: "EUW1", label: "EUW" },
-  { value: "EUN1", label: "EUNE" },
-  { value: "NA1", label: "NA" },
-  { value: "KR", label: "KR" },
-  { value: "JP1", label: "JP" },
-  { value: "BR1", label: "BR" },
-  { value: "LA1", label: "LAN" },
-  { value: "LA2", label: "LAS" },
-  { value: "OC1", label: "OC" },
-  { value: "TR1", label: "TR" },
-  { value: "RU", label: "RU" },
-  { value: "PH2", label: "PH" },
-  { value: "SG2", label: "SG" },
-  { value: "TH2", label: "TH" },
-  { value: "TW2", label: "TW" },
-  { value: "VN2", label: "VN" },
+  { value: "EUW1", label: "EUW", region: "europe" },
+  { value: "EUN1", label: "EUNE", region: "europe" },
+  { value: "NA1", label: "NA", region: "americas" },
+  { value: "KR", label: "KR", region: "asia" },
+  { value: "JP1", label: "JP", region: "asia" },
+  { value: "BR1", label: "BR", region: "americas" },
+  { value: "LA1", label: "LAN", region: "americas" },
+  { value: "LA2", label: "LAS", region: "americas" },
+  { value: "OC1", label: "OC", region: "sea" },
+  { value: "TR1", label: "TR", region: "europe" },
+  { value: "RU", label: "RU", region: "europe" },
+  { value: "PH2", label: "PH", region: "asia" },
+  { value: "SG2", label: "SG", region: "sea" },
+  { value: "TH2", label: "TH", region: "asia" },
+  { value: "TW2", label: "TW", region: "asia" },
+  { value: "VN2", label: "VN", region: "asia" },
 ];
 
 const serverDictionary = serverOptions.reduce((acc, option) => {
@@ -44,6 +44,7 @@ var ownUsername;
 
 function Dashboard() {
   const { server, summonerName } = useParams();
+  const region = serverOptions.find(option => server === option.label)?.region;
   const { state } = useLocation();
   const navigate = useNavigate();
 
@@ -57,8 +58,8 @@ function Dashboard() {
   const [summonerWinrateInfo, setSummonerWinrateInfo] = useState(null);
   const [summonerChampionWinrateInfo, setSummonerChampionWinrateInfo] =
     useState(null);
+  const [championsInfo, setChampions] = useState(null);
   const [gameQueues, setGameQueues] = useState([]);
-  const [championsInfo, setChampions] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -155,16 +156,16 @@ function Dashboard() {
                 aria-label="Basic button group"
                 fullWidth
               >
-                <Button
+                {/* <Button
                   onClick={() => {
                     loadWinrate(
                       summonerRankedInfo[1],
-                      summonerWinrateInfo.rankedSoloWinrate
+                      summonerWinrateInfo.normalWinrate
                     );
                   }}
                 >
                   Normal
-                </Button>
+                </Button> */}
                 <Button
                   onClick={() => {
                     loadWinrate(
@@ -340,31 +341,36 @@ function Dashboard() {
             MATCH HISTORY
             <div id="matchList" />
             <ButtonGroup
-                variant="outlined"
-                sx={{
-                  ".MuiButtonGroup-grouped": {
-                    "&:hover": {
-                      color: "#C89B3C",
-                      backgroundColor: "#262c33",
-                      borderColor: "#C89B3C",
-                    },
-                    color: "#A09B8C",
-                    backgroundColor: "262c33",
+              variant="outlined"
+              sx={{
+                ".MuiButtonGroup-grouped": {
+                  "&:hover": {
+                    color: "#C89B3C",
+                    backgroundColor: "#262c33",
                     borderColor: "#C89B3C",
                   },
+                  color: "#A09B8C",
+                  backgroundColor: "262c33",
+                  borderColor: "#C89B3C",
+                },
+              }}
+              size="Large"
+              aria-label="Basic button group"
+              width="300px"
+            >
+              <Button
+                onClick={() => {
+                  extendMatchHistory(
+                    summonerMatchInfo,
+                    region,
+                    puuid,
+                    setSummonerMatchInfo
+                  );
                 }}
-                size="Large"
-                aria-label="Basic button group"
-                width="300px"
               >
-            <Button
-                  onClick={() => {
-                    extendMatchHistory(summonerMatchInfo, puuid, setSummonerMatchInfo)
-                  }}
-                >
-                  Load More
-                </Button>
-                </ButtonGroup>
+                Load More
+              </Button>
+            </ButtonGroup>
           </div>
           <div id="friendBlock"></div>
         </div>
@@ -434,8 +440,7 @@ function makeImageApiCall(imageURL) {
   });
 }
 
-
-//TODO Add maybe loader while loading winrate and add functionality for All to add up both
+//TODO Add maybe loader while loading winrate
 //Filter through champions with most games in that queue
 /**
  * Function that displays champion winrate stats
@@ -521,7 +526,11 @@ async function makeChampionWinrate(
 async function makeMatchHistory(summonerMatchInfo) {
   const container = document.getElementById("matchList");
   for (let counter = 0; counter < summonerMatchInfo.length; counter++) {
-    if (summonerMatchInfo[counter][0].gameQueueID.toString() != "420" && summonerMatchInfo[counter][0].gameQueueID.toString() != "440" ) continue;
+    if (
+      summonerMatchInfo[counter][0].gameQueueID.toString() != "420" &&
+      summonerMatchInfo[counter][0].gameQueueID.toString() != "440"
+    )
+      continue;
     await createMatchEntry(summonerMatchInfo, container, counter);
   }
 }
@@ -532,18 +541,26 @@ async function createMatchEntry(summonerMatchInfo, container, counter) {
   console.log(gameQueues.get(summonerMatchInfo[counter][0].gameQueueID));
   component.innerHTML = `
     <div id="matchStatsContainer">
-    <div id='win'>${summonerMatchInfo[counter][1].win ? "Victory" : "Defeat"}</div>
+    <div id='win'>${
+      summonerMatchInfo[counter][1].win ? "Victory" : "Defeat"
+    }</div>
     <div>${gameQueues.get(summonerMatchInfo[counter][0].gameQueueID)} </div>
     <div> ${getMatchTimeAgo(summonerMatchInfo[counter][0].gameDate)} </div>
-    <div>${Math.trunc(summonerMatchInfo[counter][0].gameDuration / 60)}m ${summonerMatchInfo[counter][0].gameDuration % 60}s </div>
+    <div>${Math.trunc(summonerMatchInfo[counter][0].gameDuration / 60)}m ${
+    summonerMatchInfo[counter][0].gameDuration % 60
+  }s </div>
     </div>
     <div class="championContainer">
     <div class="championImage"></div>
-    <div class='championLevel'>${summonerMatchInfo[counter][1].champLevel} </div>
+    <div class='championLevel'>${
+      summonerMatchInfo[counter][1].champLevel
+    } </div>
     </div>
     <div class="spellsImages"></div>
     <div class="runeImages"></div>
-    <div> ${summonerMatchInfo[counter][1].kills} / ${summonerMatchInfo[counter][1].deaths} / ${summonerMatchInfo[counter][1].assists} </div>
+    <div> ${summonerMatchInfo[counter][1].kills} / ${
+    summonerMatchInfo[counter][1].deaths
+  } / ${summonerMatchInfo[counter][1].assists} </div>
         <div> Vision score: ${summonerMatchInfo[counter][1].visionScore} </div>
     <div class="itemImages"></div>
     <div class="otherPlayers"></div>
@@ -560,20 +577,39 @@ async function createMatchEntry(summonerMatchInfo, container, counter) {
   container.appendChild(component);
 }
 
-async function extendMatchHistory(summonerMatchInfo, puuid, setSummonerMatchInfo) {
+async function extendMatchHistory(
+  summonerMatchInfo,
+  region,
+  puuid,
+  setSummonerMatchInfo
+) {
   //RETRIEVE MORE MATCHES HERE
   const container = document.getElementById("matchList");
-  const newMatchList = await getMatchList(API_KEY, puuid, summonerMatchInfo.length, 10)
-  const newMatchInfoList = await getMatchInfoList(API_KEY, newMatchList, puuid)
+  const newMatchList = await getMatchList(
+    API_KEY,
+    region,
+    puuid,
+    summonerMatchInfo.length,
+    11
+  );
+  const newMatchInfoList = await getMatchInfoList(
+    API_KEY,
+    region,
+    newMatchList,
+    puuid
+  );
 
-  for (let counter = 0; counter < newMatchInfoList.length-1; counter++) {
-    if (newMatchInfoList[counter][0].gameQueueID.toString() != "420" && newMatchInfoList[counter][0].gameQueueID.toString() != "440" ) continue;
+  for (let counter = 0; counter < newMatchInfoList.length - 1; counter++) {
+    if (
+      newMatchInfoList[counter][0].gameQueueID.toString() != "420" &&
+      newMatchInfoList[counter][0].gameQueueID.toString() != "440"
+    )
+      continue;
     await createMatchEntry(newMatchInfoList, container, counter);
   }
 
-  setSummonerMatchInfo(summonerMatchInfo.concat(newMatchInfoList))
+  setSummonerMatchInfo(summonerMatchInfo.concat(newMatchInfoList));
 }
-
 
 async function getAllAssets(summonerMatchInfo, counter, component) {
   await getChampionAssets(
@@ -797,19 +833,28 @@ async function getSummonerItemImage(summonerItemData, itemID, baseImageURL) {
 
 async function getOtherPlayerAssets(participantsInfo, divClass, component) {
   for (const participantInfo of participantsInfo) {
+    const playerName = participantInfo.riotIdGameName;
+    const playerTagLine = participantInfo.riotIdTagline;
+
     const playerComponent = document.createElement("div");
     playerComponent.setAttribute("class", "player");
-    if (participantInfo.riotIdGameName == ownUsername) {
+
+    if (playerName == ownUsername) {
       playerComponent.innerHTML = `
       <div class="playerImage" id="ownImage"></div>
-      <div class="ownUsername">${participantInfo.riotIdGameName}</div> 
+      <a class="ownUsername" href="${playerName}-${playerTagLine}" target="_blank">${playerName}</a> 
+      <span class="tooltip-text">${playerName} #${playerTagLine}</span>
+  
       `;
     } else {
       playerComponent.innerHTML = `
       <div class="playerImage"></div>
-      <div class="playerUsername">${participantInfo.riotIdGameName}</div> 
+      <a class="playerUsername" href="${playerName}-${playerTagLine}" target="_blank">${playerName}</a>
+      <span class="tooltip-text">${playerName} #${playerTagLine}</span>
+
       `;
     }
+
     const playerParentComponent = component.querySelector(divClass);
     playerParentComponent.append(playerComponent);
 
@@ -821,7 +866,7 @@ async function getOtherPlayerAssets(participantsInfo, divClass, component) {
   }
 }
 
-function loadWinrate(gameQueue, winrateQueue) {
+function loadWinrate(gameQueue, winrateNumber) {
   const gamesElement = document.getElementById("games");
   const winrateElement = document.querySelector(".CircularProgressbar-text");
   const progressbarElement = document.querySelector(
@@ -830,9 +875,10 @@ function loadWinrate(gameQueue, winrateQueue) {
 
   var totalGames = 0;
   var winratePercentage = 0;
+
   if (gameQueue.rankedGames != undefined) {
     totalGames = gameQueue.rankedGames;
-    winratePercentage = winrateQueue;
+    winratePercentage = winrateNumber;
   }
 
   gamesElement.textContent = `${totalGames} Games`;
