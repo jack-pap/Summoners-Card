@@ -308,6 +308,7 @@ select:focus {
 }
 
 #summonerBlock{
+  background-image: linear-gradient(130deg, rgba(133, 131, 131, 0.189) -140.79%, rgba(2, 2, 2, 0.055));
   position: relative;
   display: flex;
   flex-direction: column;
@@ -393,7 +394,7 @@ select:focus {
   color: #a5a0a0;
 }
 
-#chips {
+.summonerChips {
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
@@ -540,9 +541,19 @@ img {
   height: 50px;
 }
 
-.runeImages img {
+.runeImages img{
+  display: row;
+  flex-direction: column;
+  vertical-align: middle;
+}
+#primaryRune {
   width: 60px; 
   height: 60px;
+}
+
+#secondaryRune  {
+  width: 30px; 
+  height: 30px;
 }
 
 .itemImages {

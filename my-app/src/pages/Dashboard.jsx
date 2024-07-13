@@ -1,7 +1,12 @@
 import "../App.css";
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { getSummonerStats, getMatchList, getMatchInfoList } from "./App.jsx";
+import {
+  makeApiCall,
+  getSummonerStats,
+  getMatchList,
+  getMatchInfoList,
+} from "./App.jsx";
 import jsonKeyData from "../../../config.json";
 import Error from "./Error.jsx";
 import { useState, useEffect, createElement } from "react";
@@ -44,7 +49,9 @@ var ownUsername;
 
 function Dashboard() {
   const { server, summonerName } = useParams();
-  const region = serverOptions.find(option => server === option.label)?.region;
+  const region = serverOptions.find(
+    (option) => server === option.label
+  )?.region;
   const { state } = useLocation();
   const navigate = useNavigate();
 
@@ -72,7 +79,8 @@ function Dashboard() {
           result = await getSummonerStats(
             summonerName.split("-")[1],
             newGameName,
-            serverDictionary[server]
+            serverDictionary[server],
+            region
           );
         } else {
           newGameName = state.gameName;
@@ -113,7 +121,14 @@ function Dashboard() {
       summonerChampionWinrateInfo &&
       championsInfo
     ) {
-      makeSummonerProfile(summonerInfo, summonerRankedInfo);
+      makeSummonerProfile(
+        summonerInfo,
+        summonerRankedInfo,
+        summonerMatchInfo,
+        summonerWinrateInfo,
+        summonerChampionWinrateInfo,
+        championsInfo
+      );
       makeChampionWinrate(summonerChampionWinrateInfo, championsInfo, 420);
       makeMatchHistory(summonerMatchInfo);
       document.getElementById("homeBody").style.animation =
@@ -216,59 +231,22 @@ function Dashboard() {
                   <div id="gameName"> {gameName} </div>
                   <div id="server"> #{server} </div>
                 </div>
-                <div id="chips">
-                  <Chip
-                    label="primary"
-                    variant="outlined"
-                    sx={{
-                      borderRadius: "13px",
-                      borderColor: "#c89b3c",
-                      color: "#c89b3c",
-                    }}
-                  />
-                  <Chip
-                    label="primary"
-                    variant="outlined"
-                    sx={{
-                      borderRadius: "13px",
-                      borderColor: "#c89b3c",
-                      color: "#c89b3c",
-                    }}
-                  />
-                  <Chip
-                    label="primary"
-                    variant="outlined"
-                    sx={{
-                      borderRadius: "13px",
-                      borderColor: "#c89b3c",
-                      color: "#c89b3c",
-                    }}
-                  />
-                  <Chip label="primary" color="primary" variant="outlined" />
-                </div>
+                <div className="summonerChips"></div>
               </div>
               <div className="rankedInfo">
-                <div id="rankedSolo">
-                  <div>
-                    <div>
-                      {summonerRankedInfo[1] === "Unranked"
-                        ? "Unranked"
-                        : `${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}
-                    </div>
+                {summonerRankedInfo[1] !== "Unranked" && (
+                  <div id="rankedSolo">
+                    <div>{`${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}</div>
                     <div>{`${summonerRankedInfo[1].rankedPoints} LP`}</div>
+                    <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}</div>
+                    <div>{`${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L`}</div>
                   </div>
-                  <div>
-                    {`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}{" "}
-                  </div>
-                  <div>
-                    {`${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L`}{" "}
-                  </div>
-                </div>
+                )}
                 {summonerRankedInfo[0] !== "Unranked" && (
                   <div id="rankedFlex">
                     <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision}`}</div>
                     <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
-                    <div>{`${summonerWinrateInfo.rankedFlexWinrate}`}</div>
+                    <div>{`${summonerWinrateInfo.rankedFlexWinrate}% Winrate`}</div>
                     <div>{`${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L`}</div>
                   </div>
                 )}
@@ -391,31 +369,6 @@ async function getGameQueues() {
 }
 
 /**
- * API call to Riot for data
- *
- * @param {string} apiURL
- * @returns {Promise}
- */
-function makeApiCall(apiURL) {
-  return new Promise((resolve, reject) => {
-    fetch(apiURL)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        resolve(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-}
-
-/**
  * API call to imageURL to get image data
  *
  * @param {string} imageURL
@@ -458,7 +411,7 @@ async function makeChampionWinrate(
   const container = document.getElementById("championEntryList");
   container.innerHTML = ``;
 
-  for (const champ of summonerChampionWinrateInfo) {
+  for (const [champId, champData] of summonerChampionWinrateInfo.entries()) {
     if (container.children.length > 4) break;
 
     const champComponent = document.createElement("div");
@@ -466,25 +419,21 @@ async function makeChampionWinrate(
     champComponent.innerHTML = `
     <div id="champContainer">
     <div class="champImage"></div>
-    <div class="champName">${championsInfo.get(champ[0])}</div>
+    <div class="champName">${championsInfo.get(champId)}</div>
 
     </div>
-    <div class="champWinrate">
-    ${
-      summonerChampionWinrateInfo.get(champ[0]).winrateMapping.get(queueId)[2]
-    }</div>
+    <div class="champWinrate"></div>
     <div class="gamesPlayed">${
-      summonerChampionWinrateInfo.get(champ[0]).winrateMapping.get(queueId)[0]
+      summonerChampionWinrateInfo.get(champId).winrateMapping.get(queueId)[0]
     } \nPlayed</div>
- 
+
     `;
     container.append(champComponent);
 
     const root = createRoot(champComponent.querySelector(".champWinrate"));
     if (
-      summonerChampionWinrateInfo
-        .get(champ[0])
-        .winrateMapping.get(queueId)[2] == 0
+      summonerChampionWinrateInfo.get(champId).winrateMapping.get(queueId)[2] ==
+      0
     ) {
       root.render(
         <ProgressBar
@@ -504,7 +453,7 @@ async function makeChampionWinrate(
         <ProgressBar
           completed={
             summonerChampionWinrateInfo
-              .get(champ[0])
+              .get(champId)
               .winrateMapping.get(queueId)[2]
           }
           width="150px"
@@ -518,7 +467,7 @@ async function makeChampionWinrate(
       );
     }
 
-    await getChampionAssets(champ[0], ".champImage", champComponent);
+    await getChampionAssets(champId, ".champImage", champComponent);
   }
 }
 
@@ -625,6 +574,7 @@ async function getAllAssets(summonerMatchInfo, counter, component) {
   );
   await getSummonerRuneAssets(
     summonerMatchInfo[counter][1].perks.styles[0].selections[0].perk,
+    summonerMatchInfo[counter][1].perks.styles[1].style,
     ".runeImages",
     component
   );
@@ -636,9 +586,101 @@ async function getAllAssets(summonerMatchInfo, counter, component) {
   );
 }
 
-async function makeSummonerProfile(summonerInfo, summonerRankedInfo) {
+async function makeSummonerProfile(
+  summonerInfo,
+  summonerRankedInfo,
+  summonerMatchInfo,
+  summonerWinrateInfo,
+  summonerChampionWinrateInfo,
+  championsInfo
+) {
+  makeSummonerBadges(
+    summonerInfo,
+    summonerRankedInfo,
+    summonerMatchInfo,
+    summonerWinrateInfo,
+    summonerChampionWinrateInfo,
+    championsInfo
+  );
+
   await makeProfileIcon(summonerInfo);
   await makeRankedEmblems(summonerRankedInfo);
+}
+
+//Check summoner stats for different stats maybe push all of them in a list and render them at once
+function makeSummonerBadges(
+  summonerInfo,
+  summonerRankedInfo,
+  summonerMatchInfo,
+  summonerWinrateInfo,
+  summonerChampionWinrateInfo,
+  championsInfo
+) {
+  const summComponent = document.getElementById("summonerBlock");
+  const root = createRoot(summComponent.querySelector(".summonerChips"));
+  const allSummonerChips = [];
+  //Check most millionare mastery points champs
+  allSummonerChips.push(
+    makeMillionBadge(championsInfo, summonerChampionWinrateInfo)
+  );
+  //Check most played champs
+  //Check highest winrate champs
+  //Check win/lose streaks
+  allSummonerChips.push(makeStreakBadge(summonerMatchInfo));
+  root.render(<>{allSummonerChips}</>);
+}
+
+function makeMillionBadge(championsInfo, summonerChampionWinrateInfo) {
+  const summonerChips = [];
+
+  for (const [id, value] of summonerChampionWinrateInfo.entries()) {
+    if (value.championPoints > 1000000) {
+      summonerChips.push(
+        <Chip
+          key={id}
+          label={`${championsInfo.get(id)} Million`}
+          variant="outlined"
+          sx={{
+            borderRadius: "13px",
+            borderColor: "#c89b3c",
+            color: "#c89b3c",
+          }}
+        />
+      );
+    }
+  }
+  return summonerChips;
+}
+
+function makeStreakBadge(summonerMatchInfo) {
+  const streakType = summonerMatchInfo[0][1].win;
+  var streakAmount = 0;
+  for (let i = 1; i < Math.min(summonerMatchInfo.length, 5); i++) {
+    if (summonerMatchInfo[i][1].win != streakType) {
+      streakAmount = i;
+      break;
+    }
+  }
+
+  if (streakAmount < 3) return;
+
+  const label = streakType ? `Winning streak` : `Losing streak`;
+  // const label = streakType
+  //   ? `${streakAmount} wins in a row!`
+  //   : `${streakAmount} losses in a row :(`;
+
+  return (
+    <Chip
+      key={streakType}
+      label={label}
+      variant="outlined"
+      sx={{
+        borderRadius: "13px",
+        borderColor: "#c89b3c",
+        color: "#c89b3c",
+      }}
+    />
+  );
 }
 
 async function makeProfileIcon(summonerInfo) {
@@ -763,12 +805,23 @@ async function getSummonerSpellImage(
   return img;
 }
 
-async function getSummonerRuneAssets(mainRuneID, divClass, component) {
+async function getSummonerRuneAssets(
+  mainRuneID,
+  secondaryRuneID,
+  divClass,
+  component
+) {
+  await getRuneImage(mainRuneID, component, divClass);
+  await getSecondaryRuneImage(secondaryRuneID, component, divClass);
+}
+
+async function getRuneImage(runeID, component, divClass) {
   const runeDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perks.json`;
   const summonerRuneData = await makeApiCall(runeDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+
   const runeImageURL = summonerRuneData.find(
-    (rune) => rune.id === mainRuneID
+    (rune) => rune.id === runeID
   ).iconPath;
   const extractedPath = runeImageURL
     .replace("/lol-game-data/assets/", "")
@@ -777,6 +830,29 @@ async function getSummonerRuneAssets(mainRuneID, divClass, component) {
 
   const summonerRuneImage = await makeImageApiCall(finalURL);
   const img = document.createElement("img");
+  img.setAttribute("id", "primaryRune");
+  img.src = summonerRuneImage;
+
+  const summonerRunesImagesComponent = component.querySelector(divClass);
+  summonerRunesImagesComponent.appendChild(img);
+}
+
+async function getSecondaryRuneImage(runeID, component, divClass) {
+  const runeDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perkstyles.json`;
+  const summonerRuneData = await makeApiCall(runeDataURL);
+  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+
+  const runeImageURL = summonerRuneData.styles.find(
+    (rune) => rune.id === runeID
+  ).iconPath;
+  const extractedPath = runeImageURL
+    .replace("/lol-game-data/assets/", "")
+    .toLowerCase();
+  const finalURL = baseImageURL + extractedPath;
+
+  const summonerRuneImage = await makeImageApiCall(finalURL);
+  const img = document.createElement("img");
+  img.setAttribute("id", "secondaryRune");
   img.src = summonerRuneImage;
 
   const summonerRunesImagesComponent = component.querySelector(divClass);

@@ -387,7 +387,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
  * @param {string} apiURL
  * @returns {Promise}
  */
-function makeApiCall(apiURL) {
+export function makeApiCall(apiURL) {
   // Return a Promise to allow the use of async/await
   return new Promise((resolve, reject) => {
     fetch(apiURL)
