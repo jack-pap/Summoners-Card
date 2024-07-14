@@ -480,7 +480,7 @@ select:focus {
   padding: 2px 15px;
   border: solid 2px #383838;
   border-radius: 5px;
-  background: linear-gradient(96deg, rgba(255, 1, 1, 0.692) 0%, rgba(49, 41, 85, 0.5) 110%);
+  background: linear-gradient(96deg, rgb(231 67 67 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%);
   align-items: center;
   justify-content: space-between;
   min-height: 120px;

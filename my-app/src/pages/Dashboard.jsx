@@ -7,6 +7,7 @@ import {
   getMatchList,
   getMatchInfoList,
 } from "./App.jsx";
+import MatchEntry from "../Components/MatchEntry";
 import jsonKeyData from "../../../config.json";
 import Error from "./Error.jsx";
 import { useState, useEffect, createElement } from "react";
@@ -66,7 +67,11 @@ function Dashboard() {
   const [summonerChampionWinrateInfo, setSummonerChampionWinrateInfo] =
     useState(null);
   const [championsInfo, setChampions] = useState(null);
-  const [gameQueues, setGameQueues] = useState([]);
+  //const [gameQueues, setGameQueues] = useState([]);
+
+  if (!serverOptions.find((option) => option.label === server)) {
+    return <Error errorMessage={`Invalid server "${server}"`} />;
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -145,179 +150,11 @@ function Dashboard() {
 
   ownUsername = gameName;
   if (isLoading) return <div>Loading...</div>;
-  if (!serverOptions.find((option) => option.label === server)) {
-    return <Error errorMessage={`Invalid server "${server}"`} />;
-  } else {
-    return (
-      <>
-        <div id="homeBody">
-          <div id="summonerContainer">
-            <div id="winrateBlock">
-              <ButtonGroup
-                variant="outlined"
-                sx={{
-                  ".MuiButtonGroup-grouped": {
-                    "&:hover": {
-                      color: "#C89B3C",
-                      backgroundColor: "#262c33",
-                      borderColor: "#C89B3C",
-                    },
-                    color: "#A09B8C",
-                    backgroundColor: "262c33",
-                    borderColor: "#C89B3C",
-                  },
-                }}
-                size="Large"
-                aria-label="Basic button group"
-                fullWidth
-              >
-                {/* <Button
-                  onClick={() => {
-                    loadWinrate(
-                      summonerRankedInfo[1],
-                      summonerWinrateInfo.normalWinrate
-                    );
-                  }}
-                >
-                  Normal
-                </Button> */}
-                <Button
-                  onClick={() => {
-                    loadWinrate(
-                      summonerRankedInfo[1],
-                      summonerWinrateInfo.rankedSoloWinrate
-                    );
-                  }}
-                >
-                  Solo
-                </Button>
-                <Button
-                  onClick={() => {
-                    loadWinrate(
-                      summonerRankedInfo[0],
-                      summonerWinrateInfo.rankedFlexWinrate
-                    );
-                  }}
-                >
-                  Flex
-                </Button>
-              </ButtonGroup>
-              <div id="games">
-                {`${summonerRankedInfo[1].rankedGames} Games`}{" "}
-              </div>
-              <div id="winrate">
-                Winrate
-                <CircularProgressbar
-                  strokeWidth={5}
-                  value={summonerWinrateInfo.rankedSoloWinrate}
-                  text={`${summonerWinrateInfo.rankedSoloWinrate}%`}
-                  styles={buildStyles({
-                    strokeLinecap: "butt",
-                    textSize: "16px",
-                    pathTransitionDuration: 0.4,
-                    pathColor: `rgba(221, 156, 15, ${
-                      summonerWinrateInfo.rankedSoloWinrate / 100
-                    })`,
-                    textColor: "#E3E4E4",
-                    trailColor: "#65645E",
-                  })}
-                />
-              </div>
-            </div>
-            <div id="summonerBlock">
-              <div className="profileGroup">
-                <div id="profileIconGroupContainer"></div>
-                <div id="name">
-                  <div id="gameName"> {gameName} </div>
-                  <div id="server"> #{server} </div>
-                </div>
-                <div className="summonerChips"></div>
-              </div>
-              <div className="rankedInfo">
-                {summonerRankedInfo[1] !== "Unranked" && (
-                  <div id="rankedSolo">
-                    <div>{`${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}</div>
-                    <div>{`${summonerRankedInfo[1].rankedPoints} LP`}</div>
-                    <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}</div>
-                    <div>{`${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L`}</div>
-                  </div>
-                )}
-                {summonerRankedInfo[0] !== "Unranked" && (
-                  <div id="rankedFlex">
-                    <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision}`}</div>
-                    <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
-                    <div>{`${summonerWinrateInfo.rankedFlexWinrate}% Winrate`}</div>
-                    <div>{`${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L`}</div>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div id="championBlock">
-              <ButtonGroup
-                variant="outlined"
-                sx={{
-                  ".MuiButtonGroup-grouped": {
-                    "&:hover": {
-                      color: "#C89B3C",
-                      backgroundColor: "#262c33",
-                      borderColor: "#C89B3C",
-                    },
-                    color: "#A09B8C",
-                    backgroundColor: "262c33",
-                    borderColor: "#C89B3C",
-                  },
-                }}
-                size="Large"
-                aria-label="Basic button group"
-                fullWidth
-              >
-                makeChampionWinrate
-                <Button
-                  onClick={() => {
-                    makeChampionWinrate(
-                      summonerChampionWinrateInfo,
-                      championsInfo,
-                      490
-                    );
-                  }}
-                >
-                  Normal
-                </Button>
-                <Button
-                  onClick={() => {
-                    makeChampionWinrate(
-                      summonerChampionWinrateInfo,
-                      championsInfo,
-                      420
-                    );
-                  }}
-                >
-                  Solo
-                </Button>
-                <Button
-                  onClick={() => {
-                    makeChampionWinrate(
-                      summonerChampionWinrateInfo,
-                      championsInfo,
-                      440
-                    );
-                  }}
-                >
-                  Flex
-                </Button>
-              </ButtonGroup>
-              <div id="statNames">
-                <div>Name</div>
-                <div>Winrate</div>
-                <div>Games</div>
-              </div>
-              <div id="championEntryList"></div>
-            </div>
-          </div>
-
-          <div id="matchHistoryBlock">
-            MATCH HISTORY
-            <div id="matchList" />
+  return (
+    <>
+      <div id="homeBody">
+        <div id="summonerContainer">
+          <div id="winrateBlock">
             <ButtonGroup
               variant="outlined"
               sx={{
@@ -334,27 +171,191 @@ function Dashboard() {
               }}
               size="Large"
               aria-label="Basic button group"
-              width="300px"
+              fullWidth
             >
+              {/* <Button
+                  onClick={() => {
+                    loadWinrate(
+                      summonerRankedInfo[1],
+                      summonerWinrateInfo.normalWinrate
+                    );
+                  }}
+                >
+                  Normal
+                </Button> */}
               <Button
                 onClick={() => {
-                  extendMatchHistory(
-                    summonerMatchInfo,
-                    region,
-                    puuid,
-                    setSummonerMatchInfo
+                  loadWinrate(
+                    summonerRankedInfo[1],
+                    summonerWinrateInfo.rankedSoloWinrate
                   );
                 }}
               >
-                Load More
+                Solo
+              </Button>
+              <Button
+                onClick={() => {
+                  loadWinrate(
+                    summonerRankedInfo[0],
+                    summonerWinrateInfo.rankedFlexWinrate
+                  );
+                }}
+              >
+                Flex
               </Button>
             </ButtonGroup>
+            <div id="games">
+              {`${summonerRankedInfo[1].rankedGames} Games`}{" "}
+            </div>
+            <div id="winrate">
+              Winrate
+              <CircularProgressbar
+                strokeWidth={5}
+                value={summonerWinrateInfo.rankedSoloWinrate}
+                text={`${summonerWinrateInfo.rankedSoloWinrate}%`}
+                styles={buildStyles({
+                  strokeLinecap: "butt",
+                  textSize: "16px",
+                  pathTransitionDuration: 0.4,
+                  pathColor: `rgba(221, 156, 15, ${
+                    summonerWinrateInfo.rankedSoloWinrate / 100
+                  })`,
+                  textColor: "#E3E4E4",
+                  trailColor: "#65645E",
+                })}
+              />
+            </div>
           </div>
-          <div id="friendBlock"></div>
+          <div id="summonerBlock">
+            <div className="profileGroup">
+              <div id="profileIconGroupContainer"></div>
+              <div id="name">
+                <div id="gameName"> {gameName} </div>
+                <div id="server"> #{server} </div>
+              </div>
+              <div className="summonerChips"></div>
+            </div>
+            <div className="rankedInfo">
+              {summonerRankedInfo[1] !== "Unranked" && (
+                <div id="rankedSolo">
+                  <div>{`${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}</div>
+                  <div>{`${summonerRankedInfo[1].rankedPoints} LP`}</div>
+                  <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}</div>
+                  <div>{`${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L`}</div>
+                </div>
+              )}
+              {summonerRankedInfo[0] !== "Unranked" && (
+                <div id="rankedFlex">
+                  <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision}`}</div>
+                  <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
+                  <div>{`${summonerWinrateInfo.rankedFlexWinrate}% Winrate`}</div>
+                  <div>{`${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L`}</div>
+                </div>
+              )}
+            </div>
+          </div>
+          <div id="championBlock">
+            <ButtonGroup
+              variant="outlined"
+              sx={{
+                ".MuiButtonGroup-grouped": {
+                  "&:hover": {
+                    color: "#C89B3C",
+                    backgroundColor: "#262c33",
+                    borderColor: "#C89B3C",
+                  },
+                  color: "#A09B8C",
+                  backgroundColor: "262c33",
+                  borderColor: "#C89B3C",
+                },
+              }}
+              size="Large"
+              aria-label="Basic button group"
+              fullWidth
+            >
+              makeChampionWinrate
+              <Button
+                onClick={() => {
+                  makeChampionWinrate(
+                    summonerChampionWinrateInfo,
+                    championsInfo,
+                    490
+                  );
+                }}
+              >
+                Normal
+              </Button>
+              <Button
+                onClick={() => {
+                  makeChampionWinrate(
+                    summonerChampionWinrateInfo,
+                    championsInfo,
+                    420
+                  );
+                }}
+              >
+                Solo
+              </Button>
+              <Button
+                onClick={() => {
+                  makeChampionWinrate(
+                    summonerChampionWinrateInfo,
+                    championsInfo,
+                    440
+                  );
+                }}
+              >
+                Flex
+              </Button>
+            </ButtonGroup>
+            <div id="statNames">
+              <div>Name</div>
+              <div>Winrate</div>
+              <div>Games</div>
+            </div>
+            <div id="championEntryList"></div>
+          </div>
         </div>
-      </>
-    );
-  }
+
+        <div id="matchHistoryBlock">
+          MATCH HISTORY
+          <div id="matchList" />
+          <ButtonGroup
+            variant="outlined"
+            sx={{
+              ".MuiButtonGroup-grouped": {
+                "&:hover": {
+                  color: "#C89B3C",
+                  backgroundColor: "#262c33",
+                  borderColor: "#C89B3C",
+                },
+                color: "#A09B8C",
+                backgroundColor: "262c33",
+                borderColor: "#C89B3C",
+              },
+            }}
+            size="Large"
+            aria-label="Basic button group"
+            width="300px"
+          >
+            <Button
+              onClick={() => {
+                extendMatchHistory(
+                  summonerMatchInfo,
+                  region,
+                  puuid,
+                  setSummonerMatchInfo
+                );
+              }}
+            >
+              Load More
+            </Button>
+          </ButtonGroup>
+        </div>
+        <div id="friendBlock"></div>
+      </div>
+    </>
+  );
 }
 
 async function getGameQueues() {
@@ -474,13 +475,37 @@ async function makeChampionWinrate(
 //TODO handle other game modes calculation arena doesnt work currently
 async function makeMatchHistory(summonerMatchInfo) {
   const container = document.getElementById("matchList");
-  for (let counter = 0; counter < summonerMatchInfo.length; counter++) {
+
+  for (
+    let counter = 0;
+    counter < Math.min(20, summonerMatchInfo.length);
+    counter++
+  ) {
     if (
       summonerMatchInfo[counter][0].gameQueueID.toString() != "420" &&
       summonerMatchInfo[counter][0].gameQueueID.toString() != "440"
     )
       continue;
-    await createMatchEntry(summonerMatchInfo, container, counter);
+
+    const matchComponent = document.createElement("div");
+    matchComponent.setAttribute("class", "matchHistoryContainer");
+    matchComponent.innerHTML = `
+      <div class="entry"></div>
+      `;
+    container.append(matchComponent);
+
+    const root = createRoot(matchComponent.querySelector(".entry"));
+
+    const entryComponent = (
+      <MatchEntry
+        summonerMatchInfo={summonerMatchInfo}
+        counter={counter}
+        gameQueues={gameQueues}
+      ></MatchEntry>
+    );
+    root.render(entryComponent);
+    await getAllAssets(summonerMatchInfo, counter, matchComponent);
+    //await createMatchEntry(summonerMatchInfo, container, counter);
   }
 }
 
@@ -518,8 +543,6 @@ async function createMatchEntry(summonerMatchInfo, container, counter) {
 
   if (summonerMatchInfo[counter][1].win == false) {
     component.setAttribute("class", "matchEntryDefeat");
-    component.style.background =
-      "linear-gradient(96deg, rgb(231 67 67 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%)";
   }
 
   await getAllAssets(summonerMatchInfo, counter, component);
@@ -532,7 +555,6 @@ async function extendMatchHistory(
   puuid,
   setSummonerMatchInfo
 ) {
-  //RETRIEVE MORE MATCHES HERE
   const container = document.getElementById("matchList");
   const newMatchList = await getMatchList(
     API_KEY,
@@ -554,7 +576,25 @@ async function extendMatchHistory(
       newMatchInfoList[counter][0].gameQueueID.toString() != "440"
     )
       continue;
-    await createMatchEntry(newMatchInfoList, container, counter);
+      const matchComponent = document.createElement("div");
+      matchComponent.setAttribute("class", "matchHistoryContainer");
+      matchComponent.innerHTML = `
+        <div class="entry"></div>
+        `;
+      container.append(matchComponent);
+  
+      const root = createRoot(matchComponent.querySelector(".entry"));
+  
+      const entryComponent = (
+        <MatchEntry
+          summonerMatchInfo={newMatchInfoList}
+          counter={counter}
+          gameQueues={gameQueues}
+        ></MatchEntry>
+      );
+      root.render(entryComponent);
+      await getAllAssets(newMatchInfoList, counter, matchComponent);
+    //await createMatchEntry(newMatchInfoList, container, counter);
   }
 
   setSummonerMatchInfo(summonerMatchInfo.concat(newMatchInfoList));
@@ -967,7 +1007,7 @@ function loadWinrate(gameQueue, winrateNumber) {
   })`;
 }
 
-function getMatchTimeAgo(milliseconds) {
+export function getMatchTimeAgo(milliseconds) {
   const seconds = Math.floor(milliseconds / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
