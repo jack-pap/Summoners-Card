@@ -1,18 +1,18 @@
 /* eslint-disable react/prop-types */
-import '../App.css'
+import "../App.css";
 import { useRouteError } from "react-router-dom";
 
-function Error({ errorMessage }) {
+function ErrorPage({ errorMessage }) {
   const error = useRouteError();
   if (error) console.error(error);
 
   return (
     <>
-      <div id='homeBody'>
+      <div id="homeBody">
         <h2>Error: {error?.statusText || error?.message || errorMessage}</h2>
       </div>
     </>
-  )
+  );
 }
 
-export default Error
+export default ErrorPage;

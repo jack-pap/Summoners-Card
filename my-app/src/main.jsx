@@ -10,7 +10,7 @@ import App from './pages/App.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Champions from './pages/Champions.jsx';
 import Privacy from './pages/About.jsx';
-import Error from './pages/Error.jsx';
+import ErrorPage from './pages/ErrorPage.jsx';
 import './index.css'
 import './app.css'
 import About from './pages/About.jsx';
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
       <Layout><App /></Layout>
       <div className="line" id="rightLine"></div>
     </>,
-    errorElement: <Layout><Error /></Layout>,
+    errorElement: <Layout><ErrorPage /></Layout>,
   },
   {
     path: "/player/:server/:summonerName",
@@ -39,17 +39,17 @@ const router = createBrowserRouter([
       <div className="dashboard">
         <Layout><Dashboard /></Layout>
       </div>,
-    errorElement: <Layout><Error /></Layout>,
+    errorElement: <Layout><ErrorPage /></Layout>,
   },
   {
     path: "/champions",
     element: <Layout><Champions /></Layout>,
-    errorElement: <Layout><Error /></Layout>,
+    errorElement: <Layout><ErrorPage /></Layout>,
   },
   {
     path: "/about",
     element: <Layout><About /></Layout>,
-    errorElement: <Layout><Error /></Layout>,
+    errorElement: <Layout><ErrorPage /></Layout>,
   },
 ]);
 

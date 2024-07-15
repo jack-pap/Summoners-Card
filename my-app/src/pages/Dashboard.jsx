@@ -9,7 +9,7 @@ import {
 } from "./App.jsx";
 import MatchEntry from "../Components/MatchEntry";
 import jsonKeyData from "../../../config.json";
-import Error from "./Error.jsx";
+import ErrorPage from "./ErrorPage.jsx";
 import { useState, useEffect, createElement } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Button from "@mui/material/Button";
@@ -70,7 +70,7 @@ function Dashboard() {
   //const [gameQueues, setGameQueues] = useState([]);
 
   if (!serverOptions.find((option) => option.label === server)) {
-    return <Error errorMessage={`Invalid server "${server}"`} />;
+    return <ErrorPage errorMessage={`Invalid server "${server}"`} />;
   }
 
   useEffect(() => {
@@ -256,6 +256,7 @@ function Dashboard() {
           </div>
           <div id="championBlock">
             <ButtonGroup
+              id="championButtonGroup"
               variant="outlined"
               sx={{
                 ".MuiButtonGroup-grouped": {
@@ -380,7 +381,9 @@ function makeImageApiCall(imageURL) {
     fetch(imageURL)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`Image data failed to request: ${response.status}`);
+          throw new Error(
+            `Image data failed to request: ${response.status}`
+          );
         }
         return response.blob();
       })
@@ -475,6 +478,7 @@ async function makeChampionWinrate(
 //TODO handle other game modes calculation arena doesnt work currently
 async function makeMatchHistory(summonerMatchInfo) {
   const container = document.getElementById("matchList");
+  const promises = [];
 
   for (
     let counter = 0;
@@ -504,9 +508,10 @@ async function makeMatchHistory(summonerMatchInfo) {
       ></MatchEntry>
     );
     root.render(entryComponent);
-    await getAllAssets(summonerMatchInfo, counter, matchComponent);
+    promises.push(getAllAssets(summonerMatchInfo, counter, matchComponent));
     //await createMatchEntry(summonerMatchInfo, container, counter);
   }
+  await Promise.all(promises);
 }
 
 async function createMatchEntry(summonerMatchInfo, container, counter) {
@@ -576,24 +581,24 @@ async function extendMatchHistory(
       newMatchInfoList[counter][0].gameQueueID.toString() != "440"
     )
       continue;
-      const matchComponent = document.createElement("div");
-      matchComponent.setAttribute("class", "matchHistoryContainer");
-      matchComponent.innerHTML = `
+    const matchComponent = document.createElement("div");
+    matchComponent.setAttribute("class", "matchHistoryContainer");
+    matchComponent.innerHTML = `
         <div class="entry"></div>
         `;
-      container.append(matchComponent);
-  
-      const root = createRoot(matchComponent.querySelector(".entry"));
-  
-      const entryComponent = (
-        <MatchEntry
-          summonerMatchInfo={newMatchInfoList}
-          counter={counter}
-          gameQueues={gameQueues}
-        ></MatchEntry>
-      );
-      root.render(entryComponent);
-      await getAllAssets(newMatchInfoList, counter, matchComponent);
+    container.append(matchComponent);
+
+    const root = createRoot(matchComponent.querySelector(".entry"));
+
+    const entryComponent = (
+      <MatchEntry
+        summonerMatchInfo={newMatchInfoList}
+        counter={counter}
+        gameQueues={gameQueues}
+      ></MatchEntry>
+    );
+    root.render(entryComponent);
+    await getAllAssets(newMatchInfoList, counter, matchComponent);
     //await createMatchEntry(newMatchInfoList, container, counter);
   }
 
@@ -659,14 +664,15 @@ function makeSummonerBadges(
   const summComponent = document.getElementById("summonerBlock");
   const root = createRoot(summComponent.querySelector(".summonerChips"));
   const allSummonerChips = [];
-  //Check most millionare mastery points champs
+
   allSummonerChips.push(
-    makeMillionBadge(championsInfo, summonerChampionWinrateInfo)
+    makeMillionBadge(championsInfo, summonerChampionWinrateInfo),
+    makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo),
+    makeMostPlayedBadge(championsInfo, summonerChampionWinrateInfo),
+    makeStreakBadge(summonerMatchInfo)
   );
-  //Check most played champs
+
   //Check highest winrate champs
-  //Check win/lose streaks
-  allSummonerChips.push(makeStreakBadge(summonerMatchInfo));
   root.render(<>{allSummonerChips}</>);
 }
 
@@ -681,7 +687,7 @@ function makeMillionBadge(championsInfo, summonerChampionWinrateInfo) {
           label={`${championsInfo.get(id)} Million`}
           variant="outlined"
           sx={{
-            borderRadius: "13px",
+            borderRadius: "10px",
             borderColor: "#c89b3c",
             color: "#c89b3c",
           }}
@@ -690,6 +696,60 @@ function makeMillionBadge(championsInfo, summonerChampionWinrateInfo) {
     }
   }
   return summonerChips;
+}
+
+function makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo) {
+  var [bestChampName, bestChampWinrate] = ["null", 0];
+  for (const [id, value] of summonerChampionWinrateInfo.entries()) {
+    const normalWinrate = value.winrateMapping.get(490)[2];
+    const soloWinrate = value.winrateMapping.get(420)[2];
+    const flexWinrate = value.winrateMapping.get(440)[2];
+    const sum = (normalWinrate + soloWinrate + flexWinrate) / 3;
+    if (sum > bestChampWinrate) {
+      bestChampName = championsInfo.get(id);
+      bestChampWinrate = sum;
+    }
+  }
+
+  return (
+    <Chip
+      key={bestChampName}
+      label={`Skilled ${bestChampName}`}
+      variant="outlined"
+      sx={{
+        borderRadius: "10px",
+        borderColor: "#c89b3c",
+        color: "#c89b3c",
+      }}
+    />
+  );
+}
+
+function makeMostPlayedBadge(championsInfo, summonerChampionWinrateInfo) {
+  var [bestChampName, bestChampGames] = ["null", 0];
+  for (const [id, value] of summonerChampionWinrateInfo.entries()) {
+    const normalGames = value.winrateMapping.get(490)[0];
+    const soloGames = value.winrateMapping.get(420)[0];
+    const flexGames = value.winrateMapping.get(440)[0];
+    const sum = normalGames + soloGames + flexGames;
+    if (sum > bestChampGames) {
+      bestChampName = championsInfo.get(id);
+      bestChampGames = sum;
+    }
+  }
+
+  return (
+    <Chip
+      key={bestChampName}
+      label={`OTP ${bestChampName}`}
+      variant="outlined"
+      sx={{
+        borderRadius: "10px",
+        borderColor: "#c89b3c",
+        color: "#c89b3c",
+      }}
+    />
+  );
 }
 
 function makeStreakBadge(summonerMatchInfo) {
@@ -715,7 +775,7 @@ function makeStreakBadge(summonerMatchInfo) {
       label={label}
       variant="outlined"
       sx={{
-        borderRadius: "13px",
+        borderRadius: "10px",
         borderColor: "#c89b3c",
         color: "#c89b3c",
       }}

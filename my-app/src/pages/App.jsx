@@ -8,6 +8,7 @@ import {
   RouterProvider,
   useNavigate,
 } from "react-router-dom";
+import { createRoot } from "react-dom/client";
 import GridLoader from "react-spinners/GridLoader";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
@@ -15,6 +16,7 @@ import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
+import ErrorPage from "./ErrorPage";
 
 const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
 
@@ -22,19 +24,19 @@ const serverOptions = [
   { value: "EUW1", label: "EUW", region: "europe" },
   { value: "EUN1", label: "EUNE", region: "europe" },
   { value: "NA1", label: "NA", region: "americas" },
-  { value: "KR", label: "KR", region: "asia"  },
-  { value: "JP1", label: "JP", region: "asia"  },
-  { value: "BR1", label: "BR", region: "americas"  },
-  { value: "LA1", label: "LAN", region: "americas"  },
-  { value: "LA2", label: "LAS", region: "americas"  },
-  { value: "OC1", label: "OC", region: "sea"  },
-  { value: "TR1", label: "TR", region: "europe"  },
-  { value: "RU", label: "RU", region: "europe"  },
-  { value: "PH2", label: "PH", region: "asia"  },
-  { value: "SG2", label: "SG", region: "sea"  },
-  { value: "TH2", label: "TH", region: "asia"  },
-  { value: "TW2", label: "TW", region: "asia"  },
-  { value: "VN2", label: "VN", region: "asia"  },
+  { value: "KR", label: "KR", region: "asia" },
+  { value: "JP1", label: "JP", region: "asia" },
+  { value: "BR1", label: "BR", region: "americas" },
+  { value: "LA1", label: "LAN", region: "americas" },
+  { value: "LA2", label: "LAS", region: "americas" },
+  { value: "OC1", label: "OC", region: "sea" },
+  { value: "TR1", label: "TR", region: "europe" },
+  { value: "RU", label: "RU", region: "europe" },
+  { value: "PH2", label: "PH", region: "asia" },
+  { value: "SG2", label: "SG", region: "sea" },
+  { value: "TH2", label: "TH", region: "asia" },
+  { value: "TW2", label: "TW", region: "asia" },
+  { value: "VN2", label: "VN", region: "asia" },
 ];
 
 const GAME_MODES = {
@@ -233,10 +235,7 @@ function App() {
                 backgroundColor: "#160B0B",
                 borderColor: "#160B0B",
               }}
-            >
-              Please ensure that the summoner name has no whitespace or special
-              symbols
-            </Alert>
+            />
           </Collapse>
         </Box>
       </div>
@@ -268,7 +267,7 @@ async function loadVersion() {
       .then((response) => {
         if (!response.ok) {
           alert(`Cannot retrieve version number`);
-          throw new Error(`Network response was not ok: ${response.status}`);
+          throw new ErrorPage(`Network response was not ok ${response.status}`);
         }
         return response.json();
       })
@@ -352,33 +351,43 @@ async function getInput(
       document.getElementById("homeBody").style.animation = "fade-in 0.5s";
       document.getElementById("homeBody").style.pointerEvents = "all";
       setIsLoading(false);
+      document.querySelector(".MuiAlert-message").textContent = error;
+      setOpen(true);
       return;
     }
   } else {
+    document.querySelector(".MuiAlert-message").textContent =
+      "Please ensure that the summoner name has no whitespace or special symbols";
     setOpen(true);
     return;
   }
 }
 
+//ADD AN ERROR CHECK HERE FOR SAFEGUARDING LINK LOADING
 export async function getSummonerStats(tagLine, gameName, server, region) {
-  const puuid = await getPUUID(API_KEY, tagLine, gameName); // puuid identifier for summoner
-  const summonerInfo = await getSummonerInfo(API_KEY, server, puuid); // Array that includes summoner ID, summoner level and profile picture
-  const masteryInfo = await getMasteryInfo(API_KEY, server, puuid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
-  const matchList = await getMatchList(API_KEY, region, puuid, 0, 40); // Array constisting of match IDs
-  const matchInfoList = await getMatchInfoList(API_KEY, region, matchList, puuid); // Returns array that contains match information for all matches in a list
-  const rankedInfo = await getRankedInfo(API_KEY, server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
-  const summonerWinrate = getSummonerWinrates(rankedInfo); // Returns JSON object for all game mode winrates
-  const winrates = await getChampionWinrate(masteryInfo, matchInfoList); // Calculates for every champion their respective game mode winrates
-  const champions = await getAllChampions();
-  return {
-    puuid,
-    summonerInfo,
-    rankedInfo,
-    matchInfoList,
-    summonerWinrate,
-    masteryInfo,
-    champions
-  };
+  try {
+    const puuid = await getPUUID(tagLine, gameName); // puuid identifier for summoner
+    const summonerInfo = await getSummonerInfo(server, puuid); // Array that includes summoner ID, summoner level and profile picture
+    const masteryInfo = await getMasteryInfo(server, puuid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
+    const matchList = await getMatchList(region, puuid, 0, 40); // Array constisting of match IDs
+    const matchInfoList = await getMatchInfoList(region, matchList, puuid); // Returns array that contains match information for all matches in a list
+    const rankedInfo = await getRankedInfo(server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
+    const summonerWinrate = getSummonerWinrates(rankedInfo); // Returns JSON object for all game mode winrates
+    const winrates = await getChampionWinrate(masteryInfo, matchInfoList); // Calculates for every champion their respective game mode winrates
+    const champions = await getAllChampions();
+    return {
+      puuid,
+      summonerInfo,
+      rankedInfo,
+      matchInfoList,
+      summonerWinrate,
+      masteryInfo,
+      champions,
+    };
+  } catch (error) {
+    console.log(error);
+    return <ErrorPage errorMessage={`Failed to retrieve summoner`} />; //This doesnt work cause of import
+  }
 }
 
 /**
@@ -393,7 +402,7 @@ export function makeApiCall(apiURL) {
     fetch(apiURL)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.status}`);
+          throw new ErrorPage(`Network response was not ok ${response.status}`);
         }
         return response.json();
       })
@@ -411,12 +420,11 @@ export function makeApiCall(apiURL) {
  * API call to retrieve PUUID identifier
  * based on username
  *
- * @param {string} API_KEY
  * @param {string} tagLine
  * @param {string} gameName
  * @returns {string}
  */
-async function getPUUID(API_KEY, tagLine, gameName) {
+async function getPUUID(tagLine, gameName) {
   const puuidApiURL = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}?api_key=${API_KEY}`;
   const data = await makeApiCall(puuidApiURL);
   return data.puuid;
@@ -426,12 +434,11 @@ async function getPUUID(API_KEY, tagLine, gameName) {
  * API call to retrieve summoner info (summoner id,summoner level, profile icon ID)
  * based on puuid and server
  *
- * @param {string} API_KEY
  * @param {string} server
  * @param {string} puuid
  * @returns {[string]}
  */
-async function getSummonerInfo(API_KEY, server, puuid) {
+async function getSummonerInfo(server, puuid) {
   const summonerInfoApiURL = `https://${server}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}?api_key=${API_KEY}`;
   const data = await makeApiCall(summonerInfoApiURL);
   return [data.id, data.summonerLevel, data.profileIconId];
@@ -443,7 +450,6 @@ async function getSummonerInfo(API_KEY, server, puuid) {
  * (champion ID, champion mastery level, champion mastery points)
  * based on puuid and server
  *
- * @param {string} API_KEY
  * @param {string} server
  * @param {string} puuid
  * @returns {Promise<Array<Object>>} An array of objects representing champion mastery information.
@@ -455,7 +461,7 @@ async function getSummonerInfo(API_KEY, server, puuid) {
  *   - rankedSoloWinrate {Map} - Map with key 420 for ranked solo game win rate (e.g., Map([RANKED_SOLO_GAME_MODE, [0, 0]])).
  *   - rankedFlexWinrate {Map} - Map with key 440 for ranked flex game win rate (e.g., Map([RANKED_FLEX_GAME_MODE, [0, 0]])).
  */
-async function getMasteryInfo(API_KEY, server, puuid) {
+async function getMasteryInfo(server, puuid) {
   const masteryApiURL = `https://${server}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}?api_key=${API_KEY}`;
   const data = await makeApiCall(masteryApiURL);
   var championStatsMapping = new Map(); // Mapping of championId to JSON stats
@@ -537,11 +543,15 @@ function getChampionWinrate(masteryInfo, matchInfoList) {
  * API call to retrieve an array of
  * summoner match IDs based on puuid
  *
- * @param {string} API_KEY
  * @param {string} puuid
  * @returns {Promise<Array<Object>>}
  */
-export async function getMatchList(API_KEY, region, puuid, matchAmountStart, matchAmount) {
+export async function getMatchList(
+  region,
+  puuid,
+  matchAmountStart,
+  matchAmount
+) {
   const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${matchAmountStart}&count=${matchAmount}&api_key=${API_KEY}`;
   const data = await makeApiCall(matchListApiURL);
   var matchList = [];
@@ -554,12 +564,11 @@ export async function getMatchList(API_KEY, region, puuid, matchAmountStart, mat
 /**
  * API call to retrieve all match information from a matchID
  *
- * @param {string} API_KEY
  * @param {[string]} matchIDs
  * @param {string} puuid
  * @returns {[[string],[string], [string]]}
  */
-export async function getMatchInfoList(API_KEY, region, matchIDs, puuid) {
+export async function getMatchInfoList(region, matchIDs, puuid) {
   var matchInfoList = [];
   for (const matchID of matchIDs) {
     const matchInfoApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
@@ -585,12 +594,11 @@ export async function getMatchInfoList(API_KEY, region, matchIDs, puuid) {
  * (wins, losses, rank, tier)
  * based on id and server
  *
- * @param {string} API_KEY
  * @param {string} server
  * @param {string} id
  * @returns {[[string]]}
  */
-async function getRankedInfo(API_KEY, server, id) {
+async function getRankedInfo(server, id) {
   const rankedApiURL = `https://${server}.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`;
   const data = await makeApiCall(rankedApiURL);
   var rankedSoloInfo = null;

@@ -381,7 +381,7 @@ select:focus {
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-size: 20px;
+  font-size: 25px;
   padding: 5px;
   gap: 5px;
 }
@@ -396,7 +396,8 @@ select:focus {
 
 .summonerChips {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap :wrap;
+  width: 450px;
   gap: 7px;
   justify-content: center; 
   align-items: center;
