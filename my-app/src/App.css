@@ -118,20 +118,6 @@ footer {
   max-width: 800px;
 }
 
-body .dashboard footer {
-  color: #79756a;
-  font-family: Beaufort;
-  font-size: 12px;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  min-height: 50px;
-  text-align: center;
-  border-top: 1px solid #a09b8c;
-  max-width: 800px;
-}
-
 #errorPopup {
   display: flex;
   justify-content: center;
@@ -662,10 +648,9 @@ img {
 }
 
 #championBlock{
-  height: auto;
-  min-height: 200px;
+  height: fit-content;
   width: 400px;
-  min-height: 380px;
+  min-height: 373px;
   display: flex;
   flex-direction: column;
   align-items: center;

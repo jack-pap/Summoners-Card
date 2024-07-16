@@ -579,12 +579,54 @@ export async function getMatchInfoList(region, matchIDs, puuid) {
       gameQueueID: data.info.queueId,
     };
     const participants = data.info.participants;
+    const participantsList = [];
+    var ownPlayerInfo = null;
     for (const playerInfo of participants) {
-      if (playerInfo.puuid == puuid) {
-        matchInfoList.push([contents, playerInfo, participants]);
-        break;
-      }
+      const pickedPlayerInfo = (({
+        win,
+        championId,
+        champLevel,
+        kills,
+        deaths,
+        assists,
+        visionScore,
+        summoner1Id,
+        summoner2Id,
+        perks,
+        item0,
+        item1,
+        item2,
+        item3,
+        item4,
+        item5,
+        item6,
+        riotIdGameName,
+        riotIdTagline,
+      }) => ({
+        win,
+        championId,
+        champLevel,
+        kills,
+        deaths,
+        assists,
+        visionScore,
+        summoner1Id,
+        summoner2Id,
+        perks,
+        item0,
+        item1,
+        item2,
+        item3,
+        item4,
+        item5,
+        item6,
+        riotIdGameName,
+        riotIdTagline,
+      }))(playerInfo);
+      participantsList.push(pickedPlayerInfo);
+      if (playerInfo.puuid == puuid) ownPlayerInfo = pickedPlayerInfo;
     }
+    matchInfoList.push([contents, ownPlayerInfo, participantsList]);
   }
   return matchInfoList;
 }

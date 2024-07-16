@@ -12,6 +12,7 @@ import jsonKeyData from "../../../config.json";
 import ErrorPage from "./ErrorPage.jsx";
 import { useState, useEffect, createElement } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import GridLoader from "react-spinners/GridLoader";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Chip from "@mui/material/Chip";
@@ -40,6 +41,13 @@ const serverOptions = [
   { value: "VN2", label: "VN", region: "asia" },
 ];
 
+const spinnerStyles = {
+  position: "absolute",
+  top: "43%",
+  left: "50%",
+  transform: "translateX(-50%)",
+};
+
 const serverDictionary = serverOptions.reduce((acc, option) => {
   acc[option.label] = option.value;
   return acc;
@@ -67,7 +75,6 @@ function Dashboard() {
   const [summonerChampionWinrateInfo, setSummonerChampionWinrateInfo] =
     useState(null);
   const [championsInfo, setChampions] = useState(null);
-  //const [gameQueues, setGameQueues] = useState([]);
 
   if (!serverOptions.find((option) => option.label === server)) {
     return <ErrorPage errorMessage={`Invalid server "${server}"`} />;
@@ -126,6 +133,8 @@ function Dashboard() {
       summonerChampionWinrateInfo &&
       championsInfo
     ) {
+      document.getElementById("footer").style.position = "relative";
+
       makeSummonerProfile(
         summonerInfo,
         summonerRankedInfo,
@@ -149,7 +158,20 @@ function Dashboard() {
   ]);
 
   ownUsername = gameName;
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <GridLoader
+        color={"#9b792f"}
+        loading={isLoading}
+        cssOverride={spinnerStyles}
+        margin={6}
+        size={26}
+        speedMultiplier={0.8}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+      />
+    );
+  }
   return (
     <>
       <div id="homeBody">
@@ -381,9 +403,7 @@ function makeImageApiCall(imageURL) {
     fetch(imageURL)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(
-            `Image data failed to request: ${response.status}`
-          );
+          throw new Error(`Image data failed to request: ${response.status}`);
         }
         return response.blob();
       })
@@ -398,6 +418,7 @@ function makeImageApiCall(imageURL) {
 }
 
 //TODO Add maybe loader while loading winrate
+// Make it retrieve based on most games not most mastery points
 //Filter through champions with most games in that queue
 /**
  * Function that displays champion winrate stats
@@ -413,66 +434,81 @@ async function makeChampionWinrate(
   queueId
 ) {
   const container = document.getElementById("championEntryList");
-  container.innerHTML = ``;
+  container.innerHTML = "";
 
+  var mostPlayedChampions = [];
   for (const [champId, champData] of summonerChampionWinrateInfo.entries()) {
-    if (container.children.length > 4) break;
-
-    const champComponent = document.createElement("div");
-    champComponent.setAttribute("class", "champEntry");
-    champComponent.innerHTML = `
-    <div id="champContainer">
-    <div class="champImage"></div>
-    <div class="champName">${championsInfo.get(champId)}</div>
-
-    </div>
-    <div class="champWinrate"></div>
-    <div class="gamesPlayed">${
-      summonerChampionWinrateInfo.get(champId).winrateMapping.get(queueId)[0]
-    } \nPlayed</div>
-
-    `;
-    container.append(champComponent);
-
-    const root = createRoot(champComponent.querySelector(".champWinrate"));
-    if (
-      summonerChampionWinrateInfo.get(champId).winrateMapping.get(queueId)[2] ==
-      0
-    ) {
-      root.render(
-        <ProgressBar
-          completed={1}
-          width="150px"
-          height="17px"
-          bgColor="#C89B3C"
-          baseBgColor="#383838"
-          animateOnRender="true"
-          borderRadius="3px"
-          customLabel="0%"
-          labelAlignment="left"
-        />
-      );
-    } else {
-      root.render(
-        <ProgressBar
-          completed={
-            summonerChampionWinrateInfo
-              .get(champId)
-              .winrateMapping.get(queueId)[2]
-          }
-          width="150px"
-          height="17px"
-          bgColor="#C89B3C"
-          baseBgColor="#383838"
-          animateOnRender="true"
-          borderRadius="3px"
-          labelAlignment="right"
-        />
-      );
-    }
-
-    await getChampionAssets(champId, ".champImage", champComponent);
+    mostPlayedChampions.push([
+      champId,
+      champData.winrateMapping.get(queueId)[0],
+    ]);
   }
+  mostPlayedChampions = mostPlayedChampions
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+
+  const components = [];
+  const promises = [];
+
+  for (const [champId] of mostPlayedChampions) {
+    const result = makeComponents(
+      summonerChampionWinrateInfo.get(champId).winrateMapping.get(queueId),
+      championsInfo.get(champId),
+      champId
+    );
+    components.push(result.components);
+    promises.push(result.promise);
+  }
+
+  await Promise.all(promises);
+
+  components.forEach(({ champComponent, progressBarComponent }) => {
+    container.appendChild(champComponent);
+    const root = createRoot(champComponent.querySelector(".champWinrate"));
+    root.render(progressBarComponent);
+  });
+}
+
+function makeComponents(winrateMappingObject, championName, champId) {
+  const champComponent = document.createElement("div");
+  const gamesPlayed = winrateMappingObject[0];
+  const winrate = winrateMappingObject[2];
+
+  champComponent.setAttribute("class", "champEntry");
+  champComponent.innerHTML = `
+      <div id="champContainer">
+      <div class="champImage"></div>
+      <div class="champName">${championName}</div>
+  
+      </div>
+      <div class="champWinrate"></div>
+      <div class="gamesPlayed">${gamesPlayed} \nPlayed</div>
+      `;
+
+  const progressBarComponent = (
+    <ProgressBar
+      completed={winrate === 0 ? 1 : winrate}
+      width="150px"
+      height="17px"
+      bgColor="#C89B3C"
+      baseBgColor="#383838"
+      animateOnRender={true}
+      borderRadius="3px"
+      customLabel={winrate === 0 ? "0%" : undefined}
+      labelAlignment={winrate === 0 ? "left" : "right"}
+    />
+  );
+
+  const assetPromise = getChampionAssets(
+    champId,
+    ".champImage",
+    champComponent
+  );
+
+  return {
+    components: { champComponent, progressBarComponent },
+    promise: assetPromise,
+  };
 }
 
 //TODO handle other game modes calculation arena doesnt work currently
@@ -554,6 +590,7 @@ async function createMatchEntry(summonerMatchInfo, container, counter) {
   container.appendChild(component);
 }
 
+//DISABLE IT AND THEN REACTIVATE IT
 async function extendMatchHistory(
   summonerMatchInfo,
   region,
@@ -562,18 +599,12 @@ async function extendMatchHistory(
 ) {
   const container = document.getElementById("matchList");
   const newMatchList = await getMatchList(
-    API_KEY,
     region,
     puuid,
     summonerMatchInfo.length,
     11
   );
-  const newMatchInfoList = await getMatchInfoList(
-    API_KEY,
-    region,
-    newMatchList,
-    puuid
-  );
+  const newMatchInfoList = await getMatchInfoList(region, newMatchList, puuid);
 
   for (let counter = 0; counter < newMatchInfoList.length - 1; counter++) {
     if (
@@ -669,6 +700,7 @@ function makeSummonerBadges(
     makeMillionBadge(championsInfo, summonerChampionWinrateInfo),
     makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo),
     makeMostPlayedBadge(championsInfo, summonerChampionWinrateInfo),
+    //Add one for most played role
     makeStreakBadge(summonerMatchInfo)
   );
 
