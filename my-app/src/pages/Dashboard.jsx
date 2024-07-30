@@ -13,9 +13,7 @@ import ErrorPage from "./ErrorPage.jsx";
 import { useState, useEffect, createElement } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import GridLoader from "react-spinners/GridLoader";
-import CircularProgress from '@mui/material/CircularProgress';
 import Button from "@mui/material/Button";
-import LoadingButton from "@mui/lab/LoadingButton";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Chip from "@mui/material/Chip";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
@@ -50,11 +48,6 @@ const spinnerStyles = {
   transform: "translateX(-50%)",
 };
 
-const spinnerStyles2 = {
-  position: "relative",
-  transform: "translateY(-40%)",
-};
-
 const serverDictionary = serverOptions.reduce((acc, option) => {
   acc[option.label] = option.value;
   return acc;
@@ -72,7 +65,6 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [isTempLoading, setIsTempLoading] = useState(false);
 
   const [gameName, setGameName] = useState("");
   const [puuid, setPuuid] = useState(null);
@@ -369,20 +361,18 @@ function Dashboard() {
             aria-label="Basic button group"
             width="300px"
           >
-            <LoadingButton 
-            loading={isTempLoading}
-            loadingIndicator={<CircularProgress sx={{ color: '#d8a841' }} size={35}/>}
-            loadingPosition="center"
-            onClick={() => {
-              extendMatchHistory(
-                summonerMatchInfo,
-                region,
-                puuid,
-                setSummonerMatchInfo,
-                setIsTempLoading
-              );
-            }}
-            >Load More</LoadingButton>
+            <Button
+              onClick={() => {
+                extendMatchHistory(
+                  summonerMatchInfo,
+                  region,
+                  puuid,
+                  setSummonerMatchInfo
+                );
+              }}
+            >
+              Load More
+            </Button>
           </ButtonGroup>
         </div>
         <div id="friendBlock"></div>
@@ -605,8 +595,7 @@ async function extendMatchHistory(
   summonerMatchInfo,
   region,
   puuid,
-  setSummonerMatchInfo,
-  setIsTempLoading
+  setSummonerMatchInfo
 ) {
   const container = document.getElementById("matchList");
   const newMatchList = await getMatchList(
@@ -617,7 +606,6 @@ async function extendMatchHistory(
   );
   const newMatchInfoList = await getMatchInfoList(region, newMatchList, puuid);
 
-  setIsTempLoading(true);
   for (let counter = 0; counter < newMatchInfoList.length - 1; counter++) {
     if (
       newMatchInfoList[counter][0].gameQueueID.toString() != "420" &&
@@ -644,7 +632,7 @@ async function extendMatchHistory(
     await getAllAssets(newMatchInfoList, counter, matchComponent);
     //await createMatchEntry(newMatchInfoList, container, counter);
   }
-  setIsTempLoading(false);
+
   setSummonerMatchInfo(summonerMatchInfo.concat(newMatchInfoList));
 }
 
