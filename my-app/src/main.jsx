@@ -12,7 +12,7 @@ import Champions from './pages/Champions.jsx';
 import Privacy from './pages/About.jsx';
 import ErrorPage from './pages/ErrorPage.jsx';
 import './index.css'
-import './app.css'
+import './App.css'
 import About from './pages/About.jsx';
 
 const Layout = ({ children }) => (

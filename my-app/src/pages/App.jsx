@@ -9,6 +9,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { createRoot } from "react-dom/client";
+import { apiCall } from "../controller/apiService.js";
 import GridLoader from "react-spinners/GridLoader";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
@@ -282,7 +283,7 @@ async function loadVersion() {
 
 async function getAllChampions() {
   const championApiURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-summary.json`;
-  const data = await makeApiCall(championApiURL);
+  const data = await apiCall(championApiURL);
   var championMapping = new Map();
   for (const champion of data) {
     championMapping.set(champion.id, champion.name);
@@ -426,7 +427,7 @@ export function makeApiCall(apiURL) {
  */
 async function getPUUID(tagLine, gameName) {
   const puuidApiURL = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}?api_key=${API_KEY}`;
-  const data = await makeApiCall(puuidApiURL);
+  const data = await apiCall(puuidApiURL);
   return data.puuid;
 }
 
@@ -440,7 +441,7 @@ async function getPUUID(tagLine, gameName) {
  */
 async function getSummonerInfo(server, puuid) {
   const summonerInfoApiURL = `https://${server}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}?api_key=${API_KEY}`;
-  const data = await makeApiCall(summonerInfoApiURL);
+  const data = await apiCall(summonerInfoApiURL);
   return [data.id, data.summonerLevel, data.profileIconId];
 }
 
@@ -463,7 +464,7 @@ async function getSummonerInfo(server, puuid) {
  */
 async function getMasteryInfo(server, puuid) {
   const masteryApiURL = `https://${server}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}?api_key=${API_KEY}`;
-  const data = await makeApiCall(masteryApiURL);
+  const data = await apiCall(masteryApiURL);
   var championStatsMapping = new Map(); // Mapping of championId to JSON stats
   for (const champion of data) {
     var champStats = {
@@ -553,7 +554,7 @@ export async function getMatchList(
   matchAmount
 ) {
   const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${matchAmountStart}&count=${matchAmount}&api_key=${API_KEY}`;
-  const data = await makeApiCall(matchListApiURL);
+  const data = await apiCall(matchListApiURL);
   var matchList = [];
   for (const match of data) {
     matchList.push(match);
@@ -572,7 +573,7 @@ export async function getMatchInfoList(region, matchIDs, puuid) {
   var matchInfoList = [];
   for (const matchID of matchIDs) {
     const matchInfoApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
-    const data = await makeApiCall(matchInfoApiURL);
+    const data = await apiCall(matchInfoApiURL);
     const contents = {
       gameDate: Date.now() - new Date(data.info.gameEndTimestamp),
       gameDuration: data.info.gameDuration,
@@ -642,7 +643,7 @@ export async function getMatchInfoList(region, matchIDs, puuid) {
  */
 async function getRankedInfo(server, id) {
   const rankedApiURL = `https://${server}.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`;
-  const data = await makeApiCall(rankedApiURL);
+  const data = await apiCall(rankedApiURL);
   var rankedSoloInfo = null;
   var rankedFlexInfo = null;
   for (let i = 0; i < data.length; i++) {

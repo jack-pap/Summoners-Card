@@ -2,11 +2,11 @@ import "../App.css";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import {
-  makeApiCall,
   getSummonerStats,
   getMatchList,
   getMatchInfoList,
 } from "./App.jsx";
+import { apiCall } from "../controller/apiService.js";
 import MatchEntry from "../Components/MatchEntry";
 import jsonKeyData from "../../../config.json";
 import ErrorPage from "./ErrorPage.jsx";
@@ -384,7 +384,7 @@ function Dashboard() {
 async function getGameQueues() {
   const gameQueueURL =
     "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/queues.json";
-  const gameQueueData = await makeApiCall(gameQueueURL);
+  const gameQueueData = await apiCall(gameQueueURL);
   var queueMapping = new Map();
   for (var queue in gameQueueData) {
     queueMapping.set(gameQueueData[queue].id, gameQueueData[queue].name);
@@ -860,7 +860,7 @@ async function makeRankedEmblem(summonerRankedInfo, containerName) {
 
 async function getChampionAssets(championId, insideClass, parentComponent) {
   const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
-  const championData = await makeApiCall(championDataURL);
+  const championData = await apiCall(championDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
   const champImageURL = championData.squarePortraitPath;
   const extractedPath = champImageURL
@@ -891,7 +891,7 @@ async function getSummonerSpellAssets(
   component
 ) {
   const summonerSpellsURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/summoner-spells.json`;
-  const summonerSpellsData = await makeApiCall(summonerSpellsURL);
+  const summonerSpellsData = await apiCall(summonerSpellsURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
 
   const img1 = await getSummonerSpellImage(
@@ -949,7 +949,7 @@ async function getSummonerRuneAssets(
 
 async function getRuneImage(runeID, component, divClass) {
   const runeDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perks.json`;
-  const summonerRuneData = await makeApiCall(runeDataURL);
+  const summonerRuneData = await apiCall(runeDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
 
   const runeImageURL = summonerRuneData.find(
@@ -971,7 +971,7 @@ async function getRuneImage(runeID, component, divClass) {
 
 async function getSecondaryRuneImage(runeID, component, divClass) {
   const runeDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perkstyles.json`;
-  const summonerRuneData = await makeApiCall(runeDataURL);
+  const summonerRuneData = await apiCall(runeDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
 
   const runeImageURL = summonerRuneData.styles.find(
@@ -993,7 +993,7 @@ async function getSecondaryRuneImage(runeID, component, divClass) {
 
 async function getItemAssets(summonerInfo, divClass, component) {
   const itemDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/items.json`;
-  const summonerItemData = await makeApiCall(itemDataURL);
+  const summonerItemData = await apiCall(itemDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
   var itemIds = [
     summonerInfo.item0,
