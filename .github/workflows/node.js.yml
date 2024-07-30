@@ -25,6 +25,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+        working-directory: ./my-app
         cache: 'npm'
     - name: Check if my-app directory exists
       run: |
