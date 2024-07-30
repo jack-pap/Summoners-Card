@@ -26,12 +26,18 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - name: Check if my-app directory exists
+      run: |
+        if [ ! -d "my-app" ]; then
+          echo "my-app directory does not exist"
+          exit 1
+        fi
     - name: Install dependencies
       run: npm ci
-      working-directory: my-app
+      working-directory: ./my-app
     - name: Build the project
       run: npm run build --if-present
-      working-directory: my-app
+      working-directory: ./my-app
     - name: Run tests
       run: npm test
-      working-directory: my-app
+      working-directory: ./my-app
