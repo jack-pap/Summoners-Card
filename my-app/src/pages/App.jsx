@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import "../App.css";
-import jsonKeyData from "../../../config.json";
+//import jsonKeyData from "../../../config.json";
 import Select from "react-select";
 import { useState, useEffect } from "react";
 import {
@@ -19,7 +19,14 @@ import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import ErrorPage from "./ErrorPage";
 
-const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
+const API_KEY = import.meta.env.VITE_API_KEY;
+//const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
+// var API_KEY;
+// if (import.meta.env.VITE_API_KEY != null) {
+//   API_KEY = process.env.API_KEY;
+// } else {
+//   API_KEY = import.meta.env.VITE_API_KEY;
+// }
 
 const serverOptions = [
   { value: "EUW1", label: "EUW", region: "europe" },
