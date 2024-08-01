@@ -42,5 +42,5 @@ jobs:
         API_KEY: ${{ secrets.RIOT_API_KEY }}
       working-directory: ./my-app
     - name: Run tests
-      run: npm test
+      run: npm test --if-present
       working-directory: ./my-app
