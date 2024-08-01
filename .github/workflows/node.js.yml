@@ -38,8 +38,7 @@ jobs:
       working-directory: ./my-app
     - name: Build the project
       run: npm run build --if-present
-      env:
-        API_KEY: ${{ secrets.RIOT_API_KEY }}
+
       working-directory: ./my-app
     - name: Run tests
       run: npm test --if-present
