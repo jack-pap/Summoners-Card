@@ -3,7 +3,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { getSummonerStats, getMatchList, getMatchInfoList } from "./App.jsx";
 import { apiCall } from "../controller/apiService.js";
-import MatchEntry from "../components/MatchEntry";
+import MatchEntry from "../Components/MatchEntry";
 import ErrorPage from "./ErrorPage.jsx";
 import { useState, useEffect, createElement } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
