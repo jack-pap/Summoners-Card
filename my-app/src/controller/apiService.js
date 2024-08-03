@@ -1,6 +1,6 @@
 /**
  * API call to Riot for data by calling the proxy route
- * and passing the apiURL
+ * server and passing the apiURL endpoint
  * @param {string} apiURL
  * @returns {Promise}
  */
@@ -23,6 +23,7 @@ export function apiCall(apiURL) {
       })
       .catch((error) => {
         reject(error);
+        console.log(data);
       });
   });
 }

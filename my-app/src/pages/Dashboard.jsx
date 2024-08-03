@@ -3,8 +3,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { getSummonerStats, getMatchList, getMatchInfoList } from "./App.jsx";
 import { apiCall } from "../controller/apiService.js";
-import MatchEntry from "../Components/MatchEntry";
-//import jsonKeyData from "../../../config.json";
+import MatchEntry from "../components/MatchEntry";
 import ErrorPage from "./ErrorPage.jsx";
 import { useState, useEffect, createElement } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
@@ -17,13 +16,6 @@ import "react-circular-progressbar/dist/styles.css";
 import ProgressBar from "@ramonak/react-progress-bar";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
-//const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
-// var API_KEY;
-// if (import.meta.env.VITE_API_KEY != null) {
-//   API_KEY = process.env.API_KEY;
-// } else {
-//   API_KEY = import.meta.env.VITE_API_KEY;
-// }
 
 const serverOptions = [
   { value: "EUW1", label: "EUW", region: "europe" },

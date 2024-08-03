@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import "../App.css";
-//import jsonKeyData from "../../../config.json";
 import Select from "react-select";
 import { useState, useEffect } from "react";
 import {
@@ -20,13 +19,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import ErrorPage from "./ErrorPage";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
-//const API_KEY = jsonKeyData.API_KEY; // Bound to change keep updating frequently
-// var API_KEY;
-// if (import.meta.env.VITE_API_KEY != null) {
-//   API_KEY = process.env.API_KEY;
-// } else {
-//   API_KEY = import.meta.env.VITE_API_KEY;
-// }
 
 const serverOptions = [
   { value: "EUW1", label: "EUW", region: "europe" },
@@ -242,6 +234,11 @@ function App() {
                 color: "#F4C7C7",
                 backgroundColor: "#160B0B",
                 borderColor: "#160B0B",
+                ".MuiAlert-message": {
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                },
               }}
             />
           </Collapse>
@@ -304,7 +301,6 @@ async function getAllChampions() {
  *
  * @param {string} serverValue
  */
-
 async function getInput(
   serverValue,
   serverLabel,
@@ -334,10 +330,8 @@ async function getInput(
         matchInfoList,
         summonerWinrate,
         masteryInfo,
-        champions
-      } = await getSummonerStats(tagLine, gameName, server, region); // Returns JSON object for all champion and their respective game mode winrates
-      //const winrateF = Math.round(((rankedInfo[0][4] / (rankedInfo[0][4] + rankedInfo[0][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Flex queue
-      //const winrateS = Math.round(((rankedInfo[1][4] / (rankedInfo[1][4] + rankedInfo[1][5])) * 100) * 10) / 10; // Rounded winrate percentage calculated from total games played in Solo queue
+        champions,
+      } = await getSummonerStats(tagLine, gameName, server, region); // Returns all relevant info for the player, games played etc.
 
       navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, {
         state: {
@@ -352,14 +346,15 @@ async function getInput(
           championsInfo: champions,
         },
       });
-      //alert("Flex W/R " + winrateF + "%")
-      //alert("Solo W/R " + winrateS + "%")
     } catch (error) {
+      // Stops spinner and reverts back to homepage while showing an error
       console.log(error);
       document.getElementById("homeBody").style.animation = "fade-in 0.5s";
       document.getElementById("homeBody").style.pointerEvents = "all";
       setIsLoading(false);
-      document.querySelector(".MuiAlert-message").textContent = error;
+      document.querySelector(
+        ".MuiAlert-message"
+      ).textContent = `Trouble finding summoner ${gameName}`;
       setOpen(true);
       return;
     }
@@ -371,7 +366,16 @@ async function getInput(
   }
 }
 
-//ADD AN ERROR CHECK HERE FOR SAFEGUARDING LINK LOADING
+/**
+ * Driver method that initiates all API calls 
+ *
+ * @param {string} tagLine
+ * @param {string} gameName
+ * @param {string} server
+ * @param {string} region
+ * 
+ * @returns {JSON}
+ */
 export async function getSummonerStats(tagLine, gameName, server, region) {
   try {
     const puuid = await getPUUID(tagLine, gameName); // puuid identifier for summoner
@@ -381,7 +385,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
     const matchInfoList = await getMatchInfoList(region, matchList, puuid); // Returns array that contains match information for all matches in a list
     const rankedInfo = await getRankedInfo(server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
     const summonerWinrate = getSummonerWinrates(rankedInfo); // Returns JSON object for all game mode winrates
-    const winrates = await getChampionWinrate(masteryInfo, matchInfoList); // Calculates for every champion their respective game mode winrates
+    await getChampionWinrate(masteryInfo, matchInfoList); // Calculates for every champion their respective game mode winrates
     const champions = await getAllChampions();
     return {
       puuid,
@@ -393,8 +397,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
       champions,
     };
   } catch (error) {
-    console.log(error);
-    return <ErrorPage errorMessage={`Failed to retrieve summoner`} />; //This doesnt work cause of import
+    throw error;
   }
 }
 
