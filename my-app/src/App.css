@@ -111,11 +111,10 @@ footer {
   left: 50%;
   transform: translateX(-50%);
   bottom: 0;
-  width: 100%;
+  width: min(800px, 100%);
   min-height: 50px;
   text-align: center;
   border-top: 1px solid #a09b8c;
-  max-width: 800px;
 }
 
 #errorPopup {
@@ -295,6 +294,7 @@ select:focus {
 
 #summonerBlock{
   background-image: linear-gradient(130deg, rgba(133, 131, 131, 0.189) -140.79%, rgba(2, 2, 2, 0.055));
+  box-shadow: #01080fcc 0px 8px 24px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -441,20 +441,23 @@ select:focus {
   gap: 10px;
 }
 
-.matchEntry {
+.matchEntry, .matchEntryDefeat{
   display: flex;
   gap: 15px;
-  padding: 2px 15px;
+  padding: 0px 15px;
   border: solid 2px #383838;
   border-radius: 5px;
-  background: linear-gradient(96deg, rgb(98 235 140 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%); /*linear-gradient(40deg, rgb(78 255 156 / 55%) 30%, rgb(72 131 75 / 50%) 100%)*/
   align-items: center;
   justify-content: space-between;
-  min-height: 120px;
-  min-width: 1200px;
+  min-height: 160px;
+  min-width: 1100px;
   transition: all ease-in-out 0.2s;
   will-change: transform;
   image-rendering: auto;
+}
+
+.matchEntry {
+  background: linear-gradient(96deg, rgb(98 235 140 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%); /*linear-gradient(40deg, rgb(78 255 156 / 55%) 30%, rgb(72 131 75 / 50%) 100%)*/
 }
 
 .matchEntry:hover {
@@ -462,18 +465,7 @@ select:focus {
 }
 
 .matchEntryDefeat {
-  display: flex;
-  gap: 15px;
-  padding: 2px 15px;
-  border: solid 2px #383838;
-  border-radius: 5px;
   background: linear-gradient(96deg, rgb(231 67 67 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%);
-  align-items: center;
-  justify-content: space-between;
-  min-height: 120px;
-  transition: all ease-in-out 0.2s;
-  will-change: transform;
-  image-rendering: auto;
 }
 
 .matchEntryDefeat:hover {
@@ -485,6 +477,14 @@ img {
 }
 
 .championContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.championImageContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -513,34 +513,48 @@ img {
 
 .championImage img{
   z-index: 0;
-  height: 90px;
-  width: 90px;
+  height: 95px;
+  width: 95px;
   border: 2px solid #383838;
+}
+
+.spellsAndRunesContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
 }
 
 .spellsImages {
   display: flex;
-  gap: 7px;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .spellsImages img{
-  width: 50px; 
-  height: 50px;
+  width: 35px; 
+  height: 35px;
+}
+
+.runeImages{
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .runeImages img{
-  display: row;
-  flex-direction: column;
-  vertical-align: middle;
+  align-self: center;
 }
+
 #primaryRune {
-  width: 60px; 
-  height: 60px;
+  width: 40px; 
+  height: 40px;
 }
 
 #secondaryRune  {
-  width: 30px; 
-  height: 30px;
+  width: 22px; 
+  height: 22px;
 }
 
 .itemImages {
@@ -549,7 +563,6 @@ img {
   flex-direction: row;
   max-width: 250px;
   align-items: center;
-
   gap: 7px;
 }
 
@@ -572,6 +585,7 @@ img {
   justify-content: center;
   align-items: center;
   max-height: 180px;
+  padding: 3px;
   width: 240px;
   gap: 3px 10px
 }
@@ -584,8 +598,7 @@ img {
 .player {
   position: relative;
   display: flex;
-  width: 120px;
-  max-width: 100%;
+  width: min(120px, 100%);
   height: auto;
   align-items: center;
   text-align: center;

@@ -9,13 +9,13 @@ import { useState, useEffect, createElement } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import GridLoader from "react-spinners/GridLoader";
 import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Chip from "@mui/material/Chip";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import CircularProgress from "@mui/material/CircularProgress";
 import "react-circular-progressbar/dist/styles.css";
 import ProgressBar from "@ramonak/react-progress-bar";
-
-const API_KEY = import.meta.env.VITE_API_KEY;
 
 const serverOptions = [
   { value: "EUW1", label: "EUW", region: "europe" },
@@ -60,6 +60,7 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isTempLoading, setIsTempLoading] = useState(false);
 
   const [gameName, setGameName] = useState("");
   const [puuid, setPuuid] = useState(null);
@@ -142,7 +143,6 @@ function Dashboard() {
       makeMatchHistory(summonerMatchInfo);
       document.getElementById("homeBody").style.animation =
         "fade-in 1s forwards";
-      console.log(summonerMatchInfo);
     }
   }, [
     isLoading,
@@ -356,18 +356,24 @@ function Dashboard() {
             aria-label="Basic button group"
             width="300px"
           >
-            <Button
+            <LoadingButton
+              loading={isTempLoading}
+              loadingIndicator={
+                <CircularProgress sx={{ color: "#d8a841" }} size={35} />
+              }
+              loadingPosition="center"
               onClick={() => {
                 extendMatchHistory(
                   summonerMatchInfo,
                   region,
                   puuid,
-                  setSummonerMatchInfo
+                  setSummonerMatchInfo,
+                  setIsTempLoading
                 );
               }}
             >
               Load More
-            </Button>
+            </LoadingButton>
           </ButtonGroup>
         </div>
         <div id="friendBlock"></div>
@@ -413,7 +419,6 @@ function makeImageApiCall(imageURL) {
 }
 
 //TODO Add maybe loader while loading winrate
-// Make it retrieve based on most games not most mastery points
 //Filter through champions with most games in that queue
 /**
  * Function that displays champion winrate stats
@@ -507,6 +512,7 @@ function makeComponents(winrateMappingObject, championName, champId) {
 }
 
 //TODO handle other game modes calculation arena doesnt work currently
+//TODO Find out why some games are skipped 
 async function makeMatchHistory(summonerMatchInfo) {
   const container = document.getElementById("matchList");
   const promises = [];
@@ -545,53 +551,15 @@ async function makeMatchHistory(summonerMatchInfo) {
   await Promise.all(promises);
 }
 
-async function createMatchEntry(summonerMatchInfo, container, counter) {
-  const component = document.createElement("div");
-  component.setAttribute("class", "matchEntry");
-  console.log(gameQueues.get(summonerMatchInfo[counter][0].gameQueueID));
-  component.innerHTML = `
-    <div id="matchStatsContainer">
-    <div id='win'>${
-      summonerMatchInfo[counter][1].win ? "Victory" : "Defeat"
-    }</div>
-    <div>${gameQueues.get(summonerMatchInfo[counter][0].gameQueueID)} </div>
-    <div> ${getMatchTimeAgo(summonerMatchInfo[counter][0].gameDate)} </div>
-    <div>${Math.trunc(summonerMatchInfo[counter][0].gameDuration / 60)}m ${
-    summonerMatchInfo[counter][0].gameDuration % 60
-  }s </div>
-    </div>
-    <div class="championContainer">
-    <div class="championImage"></div>
-    <div class='championLevel'>${
-      summonerMatchInfo[counter][1].champLevel
-    } </div>
-    </div>
-    <div class="spellsImages"></div>
-    <div class="runeImages"></div>
-    <div> ${summonerMatchInfo[counter][1].kills} / ${
-    summonerMatchInfo[counter][1].deaths
-  } / ${summonerMatchInfo[counter][1].assists} </div>
-        <div> Vision score: ${summonerMatchInfo[counter][1].visionScore} </div>
-    <div class="itemImages"></div>
-    <div class="otherPlayers"></div>
-    <div class="test"></div>
-  `;
-
-  if (summonerMatchInfo[counter][1].win == false) {
-    component.setAttribute("class", "matchEntryDefeat");
-  }
-
-  await getAllAssets(summonerMatchInfo, counter, component);
-  container.appendChild(component);
-}
-
-//DISABLE IT AND THEN REACTIVATE IT
 async function extendMatchHistory(
   summonerMatchInfo,
   region,
   puuid,
-  setSummonerMatchInfo
+  setSummonerMatchInfo,
+  setIsTempLoading
 ) {
+  setIsTempLoading(true);
+
   const container = document.getElementById("matchList");
   const newMatchList = await getMatchList(
     region,
@@ -628,6 +596,7 @@ async function extendMatchHistory(
     //await createMatchEntry(newMatchInfoList, container, counter);
   }
 
+  setIsTempLoading(false);
   setSummonerMatchInfo(summonerMatchInfo.concat(newMatchInfoList));
 }
 
@@ -740,7 +709,7 @@ function makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo) {
 
   return (
     <Chip
-      key={bestChampName}
+      key={`Best ${bestChampName}`}
       label={`Skilled ${bestChampName}`}
       variant="outlined"
       sx={{
@@ -767,7 +736,7 @@ function makeMostPlayedBadge(championsInfo, summonerChampionWinrateInfo) {
 
   return (
     <Chip
-      key={bestChampName}
+      key={`OTP ${bestChampName}`}
       label={`OTP ${bestChampName}`}
       variant="outlined"
       sx={{
@@ -1107,6 +1076,16 @@ export function getMatchTimeAgo(milliseconds) {
   } else if (minutes > 0) {
     return `${minutes} minutes ago`;
   }
+}
+
+export function getKillParticipation(matchInfo) {
+  var totalKills = 0;
+
+  for (const participantInfo of matchInfo[2].slice(0,5)) {
+    totalKills += participantInfo.kills;
+  }
+
+  return (matchInfo[1].kills + matchInfo[1].assists) / totalKills;
 }
 
 export default Dashboard;

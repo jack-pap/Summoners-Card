@@ -1,4 +1,5 @@
-import {getMatchTimeAgo } from "../pages/Dashboard.jsx";
+import { getMatchTimeAgo } from "../pages/Dashboard.jsx";
+import { getKillParticipation } from "../pages/Dashboard.jsx";
 
 function MatchEntry({ summonerMatchInfo, counter, gameQueues }) {
   const matchData = summonerMatchInfo[counter];
@@ -19,15 +20,32 @@ function MatchEntry({ summonerMatchInfo, counter, gameQueues }) {
         </div>
       </div>
       <div className="championContainer">
-        <div className="championImage"></div>
-        <div className="championLevel">{playerInfo.champLevel}</div>
+        <div className="championImageContainer">
+          <div className="championImage"></div>
+          <div className="championLevel">{playerInfo.champLevel}</div>
+        </div>
+        <div className="spellsAndRunesContainer">
+          <div className="spellsImages"></div>
+          <div className="runeImages"></div>
+        </div>
       </div>
-      <div className="spellsImages"></div>
-      <div className="runeImages"></div>
-      <div>
-        {playerInfo.kills} / {playerInfo.deaths} / {playerInfo.assists}
+      <div className="playerStats">
+        <div>
+          {playerInfo.kills} / {playerInfo.deaths} / {playerInfo.assists}
+        </div>
+        <div>
+          KDA:{" "}
+          {Math.round(
+            ((playerInfo.kills + playerInfo.assists) / playerInfo.deaths) * 100
+          ) / 100}
+          :1
+        </div>
+        <div>
+          Kill participation:{" "}
+          {Math.round(getKillParticipation(matchData) * 100)}%
+        </div>
+        <div>Vision score: {playerInfo.visionScore}</div>
       </div>
-      <div>Vision score: {playerInfo.visionScore}</div>
       <div className="itemImages"></div>
       <div className="otherPlayers"></div>
       <div className="test"></div>
