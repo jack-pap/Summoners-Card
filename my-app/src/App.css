@@ -156,6 +156,23 @@ footer {
   transform: scale(1.1);
 }
 
+#scrollUpIcon {
+  position: fixed;
+  bottom: 3%;
+  right: 2%;
+  height: 38px;
+  width: 38px;
+  background-color: #383838;
+  border-radius: 50px;
+  border: 0px solid transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+#scrollUpIcon:hover {
+  background-color: #b99038;
+  cursor: pointer;
+}
+
 .tooltip {
   position: relative;
   display: inline-block;

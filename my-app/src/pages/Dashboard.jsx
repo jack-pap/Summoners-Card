@@ -62,6 +62,8 @@ function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isTempLoading, setIsTempLoading] = useState(false);
 
+  const [isVisible, setIsVisible] = useState(false);
+
   const [gameName, setGameName] = useState("");
   const [puuid, setPuuid] = useState(null);
   const [summonerInfo, setSummonerInfo] = useState(null);
@@ -112,6 +114,15 @@ function Dashboard() {
         setSummonerChampionWinrateInfo(result.masteryInfo);
         setChampions(result.champions);
         setIsLoading(false);
+
+        const handleScroll = () => {
+          if (window.scrollY > 100) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+        };
+        window.addEventListener("scroll", handleScroll);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -378,6 +389,34 @@ function Dashboard() {
         </div>
         <div id="friendBlock"></div>
       </div>
+      {isVisible ? (
+        <div
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            })
+          }
+        >
+          <svg
+            id="scrollUpIcon"
+            clipRule="evenodd"
+            fillRule="evenodd"
+            strokeLinejoin="round"
+            strokeMiterlimit="2"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m2.019 11.993c0 5.518 4.48 9.998 9.998 9.998 5.517 0 9.997-4.48 9.997-9.998s-4.48-9.998-9.997-9.998c-5.518 0-9.998 4.48-9.998 
+          9.998zm1.5 0c0-4.69 3.808-8.498 8.498-8.498s8.497 3.808 8.497 8.498-3.807 8.498-8.497 8.498-8.498-3.808-8.498-8.498zm4.715-1.528s1.505-1.502
+          3.259-3.255c.147-.146.338-.219.53-.219s.384.073.53.219c1.754 1.753 3.259 3.254 3.259 3.254.145.145.217.336.216.527 0 
+          .191-.074.383-.22.53-.293.293-.766.294-1.057.004l-1.978-1.978v6.694c0
+          .413-.336.75-.75.75s-.75-.337-.75-.75v-6.694l-1.978 1.979c-.29.289-.762.286-1.055-.007-.147-.146-.22-.338-.221-.53-.001-.19.071-.38.215-.524z"
+            />
+          </svg>{" "}
+        </div>
+      ) : null}
     </>
   );
 }
@@ -512,7 +551,7 @@ function makeComponents(winrateMappingObject, championName, champId) {
 }
 
 //TODO handle other game modes calculation arena doesnt work currently
-//TODO Find out why some games are skipped 
+//TODO Find out why some games are skipped
 async function makeMatchHistory(summonerMatchInfo) {
   const container = document.getElementById("matchList");
   const promises = [];
@@ -635,10 +674,7 @@ async function makeSummonerProfile(
   championsInfo
 ) {
   makeSummonerBadges(
-    summonerInfo,
-    summonerRankedInfo,
     summonerMatchInfo,
-    summonerWinrateInfo,
     summonerChampionWinrateInfo,
     championsInfo
   );
@@ -649,10 +685,7 @@ async function makeSummonerProfile(
 
 //Check summoner stats for different stats maybe push all of them in a list and render them at once
 function makeSummonerBadges(
-  summonerInfo,
-  summonerRankedInfo,
   summonerMatchInfo,
-  summonerWinrateInfo,
   summonerChampionWinrateInfo,
   championsInfo
 ) {
@@ -664,11 +697,10 @@ function makeSummonerBadges(
     makeMillionBadge(championsInfo, summonerChampionWinrateInfo),
     makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo),
     makeMostPlayedBadge(championsInfo, summonerChampionWinrateInfo),
-    //Add one for most played role
     makeStreakBadge(summonerMatchInfo)
+    //Add one for most played role
   );
 
-  //Check highest winrate champs
   root.render(<>{allSummonerChips}</>);
 }
 
@@ -751,24 +783,19 @@ function makeMostPlayedBadge(championsInfo, summonerChampionWinrateInfo) {
 function makeStreakBadge(summonerMatchInfo) {
   const streakType = summonerMatchInfo[0][1].win;
   var streakAmount = 0;
+
   for (let i = 1; i < Math.min(summonerMatchInfo.length, 5); i++) {
     if (summonerMatchInfo[i][1].win != streakType) {
       streakAmount = i;
       break;
     }
   }
-
   if (streakAmount < 3) return;
-
-  const label = streakType ? `Winning streak` : `Losing streak`;
-  // const label = streakType
-  //   ? `${streakAmount} wins in a row!`
-  //   : `${streakAmount} losses in a row :(`;
 
   return (
     <Chip
       key={streakType}
-      label={label}
+      label={streakType ? `Winning streak` : `Losing streak`}
       variant="outlined"
       sx={{
         borderRadius: "10px",
@@ -969,6 +996,7 @@ async function getItemAssets(summonerInfo, divClass, component) {
     summonerInfo.item6,
   ];
   var emptyImagesCounter = 0;
+
   for (var i = 0; i < 7; i++) {
     if (itemIds[i] != 0) {
       var image = await getSummonerItemImage(
@@ -980,6 +1008,7 @@ async function getItemAssets(summonerInfo, divClass, component) {
       itemsImagesComponent.append(image);
     } else emptyImagesCounter++;
   }
+
   for (var j = 0; j < emptyImagesCounter; j++) {
     var emptyImage = document.createElement("div");
     emptyImage.className = "emptyItem";
@@ -1016,14 +1045,13 @@ async function getOtherPlayerAssets(participantsInfo, divClass, component) {
       <div class="playerImage" id="ownImage"></div>
       <a class="ownUsername" href="${playerName}-${playerTagLine}" target="_blank">${playerName}</a> 
       <span class="tooltip-text">${playerName} #${playerTagLine}</span>
-  
+
       `;
     } else {
       playerComponent.innerHTML = `
       <div class="playerImage"></div>
       <a class="playerUsername" href="${playerName}-${playerTagLine}" target="_blank">${playerName}</a>
       <span class="tooltip-text">${playerName} #${playerTagLine}</span>
-
       `;
     }
 
@@ -1081,7 +1109,7 @@ export function getMatchTimeAgo(milliseconds) {
 export function getKillParticipation(matchInfo) {
   var totalKills = 0;
 
-  for (const participantInfo of matchInfo[2].slice(0,5)) {
+  for (const participantInfo of matchInfo[2].slice(0, 5)) {
     totalKills += participantInfo.kills;
   }
 
