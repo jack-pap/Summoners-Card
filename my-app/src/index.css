@@ -41,7 +41,7 @@
   border-left: 1px solid #9b792f;
   margin-left: 100px;
   margin-right: 100px;
-  height: 55vh;
+  height: 50vh;
 }
 
 #leftLine {
@@ -115,9 +115,17 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 50px;
+  margin-bottom: 20px;
 }
 
+.dashboard #homeBody {
+  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 75px;
+}
 
 h1 {
   color: #F0E6D2;

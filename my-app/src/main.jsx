@@ -23,12 +23,19 @@ const Layout = ({ children }) => (
   </>
 );
 
+const Layout2 = ({ children }) => (
+  <>
+    {children}
+    <Footer />
+  </>
+);
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <>
       <div className="line" id="leftLine"></div>
-      <Layout><App /></Layout>
+      <Layout2><App /></Layout2>
       <div className="line" id="rightLine"></div>
     </>,
     errorElement: <Layout><ErrorPage /></Layout>,

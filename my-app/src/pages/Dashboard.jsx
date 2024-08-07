@@ -128,6 +128,9 @@ function Dashboard() {
       }
     };
     fetchData();
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [state, summonerName, server]);
 
   useEffect(() => {
@@ -140,8 +143,6 @@ function Dashboard() {
       summonerChampionWinrateInfo &&
       championsInfo
     ) {
-      document.getElementById("footer").style.position = "relative";
-
       makeSummonerProfile(
         summonerInfo,
         summonerRankedInfo,
@@ -527,7 +528,7 @@ function makeComponents(winrateMappingObject, championName, champId) {
   const progressBarComponent = (
     <ProgressBar
       completed={winrate === 0 ? 1 : winrate}
-      width="150px"
+      width="140px"
       height="17px"
       bgColor="#C89B3C"
       baseBgColor="#383838"
@@ -561,12 +562,6 @@ async function makeMatchHistory(summonerMatchInfo) {
     counter < Math.min(20, summonerMatchInfo.length);
     counter++
   ) {
-    if (
-      summonerMatchInfo[counter][0].gameQueueID.toString() != "420" &&
-      summonerMatchInfo[counter][0].gameQueueID.toString() != "440"
-    )
-      continue;
-
     const matchComponent = document.createElement("div");
     matchComponent.setAttribute("class", "matchHistoryContainer");
     matchComponent.innerHTML = `
@@ -607,13 +602,7 @@ async function extendMatchHistory(
     11
   );
   const newMatchInfoList = await getMatchInfoList(region, newMatchList, puuid);
-
   for (let counter = 0; counter < newMatchInfoList.length - 1; counter++) {
-    if (
-      newMatchInfoList[counter][0].gameQueueID.toString() != "420" &&
-      newMatchInfoList[counter][0].gameQueueID.toString() != "440"
-    )
-      continue;
     const matchComponent = document.createElement("div");
     matchComponent.setAttribute("class", "matchHistoryContainer");
     matchComponent.innerHTML = `
@@ -739,6 +728,7 @@ function makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo) {
     }
   }
 
+  if (bestChampName == "null") return;
   return (
     <Chip
       key={`Best ${bestChampName}`}
@@ -790,8 +780,8 @@ function makeStreakBadge(summonerMatchInfo) {
       break;
     }
   }
-  if (streakAmount < 3) return;
 
+  if (streakAmount < 3) return;
   return (
     <Chip
       key={streakType}

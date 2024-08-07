@@ -35,10 +35,15 @@ function MatchEntry({ summonerMatchInfo, counter, gameQueues }) {
         </div>
         <div>
           KDA:{" "}
-          {Math.round(
-            ((playerInfo.kills + playerInfo.assists) / playerInfo.deaths) * 100
-          ) / 100}
-          :1
+          {playerInfo.deaths == 0
+            ? "Perfect"
+            : `${
+                Math.round(
+                  ((playerInfo.kills + playerInfo.assists) /
+                    playerInfo.deaths) *
+                    100
+                ) / 100
+              }:1`}
         </div>
         <div>
           Kill participation:{" "}

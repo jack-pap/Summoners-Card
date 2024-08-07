@@ -36,10 +36,9 @@ const serverOptions = [
 
 const GAME_MODES = {
   NORMAL: 490,
+  NORMAL_DRAFT: 400,
   RANKED_SOLO: 420,
   RANKED_FLEX: 440,
-  URF: 1900,
-  ONE_FOR_ALL: 1020,
 }; // Object that stores queue Ids for different game modes
 
 const customStyles = {
@@ -100,7 +99,7 @@ const customStyles = {
 
 const spinnerStyles = {
   position: "absolute",
-  top: "43%",
+  top: "45%",
   left: "50%",
   transform: "translateX(-50%)",
 };
@@ -485,8 +484,6 @@ async function getMasteryInfo(server, puuid) {
         [GAME_MODES.NORMAL, [0, 0, 0]],
         [GAME_MODES.RANKED_SOLO, [0, 0, 0]],
         [GAME_MODES.RANKED_FLEX, [0, 0, 0]],
-        [GAME_MODES.URF, [0, 0, 0]],
-        [GAME_MODES.ONE_FOR_ALL, [0, 0, 0]],
       ]), // Mapping between game modes and their winrates data -> [games played, wins, winrate]
     };
     championStatsMapping.set(champion.championId, champStats);
@@ -590,6 +587,9 @@ export async function getMatchInfoList(region, matchIDs, puuid) {
       gameDuration: data.info.gameDuration,
       gameQueueID: data.info.queueId,
     };
+
+    if (!Object.values(GAME_MODES).includes(contents.gameQueueID)) continue;
+
     const participants = data.info.participants;
     const participantsList = [];
     var ownPlayerInfo = null;
@@ -639,6 +639,16 @@ export async function getMatchInfoList(region, matchIDs, puuid) {
       if (playerInfo.puuid == puuid) ownPlayerInfo = pickedPlayerInfo;
     }
     matchInfoList.push([contents, ownPlayerInfo, participantsList]);
+  }
+
+  if (matchInfoList.length < matchIDs.length) {
+    const newMatchIDS = await getMatchList(
+      region,
+      puuid,
+      matchIDs.length - matchInfoList.length,
+      matchIDs.length
+    );
+    return getMatchInfoList(region, newMatchIDS, puuid);
   }
   return matchInfoList;
 }
