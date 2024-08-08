@@ -328,6 +328,7 @@ async function getInput(
         summonerInfo,
         rankedInfo,
         matchInfoList,
+        matchInfoIndex,
         summonerWinrate,
         masteryInfo,
         champions,
@@ -341,6 +342,7 @@ async function getInput(
           summonerInfo: summonerInfo,
           summonerRankedInfo: rankedInfo,
           summonerMatchInfo: matchInfoList,
+          summonerMatchInfoIndex: matchInfoIndex,
           summonerWinrateInfo: summonerWinrate,
           summonerChampionWinrateInfo: masteryInfo,
           championsInfo: champions,
@@ -382,7 +384,13 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
     const summonerInfo = await getSummonerInfo(server, puuid); // Array that includes summoner ID, summoner level and profile picture
     const masteryInfo = await getMasteryInfo(server, puuid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
     const matchList = await getMatchList(region, puuid, 0, 40); // Array constisting of match IDs
-    const matchInfoList = await getMatchInfoList(region, matchList, puuid); // Returns array that contains match information for all matches in a list
+    const matchInfoListResult = await getMatchInfoList(
+      region,
+      matchList,
+      puuid
+    );
+    const matchInfoList = matchInfoListResult.matchInfoList; // Returns array that contains match information for all matches in a list
+    const matchInfoIndex = matchInfoListResult.lastIndex;
     const rankedInfo = await getRankedInfo(server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
     const summonerWinrate = getSummonerWinrates(rankedInfo); // Returns JSON object for all game mode winrates
     await getChampionWinrate(masteryInfo, matchInfoList); // Calculates for every champion their respective game mode winrates
@@ -392,6 +400,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
       summonerInfo,
       rankedInfo,
       matchInfoList,
+      matchInfoIndex,
       summonerWinrate,
       masteryInfo,
       champions,
@@ -578,7 +587,28 @@ export async function getMatchList(
  * @returns {[[string],[string], [string]]}
  */
 export async function getMatchInfoList(region, matchIDs, puuid) {
+  var { matchInfoList, lastIndex } = await getMatchInfo(
+    matchIDs,
+    region,
+    puuid
+  );
+
+  if (matchInfoList.length < matchIDs.length) {
+    const moreMatchesObject = await findMoreMatches(region, puuid, matchIDs);
+    if (moreMatchesObject.matches) {
+      matchInfoList = matchInfoList.concat(
+        moreMatchesObject.matches
+      );
+      lastIndex = moreMatchesObject.index;
+    }
+  }
+
+  return { matchInfoList, lastIndex };
+}
+
+async function getMatchInfo(matchIDs, region, puuid) {
   var matchInfoList = [];
+  var lastIndex = -1;
   for (const matchID of matchIDs) {
     const matchInfoApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
     const data = await apiCall(matchInfoApiURL);
@@ -587,12 +617,12 @@ export async function getMatchInfoList(region, matchIDs, puuid) {
       gameDuration: data.info.gameDuration,
       gameQueueID: data.info.queueId,
     };
-
-    if (!Object.values(GAME_MODES).includes(contents.gameQueueID)) continue;
-
     const participants = data.info.participants;
     const participantsList = [];
     var ownPlayerInfo = null;
+
+    if (!Object.values(GAME_MODES).includes(contents.gameQueueID)) continue;
+
     for (const playerInfo of participants) {
       const pickedPlayerInfo = (({
         win,
@@ -635,22 +665,44 @@ export async function getMatchInfoList(region, matchIDs, puuid) {
         riotIdGameName,
         riotIdTagline,
       }))(playerInfo);
+
       participantsList.push(pickedPlayerInfo);
       if (playerInfo.puuid == puuid) ownPlayerInfo = pickedPlayerInfo;
     }
     matchInfoList.push([contents, ownPlayerInfo, participantsList]);
+    lastIndex = matchIDs.length;
   }
+  return { matchInfoList, lastIndex };
+}
 
-  if (matchInfoList.length < matchIDs.length) {
-    const newMatchIDS = await getMatchList(
-      region,
-      puuid,
-      matchIDs.length - matchInfoList.length,
-      matchIDs.length
-    );
-    return getMatchInfoList(region, newMatchIDS, puuid);
-  }
-  return matchInfoList;
+/**
+ * Attempts to find more ranked/normal games to fill
+ * the desired matchIDs length. If the length cannot be
+ * filled it means no games can be found and it returns
+ *
+ * @param {string} region
+ * @param {string} puuid
+ * @param {[string]} matchIDs
+ * @param {[[string],[string], [string]]} matchInfoList
+ * @returns {Promise<Array<Object>,Object>}
+ */
+async function findMoreMatches(region, puuid, matchIDs) {
+  const newMatchIDS = await getMatchList(
+    region,
+    puuid,
+    matchIDs.length,
+    matchIDs.length
+  );
+  const newMatchInfoList = await getMatchInfo(newMatchIDS, region, puuid);
+  if (newMatchInfoList.length == 0)
+    return {
+      matches: null,
+      index: -1,
+    };
+  return {
+    matches: newMatchInfoList.matchInfoList,
+    index: newMatchIDS.length,
+  };
 }
 
 /**

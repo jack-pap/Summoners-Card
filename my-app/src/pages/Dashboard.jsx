@@ -69,6 +69,7 @@ function Dashboard() {
   const [summonerInfo, setSummonerInfo] = useState(null);
   const [summonerRankedInfo, setSummonerRankedInfo] = useState(null);
   const [summonerMatchInfo, setSummonerMatchInfo] = useState(null);
+  const [summonerMatchInfoIndex, setSummonerMatchInfoIndex] = useState(null);
   const [summonerWinrateInfo, setSummonerWinrateInfo] = useState(null);
   const [summonerChampionWinrateInfo, setSummonerChampionWinrateInfo] =
     useState(null);
@@ -99,6 +100,7 @@ function Dashboard() {
             summonerInfo: state.summonerInfo,
             rankedInfo: state.summonerRankedInfo,
             matchInfoList: state.summonerMatchInfo,
+            matchInfoIndex: state.summonerMatchInfoIndex,
             summonerWinrate: state.summonerWinrateInfo,
             masteryInfo: state.summonerChampionWinrateInfo,
             champions: state.championsInfo,
@@ -110,6 +112,7 @@ function Dashboard() {
         setSummonerInfo(result.summonerInfo);
         setSummonerRankedInfo(result.rankedInfo);
         setSummonerMatchInfo(result.matchInfoList);
+        setSummonerMatchInfoIndex(result.matchInfoIndex);
         setSummonerWinrateInfo(result.summonerWinrate);
         setSummonerChampionWinrateInfo(result.masteryInfo);
         setChampions(result.champions);
@@ -139,6 +142,7 @@ function Dashboard() {
       summonerInfo &&
       summonerRankedInfo &&
       summonerMatchInfo &&
+      summonerMatchInfoIndex &&
       summonerWinrateInfo &&
       summonerChampionWinrateInfo &&
       championsInfo
@@ -377,9 +381,11 @@ function Dashboard() {
               onClick={() => {
                 extendMatchHistory(
                   summonerMatchInfo,
+                  summonerMatchInfoIndex,
                   region,
                   puuid,
                   setSummonerMatchInfo,
+                  setSummonerMatchInfoIndex,
                   setIsTempLoading
                 );
               }}
@@ -587,20 +593,18 @@ async function makeMatchHistory(summonerMatchInfo) {
 
 async function extendMatchHistory(
   summonerMatchInfo,
+  matchInfoIndex,
   region,
   puuid,
   setSummonerMatchInfo,
+  setSummonerMatchInfoIndex,
   setIsTempLoading
 ) {
   setIsTempLoading(true);
 
   const container = document.getElementById("matchList");
-  const newMatchList = await getMatchList(
-    region,
-    puuid,
-    summonerMatchInfo.length,
-    11
-  );
+  const newMatchList = await getMatchList(region, puuid, matchInfoIndex, 11);
+  setSummonerMatchInfoIndex(matchInfoIndex + 10);
   const newMatchInfoList = await getMatchInfoList(region, newMatchList, puuid);
   for (let counter = 0; counter < newMatchInfoList.length - 1; counter++) {
     const matchComponent = document.createElement("div");
