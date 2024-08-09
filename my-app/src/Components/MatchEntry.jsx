@@ -47,7 +47,7 @@ function MatchEntry({ summonerMatchInfo, counter, gameQueues }) {
         </div>
         <div>
           Kill participation:{" "}
-          {Math.round(getKillParticipation(matchData) * 100)}%
+          {Math.round(getKillParticipation(matchData, playerInfo.win) * 100)}%
         </div>
         <div>Vision score: {playerInfo.visionScore}</div>
       </div>

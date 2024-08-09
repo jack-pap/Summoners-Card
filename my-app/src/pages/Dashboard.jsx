@@ -586,7 +586,6 @@ async function makeMatchHistory(summonerMatchInfo) {
     );
     root.render(entryComponent);
     promises.push(getAllAssets(summonerMatchInfo, counter, matchComponent));
-    //await createMatchEntry(summonerMatchInfo, container, counter);
   }
   await Promise.all(promises);
 }
@@ -606,7 +605,11 @@ async function extendMatchHistory(
   const newMatchList = await getMatchList(region, puuid, matchInfoIndex, 11);
   setSummonerMatchInfoIndex(matchInfoIndex + 10);
   const newMatchInfoList = await getMatchInfoList(region, newMatchList, puuid);
-  for (let counter = 0; counter < newMatchInfoList.length - 1; counter++) {
+  for (
+    let counter = 0;
+    counter < newMatchInfoList.matchInfoList.length - 1;
+    counter++
+  ) {
     const matchComponent = document.createElement("div");
     matchComponent.setAttribute("class", "matchHistoryContainer");
     matchComponent.innerHTML = `
@@ -618,18 +621,19 @@ async function extendMatchHistory(
 
     const entryComponent = (
       <MatchEntry
-        summonerMatchInfo={newMatchInfoList}
+        summonerMatchInfo={newMatchInfoList.matchInfoList}
         counter={counter}
         gameQueues={gameQueues}
       ></MatchEntry>
     );
     root.render(entryComponent);
-    await getAllAssets(newMatchInfoList, counter, matchComponent);
-    //await createMatchEntry(newMatchInfoList, container, counter);
+    await getAllAssets(newMatchInfoList.matchInfoList, counter, matchComponent);
   }
 
   setIsTempLoading(false);
-  setSummonerMatchInfo(summonerMatchInfo.concat(newMatchInfoList));
+  setSummonerMatchInfo(
+    summonerMatchInfo.concat(newMatchInfoList.matchInfoList)
+  );
 }
 
 async function getAllAssets(summonerMatchInfo, counter, component) {
@@ -1100,11 +1104,11 @@ export function getMatchTimeAgo(milliseconds) {
   }
 }
 
-export function getKillParticipation(matchInfo) {
+export function getKillParticipation(matchInfo, winStatus) {
   var totalKills = 0;
 
-  for (const participantInfo of matchInfo[2].slice(0, 5)) {
-    totalKills += participantInfo.kills;
+  for (const participantInfo of matchInfo[2]) {
+    if (participantInfo.win == winStatus) totalKills += participantInfo.kills;
   }
 
   return (matchInfo[1].kills + matchInfo[1].assists) / totalKills;

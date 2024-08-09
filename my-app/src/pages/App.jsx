@@ -596,9 +596,7 @@ export async function getMatchInfoList(region, matchIDs, puuid) {
   if (matchInfoList.length < matchIDs.length) {
     const moreMatchesObject = await findMoreMatches(region, puuid, matchIDs);
     if (moreMatchesObject.matches) {
-      matchInfoList = matchInfoList.concat(
-        moreMatchesObject.matches
-      );
+      matchInfoList = matchInfoList.concat(moreMatchesObject.matches);
       lastIndex = moreMatchesObject.index;
     }
   }
@@ -701,7 +699,7 @@ async function findMoreMatches(region, puuid, matchIDs) {
     };
   return {
     matches: newMatchInfoList.matchInfoList,
-    index: newMatchIDS.length,
+    index: matchIDs.length + newMatchIDS.length,
   };
 }
 
