@@ -5,8 +5,11 @@ const bodyParser = require('body-parser');
 var app = express();
 const port = 3000;
 
+const summonerRouter = require('./routes/summoner-db-route')
+
 app.use(cors()); // Enable CORS for everywhere
 app.use(bodyParser.json()); // Parse JSON bodies
+
 
 app.get('/', (req, res) => {
   res.send('Welcome to the proxy server!');
@@ -24,6 +27,8 @@ app.get('/proxy', async (req, res) => {
   }
 });
 
+app.use('/summoner', summonerRouter)
+
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Server listening on port ${port}`);
 });

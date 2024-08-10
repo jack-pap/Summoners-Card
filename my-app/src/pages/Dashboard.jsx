@@ -2,7 +2,12 @@ import "../App.css";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { getSummonerStats, getMatchList, getMatchInfoList } from "./App.jsx";
-import { apiCall } from "../controller/apiService.js";
+import {
+  apiProxyCall,
+  apiGETDatabaseCall,
+  apiPOSTDatabaseCall,
+  apiPUTDatabaseCall,
+} from "../../server/controller/apiService.js";
 import MatchEntry from "../Components/MatchEntry";
 import ErrorPage from "./ErrorPage.jsx";
 import { useState, useEffect, createElement } from "react";
@@ -80,6 +85,9 @@ function Dashboard() {
   }
 
   useEffect(() => {
+    // apiGETDatabaseCall("all");
+    // apiPUTDatabaseCall("delete", { puuid: "1" });
+    // apiGETDatabaseCall("all");
     const fetchData = async () => {
       setIsLoading(true);
       try {
@@ -157,6 +165,8 @@ function Dashboard() {
       );
       makeChampionWinrate(summonerChampionWinrateInfo, championsInfo, 420);
       makeMatchHistory(summonerMatchInfo);
+
+      document.getElementById("footer").style.position = "relative";
       document.getElementById("homeBody").style.animation =
         "fade-in 1s forwards";
     }
@@ -431,7 +441,7 @@ function Dashboard() {
 async function getGameQueues() {
   const gameQueueURL =
     "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/queues.json";
-  const gameQueueData = await apiCall(gameQueueURL);
+  const gameQueueData = await apiProxyCall(gameQueueURL);
   var queueMapping = new Map();
   for (var queue in gameQueueData) {
     queueMapping.set(gameQueueData[queue].id, gameQueueData[queue].name);
@@ -849,7 +859,7 @@ async function makeRankedEmblem(summonerRankedInfo, containerName) {
 
 async function getChampionAssets(championId, insideClass, parentComponent) {
   const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
-  const championData = await apiCall(championDataURL);
+  const championData = await apiProxyCall(championDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
   const champImageURL = championData.squarePortraitPath;
   const extractedPath = champImageURL
@@ -880,7 +890,7 @@ async function getSummonerSpellAssets(
   component
 ) {
   const summonerSpellsURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/summoner-spells.json`;
-  const summonerSpellsData = await apiCall(summonerSpellsURL);
+  const summonerSpellsData = await apiProxyCall(summonerSpellsURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
 
   const img1 = await getSummonerSpellImage(
@@ -938,7 +948,7 @@ async function getSummonerRuneAssets(
 
 async function getRuneImage(runeID, component, divClass) {
   const runeDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perks.json`;
-  const summonerRuneData = await apiCall(runeDataURL);
+  const summonerRuneData = await apiProxyCall(runeDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
 
   const runeImageURL = summonerRuneData.find(
@@ -960,7 +970,7 @@ async function getRuneImage(runeID, component, divClass) {
 
 async function getSecondaryRuneImage(runeID, component, divClass) {
   const runeDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perkstyles.json`;
-  const summonerRuneData = await apiCall(runeDataURL);
+  const summonerRuneData = await apiProxyCall(runeDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
 
   const runeImageURL = summonerRuneData.styles.find(
@@ -982,7 +992,7 @@ async function getSecondaryRuneImage(runeID, component, divClass) {
 
 async function getItemAssets(summonerInfo, divClass, component) {
   const itemDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/items.json`;
-  const summonerItemData = await apiCall(itemDataURL);
+  const summonerItemData = await apiProxyCall(itemDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
   var itemIds = [
     summonerInfo.item0,

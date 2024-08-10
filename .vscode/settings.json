@@ -2,5 +2,14 @@
   "editor.defaultFormatter": "ms-python.black-formatter",
   "[javascriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "summoner",
+      "database": "${workspaceFolder:Summoners-Card}/my-app/src/database/summoner.db"
+    }
+  ],
+  "sqltools.useNodeRuntime": true
 }

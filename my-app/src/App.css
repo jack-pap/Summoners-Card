@@ -118,21 +118,6 @@ footer {
   z-index: -1;
 }
 
-.dashboard footer {
-  color: #79756a;
-  font-family: Beaufort;
-  font-size: 12px;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 0;
-  width: min(800px, 100%);
-  min-height: 50px;
-  text-align: center;
-  border-top: 1px solid #a09b8c;
-  z-index: -5;
-}
-
 #errorPopup {
   display: flex;
   justify-content: center;
