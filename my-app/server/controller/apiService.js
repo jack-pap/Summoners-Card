@@ -29,6 +29,32 @@ export function apiProxyCall(apiURL) {
 }
 
 /**
+ * API call to imageURL to get image data
+ *
+ * @param {string} imageURL
+ * @returns {Promise}
+ */
+//TODO TRY ROUTING IT 
+export function apiImageCall(imageURL) {
+  return new Promise((resolve, reject) => {
+    fetch(imageURL)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Image data failed to request: ${response.status}`);
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        resolve(url);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
+/**
  * API POST call to server to create
  * new database entry
  * 
@@ -54,7 +80,7 @@ export function apiPOSTDatabaseCall(queryRoute, summonerJSONObject) {
         return response.json();
       })
       .then((data) => {
-        resolve(data);
+        resolve(data);   
         console.log(data);
       })
       .catch((error) => {

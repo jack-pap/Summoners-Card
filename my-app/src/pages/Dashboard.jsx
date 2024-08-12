@@ -1,9 +1,11 @@
 import "../App.css";
 import React from "react";
+import { memo } from 'react';
 import { createRoot } from "react-dom/client";
 import { getSummonerStats, getMatchList, getMatchInfoList } from "./App.jsx";
 import {
   apiProxyCall,
+  apiImageCall,
   apiGETDatabaseCall,
   apiPOSTDatabaseCall,
   apiPUTDatabaseCall,
@@ -56,7 +58,7 @@ const serverDictionary = serverOptions.reduce((acc, option) => {
 const gameQueues = await getGameQueues();
 var ownUsername;
 
-function Dashboard() {
+const Dashboard = memo(function Dashboard() {
   const { server, summonerName } = useParams();
   const region = serverOptions.find(
     (option) => server === option.label
@@ -436,7 +438,7 @@ function Dashboard() {
       ) : null}
     </>
   );
-}
+});
 
 async function getGameQueues() {
   const gameQueueURL =
@@ -449,30 +451,7 @@ async function getGameQueues() {
   return queueMapping;
 }
 
-/**
- * API call to imageURL to get image data
- *
- * @param {string} imageURL
- * @returns {Promise}
- */
-function makeImageApiCall(imageURL) {
-  return new Promise((resolve, reject) => {
-    fetch(imageURL)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Image data failed to request: ${response.status}`);
-        }
-        return response.blob();
-      })
-      .then((blob) => {
-        const url = URL.createObjectURL(blob);
-        resolve(url);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-}
+
 
 //TODO Add maybe loader while loading winrate
 //Filter through champions with most games in that queue
@@ -567,8 +546,7 @@ function makeComponents(winrateMappingObject, championName, champId) {
   };
 }
 
-//TODO handle other game modes calculation arena doesnt work currently
-//TODO Find out why some games are skipped
+
 async function makeMatchHistory(summonerMatchInfo) {
   const container = document.getElementById("matchList");
   const promises = [];
@@ -826,7 +804,7 @@ async function makeProfileIcon(summonerInfo) {
     `;
 
   const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${summonerInfo[2]}.jpg`;
-  const profileIconImage = await makeImageApiCall(imgURL);
+  const profileIconImage = await apiImageCall(imgURL);
   const img = document.createElement("img");
   img.src = profileIconImage;
 
@@ -849,7 +827,7 @@ async function makeRankedEmblem(summonerRankedInfo, containerName) {
   component.setAttribute("class", "rankedEmblem");
 
   const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/ranked-emblem/emblem-${summonerRankedInfo.rankedTier.toLowerCase()}.png`;
-  const profileIconImage = await makeImageApiCall(imgURL);
+  const profileIconImage = await apiImageCall(imgURL);
   const img = document.createElement("img");
   img.src = profileIconImage;
 
@@ -867,7 +845,7 @@ async function getChampionAssets(championId, insideClass, parentComponent) {
     .toLowerCase();
   const finalURL = baseImageURL + extractedPath;
 
-  const championImage = await makeImageApiCall(finalURL);
+  const championImage = await apiImageCall(finalURL);
   const img = document.createElement("img");
   img.src = championImage;
 
@@ -930,7 +908,7 @@ async function getSummonerSpellImage(
     .toLowerCase();
   const finalURL = baseImageURL + extractedPath;
 
-  const summonerSpellImage = await makeImageApiCall(finalURL);
+  const summonerSpellImage = await apiImageCall(finalURL);
   const img = document.createElement("img");
   img.src = summonerSpellImage;
   return img;
@@ -959,7 +937,7 @@ async function getRuneImage(runeID, component, divClass) {
     .toLowerCase();
   const finalURL = baseImageURL + extractedPath;
 
-  const summonerRuneImage = await makeImageApiCall(finalURL);
+  const summonerRuneImage = await apiImageCall(finalURL);
   const img = document.createElement("img");
   img.setAttribute("id", "primaryRune");
   img.src = summonerRuneImage;
@@ -981,7 +959,7 @@ async function getSecondaryRuneImage(runeID, component, divClass) {
     .toLowerCase();
   const finalURL = baseImageURL + extractedPath;
 
-  const summonerRuneImage = await makeImageApiCall(finalURL);
+  const summonerRuneImage = await apiImageCall(finalURL);
   const img = document.createElement("img");
   img.setAttribute("id", "secondaryRune");
   img.src = summonerRuneImage;
@@ -1034,7 +1012,7 @@ async function getSummonerItemImage(summonerItemData, itemID, baseImageURL) {
     .replace("/lol-game-data/assets/", "")
     .toLowerCase();
   const finalURL = baseImageURL + extractedPath;
-  const summonerItemImage = await makeImageApiCall(finalURL);
+  const summonerItemImage = await apiImageCall(finalURL);
   const img = document.createElement("img");
   img.src = summonerItemImage;
   return img;

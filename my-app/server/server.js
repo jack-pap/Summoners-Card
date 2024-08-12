@@ -27,6 +27,19 @@ app.get('/proxy', async (req, res) => {
   }
 });
 
+// Proxy route to be called by controller to fetch iamge data from API endpoint
+app.get('/proxyImage', async (req, res) => {
+  const apiURL = req.query.url;
+  try {
+    const response = await fetch(apiURL);
+    const data = await response.arrayBuffer();
+    res.type(response.headers.get('content-type'));
+    res.send(data);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch image data' });
+  }
+});
+
 app.use('/summoner', summonerRouter)
 
 app.listen(port, () => {

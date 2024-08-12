@@ -1,7 +1,8 @@
 import { getMatchTimeAgo } from "../pages/Dashboard.jsx";
 import { getKillParticipation } from "../pages/Dashboard.jsx";
+import { memo } from 'react';
 
-function MatchEntry({ summonerMatchInfo, counter, gameQueues }) {
+const MatchEntry = memo(function MatchEntry({ summonerMatchInfo, counter, gameQueues }) {
   const matchData = summonerMatchInfo[counter];
   const gameInfo = matchData[0];
   const playerInfo = matchData[1];
@@ -56,5 +57,6 @@ function MatchEntry({ summonerMatchInfo, counter, gameQueues }) {
       <div className="test"></div>
     </div>
   );
-}
+});
+
 export default MatchEntry;
