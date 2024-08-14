@@ -1,31 +1,35 @@
-const path = require('path');
+require('dotenv').config();
+const SQL_PASS = process.env.SQL_PASSWORD;
+
 const knex = require('knex')({
-    client: 'sqlite3',
+    client: 'mysql',
     connection: {
-        filename: './server/database/summoner.db'
+      host: '127.0.0.1',
+      port: 3306,
+      user: 'root',
+      password: SQL_PASS,
+      database: 'summoner',
     },
-    useNullAsDefault: true
-  })
+  });
 
 exports.summonersAll = async (req, res) => {
   knex
     .select('*')
-    .from('summoner') 
+    .from('summonerInfo') 
     .then(userData => {
       res.json(userData)
     })
     .catch(error => {
         
-      res.json({ message: `There was an error retrieving summoners: ${err}` })
+      res.json({ message: `There was an error retrieving summoners: ${error}` })
     })
 }
 
 exports.summonerCreate = async (req, res) => {
-  knex('summoner')
+  knex('summonerInfo')
     .insert({ 
       'puuid': req.body.puuid,
-      'server': req.body.server,
-      'gameName': req.body.gameName,
+      'summonerWinrate': req.body.summonerWinrate,
     })
     .then(() => {
       res.json({ message: `Summoner \'${req.body.gameName}\' entry created.` })
@@ -36,7 +40,7 @@ exports.summonerCreate = async (req, res) => {
 }
 
 exports.summonerDelete = async (req, res) => {
-  knex('summoner')
+  knex('summonerInfo')
     .where('puuid', req.body.puuid)
     .del()
     .then(() => {
@@ -50,7 +54,7 @@ exports.summonerDelete = async (req, res) => {
 exports.summonersReset = async (req, res) => {
   knex
     .select('*') 
-    .from('summoner') 
+    .from('summonerInfo') 
     .truncate() 
     .then(() => {
       res.json({ message: 'Summoner list cleared.' })

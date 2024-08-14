@@ -12,7 +12,7 @@ app.use(bodyParser.json()); // Parse JSON bodies
 
 
 app.get('/', (req, res) => {
-  res.send('Welcome to the proxy server!');
+  res.send('Welcome to the server!');
 });
 
 // Proxy route to be called by controller to fetch data from API endpoint

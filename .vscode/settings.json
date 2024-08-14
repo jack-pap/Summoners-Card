@@ -5,10 +5,17 @@
   },
   "sqltools.connections": [
     {
+      "mysqlOptions": {
+        "authProtocol": "default",
+        "enableSsl": "Disabled"
+      },
       "previewLimit": 50,
-      "driver": "SQLite",
+      "server": "localhost",
+      "port": 3306,
+      "driver": "MySQL",
       "name": "summoner",
-      "database": "${workspaceFolder:Summoners-Card}/my-app/src/database/summoner.db"
+      "database": "summoner",
+      "username": "root"
     }
   ],
   "sqltools.useNodeRuntime": true

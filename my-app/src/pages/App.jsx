@@ -123,7 +123,7 @@ function App() {
       .then((version) => {
         setPatchVersion(
           version[0].split(".")[0] + "." + version[0].split(".")[1]
-        ); // Update the patch version state
+        );
       })
       .catch((error) => {
         console.error("Error loading version:", error);
