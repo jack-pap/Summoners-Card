@@ -19,9 +19,21 @@ exports.summonersAll = async (req, res) => {
     .then(userData => {
       res.json(userData)
     })
+    .catch(error => {    
+      res.json({ message: `There was an error retrieving all summoners: ${error}` })
+    })
+}
+
+exports.summonerSpecific = async (req, res) => {
+  knex
+    .select('*')
+    .from('summonerInfo')
+    .where('puuid', req.body.puuid)
+    .then(userData => {
+      res.json(userData)
+    })
     .catch(error => {
-        
-      res.json({ message: `There was an error retrieving summoners: ${error}` })
+      res.json({ message: `There was an error retrieving summoner: ${error}` })
     })
 }
 
@@ -63,3 +75,70 @@ exports.summonersReset = async (req, res) => {
       res.json({ message: `There was an error resetting summoner list: ${err}.` })
     })
 }
+
+exports.matchesAll = async (req, res) => {
+  knex
+    .select('*')
+    .from('matchInfo') 
+    .then(matchData => {
+      res.json(matchData)
+    })
+    .catch(error => {    
+      res.json({ message: `There was an error retrieving all matches: ${error}` })
+    })
+}
+
+exports.matchSpecific = async (req, res) => {
+  knex
+    .select('*')
+    .from('matchInfo')
+    .where('matchID', req.body.matchID)
+    .then(matchData => {
+      res.json(matchData)
+    })
+    .catch(error => {
+      res.json({ message: `There was an error retrieving match: ${error}` })
+    })
+}
+
+exports.matchCreate = async (req, res) => {
+  knex('matchInfo')
+    .insert({ 
+      'puuid': req.body.puuid,
+      'matchID': req.body.matchID,
+      'matchInfo': req.body.matchInfo,
+      'matchDate': req.body.matchDate
+    })
+    .then(() => {
+      res.json({ message: `Match \'${req.body.matchID}\' entry created.` })
+    })
+    .catch(err => {
+      res.json({ message: `There was an error creating match ${req.body.matchID} entry: ${err}` })
+    })
+}
+
+exports.matchDelete = async (req, res) => {
+  knex('matchInfo')
+    .where('matchID', req.body.matchID)
+    .del()
+    .then(() => {
+      res.json({ message: `Match ${req.body.matchID} deleted.` })
+    })
+    .catch(err => {
+      res.json({ message: `There was an error deleting match ${req.body.matchID}: ${err}` })
+    })
+}
+
+exports.matchesReset = async (req, res) => {
+  knex
+    .select('*') 
+    .from('matchInfo') 
+    .truncate() 
+    .then(() => {
+      res.json({ message: 'Match list cleared.' })
+    })
+    .catch(err => {
+      res.json({ message: `There was an error resetting match list: ${err}.` })
+    })
+}
+

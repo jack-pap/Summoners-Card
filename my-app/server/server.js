@@ -6,10 +6,14 @@ var app = express();
 const port = 3000;
 
 const summonerRouter = require('./routes/summoner-db-route')
+const matchRouter = require('./routes/match-db-route')
 
 app.use(cors()); // Enable CORS for everywhere
 app.use(bodyParser.json()); // Parse JSON bodies
 
+//Database routes
+app.use('/summoner', summonerRouter);
+app.use('/match', matchRouter);
 
 app.get('/', (req, res) => {
   res.send('Welcome to the server!');
@@ -39,8 +43,6 @@ app.get('/proxyImage', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch image data' });
   }
 });
-
-app.use('/summoner', summonerRouter)
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
