@@ -1,3 +1,4 @@
+
 /**
  * API call to Riot for data by calling the proxy route
  * server and passing the apiURL endpoint
@@ -8,7 +9,6 @@ export function apiProxyCall(apiURL) {
   const proxyURL = `http://localhost:3000/proxy?url=${encodeURIComponent(
     apiURL
   )}`;
-
   return new Promise((resolve, reject) => {
     fetch(proxyURL)
       .then((response) => {
@@ -34,7 +34,6 @@ export function apiProxyCall(apiURL) {
  * @param {string} imageURL
  * @returns {Promise}
  */
-//TODO TRY ROUTING IT 
 export function apiImageCall(imageURL) {
   return new Promise((resolve, reject) => {
     fetch(imageURL)
@@ -58,11 +57,13 @@ export function apiImageCall(imageURL) {
  * API POST call to server to create
  * new database entry
  * 
+ * @param {string} path
  * @param {string} queryRoute
+ * @param {JSON} summonerJSONObject
  * @returns {Promise}
  */
-export function apiPOSTDatabaseCall(queryRoute, summonerJSONObject) {
-  const queryRouteURL = `http://localhost:3000/summoner/${queryRoute}`;
+export function apiPOSTDatabaseCall(path, queryRoute, summonerJSONObject) {
+  const queryRouteURL = `http://localhost:3000/${path}/${queryRoute}`;
 
   return new Promise((resolve, reject) => {
     fetch(queryRouteURL, {
@@ -94,11 +95,12 @@ export function apiPOSTDatabaseCall(queryRoute, summonerJSONObject) {
  * API GET call to server to request data from
  * the database
  * 
+ * @param {string} path
  * @param {string} queryRoute
  * @returns {Promise}
  */
-export function apiGETDatabaseCall(queryRoute) {
-  const queryRouteURL = `http://localhost:3000/summoner/${queryRoute}`;
+export function apiGETDatabaseCall(path, queryRoute) {
+  const queryRouteURL = `http://localhost:3000/${path}/${queryRoute}`;
 
   return new Promise((resolve, reject) => {
     fetch(queryRouteURL)
@@ -123,11 +125,13 @@ export function apiGETDatabaseCall(queryRoute) {
  * API PUT call to server to modify data from
  * the database
  * 
+ * @param {string} path
  * @param {string} queryRoute
+ * @param {JSON} summonerJSONObject
  * @returns {Promise}
  */
-export function apiPUTDatabaseCall(queryRoute, summonerJSONObject) {
-  const queryRouteURL = `http://localhost:3000/summoner/${queryRoute}`;
+export function apiPUTDatabaseCall(path, queryRoute, summonerJSONObject) {
+  const queryRouteURL = `http://localhost:3000/${path}/${queryRoute}`;
 
   return new Promise((resolve, reject) => {
     fetch(queryRouteURL, {

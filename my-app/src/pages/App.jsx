@@ -3,7 +3,13 @@ import "../App.css";
 import Select from "react-select";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiProxyCall } from "../../server/controller/apiService.js";
+import {
+  apiProxyCall,
+  apiImageCall,
+  apiGETDatabaseCall,
+  apiPOSTDatabaseCall,
+  apiPUTDatabaseCall,
+} from "../../server/controller/apiService.js";
 import GridLoader from "react-spinners/GridLoader";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
@@ -395,6 +401,12 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
     const summonerWinrate = getSummonerWinrates(rankedInfo); // Returns JSON object for all game mode winrates
     await getChampionWinrate(masteryInfo, matchInfoList); // Calculates for every champion their respective game mode winrates
     const champions = await getAllChampions();
+
+    //Add summoner details
+    apiPUTDatabaseCall("summoner", "createSummoner", {
+      puuid: puuid,
+      summonerWinrate: summonerWinrate,
+    });
     return {
       puuid,
       summonerInfo,
@@ -667,8 +679,22 @@ async function getMatchInfo(matchIDs, region, puuid) {
       participantsList.push(pickedPlayerInfo);
       if (playerInfo.puuid == puuid) ownPlayerInfo = pickedPlayerInfo;
     }
+    //change to JSON object
     matchInfoList.push([contents, ownPlayerInfo, participantsList]);
     lastIndex = matchIDs.length;
+
+    console.log(contents.gameDate);
+    console.log(formatDate(contents.gameDate));
+
+    apiPUTDatabaseCall("match", "createMatch", {
+      puuid: puuid,
+      matchID: matchID,
+      matchInfo: {
+        contents: contents,
+        ownPlayerInfo: ownPlayerInfo,
+        participantsList: participantsList,
+      },
+    });
   }
   return { matchInfoList, lastIndex };
 }
@@ -736,5 +762,36 @@ async function getRankedInfo(server, id) {
   }
   return [rankedFlexInfo || "Unranked", rankedSoloInfo || "Unranked"];
 }
+
+function formatDate(milliseconds) {
+  const seconds = Math.floor(milliseconds / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  const remainingHours = hours % 24;
+  const remainingMinutes = minutes % 60;
+  const remainingSeconds = seconds % 60;
+
+  // Calculate years, months, and days considering the actual lengths of months and years
+  let years = 0;
+  let months = 0;
+  let remainingDays = days;
+
+  while (remainingDays >= 365) {
+    years++;
+    remainingDays -= 365;
+  }
+
+  while (remainingDays >= 30) {
+    months++;
+    remainingDays -= 30;
+  }
+
+  const formattedDuration = `${years}-${String(months).padStart(2, '0')}-${String(remainingDays).padStart(2, '0')} ${String(remainingHours).padStart(2, '0')}:${String(remainingMinutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+
+  return formattedDuration;
+}
+
 
 export default App;

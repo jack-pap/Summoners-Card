@@ -87,9 +87,9 @@ const Dashboard = memo(function Dashboard() {
   }
 
   useEffect(() => {
-    apiGETDatabaseCall("all");
-    apiPUTDatabaseCall("delete", { puuid: "puuid:1" });
-    // apiGETDatabaseCall("all");
+    // apiGETDatabaseCall("match", "allMatches");
+    // apiPUTDatabaseCall("match", "deleteMatch", { matchID: "test" });
+    // apiGETDatabaseCall("match", "allMatches");
     const fetchData = async () => {
       setIsLoading(true);
       try {
