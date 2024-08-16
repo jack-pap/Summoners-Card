@@ -19,14 +19,25 @@ Install dependencies
 ```
 npm install
 ```
-Run local server
+Run local front-end server
 ```
 npm run dev
+```
+Run back-end server 
+```
+npm start
 ```
 
 # Requirements
 * Vite 
-
+* Express.js
 * Node.js
+* MySQL server
+* Ensure your Riot API key and the database password are in a .env file placed in the root directory.
 
-* Ensure your Riot API key is in config.json and the file is in the same folder as the project
+# Screenshots
+![homepage](https://github.com/user-attachments/assets/6191574a-2d2e-4fbe-955f-8b30944513d3)
+
+![dashboard](https://github.com/user-attachments/assets/b7179061-7f9d-4c86-9cbc-3423d00b4f16)
+
+
