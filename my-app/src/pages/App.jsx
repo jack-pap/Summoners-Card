@@ -403,9 +403,9 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
     const champions = await getAllChampions();
 
     //Add summoner details
-    apiPUTDatabaseCall("summoner", "createSummoner", {
-      puuid: puuid,
-      summonerWinrate: summonerWinrate,
+    apiPOSTDatabaseCall("summoner", "createSummoner", {
+      puuid,
+      summonerWinrate,
     });
     return {
       puuid,
@@ -582,6 +582,10 @@ export async function getMatchList(
   matchAmountStart,
   matchAmount
 ) {
+  const dbMatches = apiGETDatabaseCall("match", "getMatch", {puuid})
+  if (dbMatches) {
+    return dbMatches;
+  }
   const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${matchAmountStart}&count=${matchAmount}&api_key=${API_KEY}`;
   const data = await apiProxyCall(matchListApiURL);
   var matchList = [];
@@ -686,7 +690,7 @@ async function getMatchInfo(matchIDs, region, puuid) {
     console.log(contents.gameDate);
     console.log(formatDate(contents.gameDate));
 
-    apiPUTDatabaseCall("match", "createMatch", {
+    apiPOSTDatabaseCall("match", "createMatch", {
       puuid: puuid,
       matchID: matchID,
       matchInfo: {
@@ -694,6 +698,7 @@ async function getMatchInfo(matchIDs, region, puuid) {
         ownPlayerInfo: ownPlayerInfo,
         participantsList: participantsList,
       },
+      matchDate: "2024-08-02 13:00:00",
     });
   }
   return { matchInfoList, lastIndex };
@@ -763,35 +768,16 @@ async function getRankedInfo(server, id) {
   return [rankedFlexInfo || "Unranked", rankedSoloInfo || "Unranked"];
 }
 
+//TODO FIX IT
 function formatDate(milliseconds) {
   const seconds = Math.floor(milliseconds / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
+  const day = Math.floor(hours / 24);
+  const month = Math.floor(day / 31);
+  const year = Math.floor(month / 365);
 
-  const remainingHours = hours % 24;
-  const remainingMinutes = minutes % 60;
-  const remainingSeconds = seconds % 60;
-
-  // Calculate years, months, and days considering the actual lengths of months and years
-  let years = 0;
-  let months = 0;
-  let remainingDays = days;
-
-  while (remainingDays >= 365) {
-    years++;
-    remainingDays -= 365;
-  }
-
-  while (remainingDays >= 30) {
-    months++;
-    remainingDays -= 30;
-  }
-
-  const formattedDuration = `${years}-${String(months).padStart(2, '0')}-${String(remainingDays).padStart(2, '0')} ${String(remainingHours).padStart(2, '0')}:${String(remainingMinutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-
-  return formattedDuration;
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
-
 
 export default App;

@@ -37,31 +37,32 @@ exports.summonerSpecific = async (req, res) => {
     })
 }
 
-exports.summonerCreate = async (req, res) => {
-  knex('summonerInfo')
-    .insert({ 
-      'puuid': req.body.puuid,
-      'summonerWinrate': req.body.summonerWinrate,
-    })
-    .then(() => {
-      res.json({ message: `Summoner \'${req.body.gameName}\' entry created.` })
-    })
-    .catch(err => {
-      res.json({ message: `There was an error creating summoner ${req.body.puuid} entry: ${err}` })
-    })
-}
+  exports.summonerCreate = async (req, res) => {
+    knex
+      .insert({ 
+        'puuid': req.body.puuid,
+        'summonerWinrate': req.body.summonerWinrate
+      })
+      .into('summonerInfo')
+      .then(() => {
+        res.json({ message: `Summoner \'${req.body.puuid}\' entry created.` })
+      })
+      .catch(err => {
+        res.json({ message: `There was an error creating summoner ${req.body.puuid} entry: ${err}` })
+      })
+  }
 
-exports.summonerDelete = async (req, res) => {
-  knex('summonerInfo')
-    .where('puuid', req.body.puuid)
-    .del()
-    .then(() => {
-      res.json({ message: `Summoner ${req.body.puuid} deleted.` })
-    })
-    .catch(err => {
-      res.json({ message: `There was an error deleting summoner ${req.body.gameName}: ${err}` })
-    })
-}
+  exports.summonerDelete = async (req, res) => {
+    knex('summonerInfo')
+      .where('puuid', req.body.puuid)
+      .del()
+      .then(() => {
+        res.json({ message: `Summoner ${req.body.puuid} deleted.` })
+      })
+      .catch(err => {
+        res.json({ message: `There was an error deleting summoner ${req.body.puuid}: ${err}` })
+      })
+  }
 
 exports.summonersReset = async (req, res) => {
   knex
@@ -92,7 +93,7 @@ exports.matchSpecific = async (req, res) => {
   knex
     .select('*')
     .from('matchInfo')
-    .where('matchID', req.body.matchID)
+    .where('matchID', req.body.puuid)
     .then(matchData => {
       res.json(matchData)
     })
@@ -102,13 +103,14 @@ exports.matchSpecific = async (req, res) => {
 }
 
 exports.matchCreate = async (req, res) => {
-  knex('matchInfo')
+  knex
     .insert({ 
       'puuid': req.body.puuid,
       'matchID': req.body.matchID,
       'matchInfo': req.body.matchInfo,
       'matchDate': req.body.matchDate
     })
+    .into('matchInfo')
     .then(() => {
       res.json({ message: `Match \'${req.body.matchID}\' entry created.` })
     })
