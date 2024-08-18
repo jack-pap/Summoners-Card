@@ -13,6 +13,9 @@ router.get('/allMatches', matchRoutes.matchesAll)
 // Add route for GET request to retrieve specific summoner matches
 router.get('/getMatch', matchRoutes.matchSpecific)
 
+// Add route for GET request to retrieve specific summoner matches
+router.get('/getMatchInfo', matchRoutes.matchSpecificInfo)
+
 // Add route for POST request to create new match
 router.post('/createMatch', matchRoutes.matchCreate)
 

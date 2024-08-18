@@ -390,7 +390,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
     const summonerInfo = await getSummonerInfo(server, puuid); // Array that includes summoner ID, summoner level and profile picture
     const masteryInfo = await getMasteryInfo(server, puuid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
     const matchList = await getMatchList(region, puuid, 0, 40); // Array constisting of match IDs
-    const matchInfoListResult = await getMatchInfoList(
+    const matchInfoListResult = await matchInfoListDriver(
       region,
       matchList,
       puuid
@@ -582,10 +582,14 @@ export async function getMatchList(
   matchAmountStart,
   matchAmount
 ) {
-  const dbMatches = apiGETDatabaseCall("match", "getMatch", {puuid})
-  if (dbMatches) {
-    return dbMatches;
+  const DBMatchList = await apiGETDatabaseCall(
+    "match",
+    `getMatch?puuid=${puuid}`
+  );
+  if (DBMatchList.length > 0) {
+    return DBMatchList.map(obj => Object.values(obj)[0]);
   }
+
   const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${matchAmountStart}&count=${matchAmount}&api_key=${API_KEY}`;
   const data = await apiProxyCall(matchListApiURL);
   var matchList = [];
@@ -602,8 +606,8 @@ export async function getMatchList(
  * @param {string} puuid
  * @returns {[[string],[string], [string]]}
  */
-export async function getMatchInfoList(region, matchIDs, puuid) {
-  var { matchInfoList, lastIndex } = await getMatchInfo(
+export async function matchInfoListDriver(region, matchIDs, puuid) {
+  var { matchInfoList, lastIndex } = await getMatchInfoList(
     matchIDs,
     region,
     puuid
@@ -620,22 +624,28 @@ export async function getMatchInfoList(region, matchIDs, puuid) {
   return { matchInfoList, lastIndex };
 }
 
-async function getMatchInfo(matchIDs, region, puuid) {
+async function getMatchInfoList(matchIDs, region, puuid) {
   var matchInfoList = [];
   var lastIndex = -1;
   for (const matchID of matchIDs) {
-    const matchInfoApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
-    const data = await apiProxyCall(matchInfoApiURL);
-    const contents = {
-      gameDate: Date.now() - new Date(data.info.gameEndTimestamp),
-      gameDuration: data.info.gameDuration,
-      gameQueueID: data.info.queueId,
-    };
-    const participants = data.info.participants;
+    const DBMatchInfo = await apiGETDatabaseCall(
+      "match",
+      `getMatchInfo?matchID=${matchID}`
+    );
+
+    if (DBMatchInfo) {
+      matchInfoList.push([
+        DBMatchInfo.contents,
+        DBMatchInfo.ownPlayerInfo,
+        DBMatchInfo.participantsList,
+      ]);
+      lastIndex = matchIDs.length;
+      continue;
+    }
+
+    const { contents, participants } = await matchInfoAPICall(region, matchID);
     const participantsList = [];
     var ownPlayerInfo = null;
-
-    if (!Object.values(GAME_MODES).includes(contents.gameQueueID)) continue;
 
     for (const playerInfo of participants) {
       const pickedPlayerInfo = (({
@@ -687,7 +697,7 @@ async function getMatchInfo(matchIDs, region, puuid) {
     matchInfoList.push([contents, ownPlayerInfo, participantsList]);
     lastIndex = matchIDs.length;
 
-    console.log(contents.gameDate);
+    console.log(new Date(data.info.gameEndTimestamp));
     console.log(formatDate(contents.gameDate));
 
     apiPOSTDatabaseCall("match", "createMatch", {
@@ -702,6 +712,20 @@ async function getMatchInfo(matchIDs, region, puuid) {
     });
   }
   return { matchInfoList, lastIndex };
+}
+
+async function matchInfoAPICall(region, matchID) {
+  const matchInfoApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
+  const data = await apiProxyCall(matchInfoApiURL);
+  const contents = {
+    gameDate: Date.now() - new Date(data.info.gameEndTimestamp),
+    gameDuration: data.info.gameDuration,
+    gameQueueID: data.info.queueId,
+  };
+  const participants = data.info.participants;
+
+  if (!Object.values(GAME_MODES).includes(contents.gameQueueID)) return;
+  return { contents, participants };
 }
 
 /**
@@ -722,7 +746,7 @@ async function findMoreMatches(region, puuid, matchIDs) {
     matchIDs.length,
     matchIDs.length
   );
-  const newMatchInfoList = await getMatchInfo(newMatchIDS, region, puuid);
+  const newMatchInfoList = await getMatchInfoList(newMatchIDS, region, puuid);
   if (newMatchInfoList.length == 0)
     return {
       matches: null,

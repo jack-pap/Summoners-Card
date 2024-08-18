@@ -2,7 +2,7 @@ import "../App.css";
 import React from "react";
 import { memo } from 'react';
 import { createRoot } from "react-dom/client";
-import { getSummonerStats, getMatchList, getMatchInfoList } from "./App.jsx";
+import { getSummonerStats, getMatchList, matchInfoListDriver } from "./App.jsx";
 import {
   apiProxyCall,
   apiImageCall,
@@ -592,7 +592,7 @@ async function extendMatchHistory(
   const container = document.getElementById("matchList");
   const newMatchList = await getMatchList(region, puuid, matchInfoIndex, 11);
   setSummonerMatchInfoIndex(matchInfoIndex + 10);
-  const newMatchInfoList = await getMatchInfoList(region, newMatchList, puuid);
+  const newMatchInfoList = await matchInfoListDriver(region, newMatchList, puuid);
   for (
     let counter = 0;
     counter < newMatchInfoList.matchInfoList.length - 1;
