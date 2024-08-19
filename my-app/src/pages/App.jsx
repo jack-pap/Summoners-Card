@@ -573,7 +573,10 @@ function getChampionWinrate(masteryInfo, matchInfoList) {
  * API call to retrieve an array of
  * summoner match IDs based on puuid
  *
+ * @param {string} region
  * @param {string} puuid
+ * @param {number} matchAmountStart
+ * @param {number} matchAmount
  * @returns {Promise<Array<Object>>}
  */
 export async function getMatchList(
@@ -587,7 +590,7 @@ export async function getMatchList(
     `getMatch?puuid=${puuid}`
   );
   if (DBMatchList.length > 0) {
-    return DBMatchList.map(obj => Object.values(obj)[0]);
+    return DBMatchList.map((obj) => Object.values(obj)[0]);
   }
 
   const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${matchAmountStart}&count=${matchAmount}&api_key=${API_KEY}`;
@@ -614,7 +617,7 @@ export async function matchInfoListDriver(region, matchIDs, puuid) {
   );
 
   if (matchInfoList.length < matchIDs.length) {
-    const moreMatchesObject = await findMoreMatches(region, puuid, matchIDs);
+    const moreMatchesObject = await findMoreMatches(region, puuid, matchIDs, lastIndex);
     if (moreMatchesObject.matches) {
       matchInfoList = matchInfoList.concat(moreMatchesObject.matches);
       lastIndex = moreMatchesObject.index;
@@ -633,17 +636,20 @@ async function getMatchInfoList(matchIDs, region, puuid) {
       `getMatchInfo?matchID=${matchID}`
     );
 
-    if (DBMatchInfo) {
+    if (DBMatchInfo.length > 0) {
+      const parsedMatchInfo = JSON.parse(DBMatchInfo[0].matchInfo);
       matchInfoList.push([
-        DBMatchInfo.contents,
-        DBMatchInfo.ownPlayerInfo,
-        DBMatchInfo.participantsList,
+        parsedMatchInfo.contents,
+        parsedMatchInfo.ownPlayerInfo,
+        parsedMatchInfo.participantsList,
       ]);
       lastIndex = matchIDs.length;
       continue;
     }
 
     const { contents, participants } = await matchInfoAPICall(region, matchID);
+    if (!Object.values(GAME_MODES).includes(contents.gameQueueID)) continue;
+
     const participantsList = [];
     var ownPlayerInfo = null;
 
@@ -697,9 +703,6 @@ async function getMatchInfoList(matchIDs, region, puuid) {
     matchInfoList.push([contents, ownPlayerInfo, participantsList]);
     lastIndex = matchIDs.length;
 
-    console.log(new Date(data.info.gameEndTimestamp));
-    console.log(formatDate(contents.gameDate));
-
     apiPOSTDatabaseCall("match", "createMatch", {
       puuid: puuid,
       matchID: matchID,
@@ -708,7 +711,7 @@ async function getMatchInfoList(matchIDs, region, puuid) {
         ownPlayerInfo: ownPlayerInfo,
         participantsList: participantsList,
       },
-      matchDate: "2024-08-02 13:00:00",
+      matchDate: contents.gameDateSQLFormat,
     });
   }
   return { matchInfoList, lastIndex };
@@ -718,13 +721,13 @@ async function matchInfoAPICall(region, matchID) {
   const matchInfoApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
   const data = await apiProxyCall(matchInfoApiURL);
   const contents = {
-    gameDate: Date.now() - new Date(data.info.gameEndTimestamp),
+    gameDate: Date.now() - new Date(data.info.gameStartTimestamp),
+    gameDateSQLFormat: formatDateSQL(data.info.gameStartTimestamp),
     gameDuration: data.info.gameDuration,
     gameQueueID: data.info.queueId,
   };
   const participants = data.info.participants;
 
-  if (!Object.values(GAME_MODES).includes(contents.gameQueueID)) return;
   return { contents, participants };
 }
 
@@ -739,12 +742,12 @@ async function matchInfoAPICall(region, matchID) {
  * @param {[[string],[string], [string]]} matchInfoList
  * @returns {Promise<Array<Object>,Object>}
  */
-async function findMoreMatches(region, puuid, matchIDs) {
+async function findMoreMatches(region, puuid, matchIDs, lastIndex) {
   const newMatchIDS = await getMatchList(
     region,
     puuid,
-    matchIDs.length,
-    matchIDs.length
+    lastIndex,
+    20
   );
   const newMatchInfoList = await getMatchInfoList(newMatchIDS, region, puuid);
   if (newMatchInfoList.length == 0)
@@ -792,14 +795,22 @@ async function getRankedInfo(server, id) {
   return [rankedFlexInfo || "Unranked", rankedSoloInfo || "Unranked"];
 }
 
-//TODO FIX IT
-function formatDate(milliseconds) {
-  const seconds = Math.floor(milliseconds / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const day = Math.floor(hours / 24);
-  const month = Math.floor(day / 31);
-  const year = Math.floor(month / 365);
+/**
+ * Formats timestamp milliseconds into DATETIME
+ * format for entry in MySQL database
+ * 
+ * @param {number} timestamp
+ * @returns {string} 
+ */
+function formatDateSQL(timestamp) {
+  const date = new Date(timestamp);
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
