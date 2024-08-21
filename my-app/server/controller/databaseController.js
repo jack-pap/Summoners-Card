@@ -41,9 +41,12 @@ exports.summonerSpecific = async (req, res) => {
     knex
       .insert({ 
         'puuid': req.body.puuid,
-        'summonerWinrate': req.body.summonerWinrate
+        'summonerWinrate': req.body.summonerWinrate,
+        'lastUpdatedDate': req.body.lastUpdatedDate
       })
       .into('summonerInfo')
+      .onConflict('puuid')
+      .merge(['puuid', 'summonerWinrate', 'lastUpdatedDate'])
       .then(() => {
         res.json({ message: `Summoner \'${req.body.puuid}\' entry created.` })
       })
@@ -51,6 +54,19 @@ exports.summonerSpecific = async (req, res) => {
         res.json({ message: `There was an error creating summoner ${req.body.puuid} entry: ${err}` })
       })
   }
+
+  // exports.summonerUpdate = async (req, res) => {
+  //   //Add other changed attributes if needed
+  //   knex('summonerInfo')
+  //   .where({puuid: req.body.puuid})
+  //     .update({lastUpdatedDate: req.body.lastUpdatedDate})
+  //     .then(() => {
+  //       res.json({ message: `Summoner \'${req.body.puuid}\' entry created.` })
+  //     })
+  //     .catch(err => {
+  //       res.json({ message: `There was an error creating summoner ${req.body.puuid} entry: ${err}` })
+  //     })
+  // }
 
   exports.summonerDelete = async (req, res) => {
     knex('summonerInfo')

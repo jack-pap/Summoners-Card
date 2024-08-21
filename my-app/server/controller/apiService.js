@@ -130,7 +130,7 @@ export function apiGETDatabaseCall(path, queryRoute) {
  * @param {JSON} summonerJSONObject
  * @returns {Promise}
  */
-export function apiPUTDatabaseCall(path, queryRoute, summonerJSONObject) {
+export function apiPUTDatabaseCall(path, queryRoute) {
   const queryRouteURL = `http://localhost:3000/${path}/${queryRoute}`;
 
   return new Promise((resolve, reject) => {
@@ -140,7 +140,6 @@ export function apiPUTDatabaseCall(path, queryRoute, summonerJSONObject) {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(summonerJSONObject)
     })
       .then((response) => {
         if (!response.ok) {

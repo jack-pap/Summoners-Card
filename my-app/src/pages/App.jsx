@@ -402,10 +402,10 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
     await getChampionWinrate(masteryInfo, matchInfoList); // Calculates for every champion their respective game mode winrates
     const champions = await getAllChampions();
 
-    //Add summoner details
     apiPOSTDatabaseCall("summoner", "createSummoner", {
-      puuid,
-      summonerWinrate,
+      puuid: puuid,
+      summonerWinrate: summonerWinrate,
+      lastUpdatedDate: formatDateSQL(Date.now()),
     });
     return {
       puuid,
@@ -573,7 +573,7 @@ function getChampionWinrate(masteryInfo, matchInfoList) {
  * API call to retrieve an array of
  * summoner match IDs based on puuid
  *
- * @param {string} region
+- * @param {string} region
  * @param {string} puuid
  * @param {number} matchAmountStart
  * @param {number} matchAmount
@@ -617,7 +617,12 @@ export async function matchInfoListDriver(region, matchIDs, puuid) {
   );
 
   if (matchInfoList.length < matchIDs.length) {
-    const moreMatchesObject = await findMoreMatches(region, puuid, matchIDs, lastIndex);
+    const moreMatchesObject = await findMoreMatches(
+      region,
+      puuid,
+      matchIDs,
+      lastIndex
+    );
     if (moreMatchesObject.matches) {
       matchInfoList = matchInfoList.concat(moreMatchesObject.matches);
       lastIndex = moreMatchesObject.index;
@@ -714,6 +719,10 @@ async function getMatchInfoList(matchIDs, region, puuid) {
       matchDate: contents.gameDateSQLFormat,
     });
   }
+  // apiPOSTDatabaseCall("summoner", "updateSummoner", {
+  //   puuid: puuid,
+  //   lastUpdatedDate: formatDateSQL(Date.now())
+  // });
   return { matchInfoList, lastIndex };
 }
 
@@ -743,12 +752,7 @@ async function matchInfoAPICall(region, matchID) {
  * @returns {Promise<Array<Object>,Object>}
  */
 async function findMoreMatches(region, puuid, matchIDs, lastIndex) {
-  const newMatchIDS = await getMatchList(
-    region,
-    puuid,
-    lastIndex,
-    20
-  );
+  const newMatchIDS = await getMatchList(region, puuid, lastIndex, 20);
   const newMatchInfoList = await getMatchInfoList(newMatchIDS, region, puuid);
   if (newMatchInfoList.length == 0)
     return {
@@ -798,9 +802,9 @@ async function getRankedInfo(server, id) {
 /**
  * Formats timestamp milliseconds into DATETIME
  * format for entry in MySQL database
- * 
+ *
  * @param {number} timestamp
- * @returns {string} 
+ * @returns {string}
  */
 function formatDateSQL(timestamp) {
   const date = new Date(timestamp);
