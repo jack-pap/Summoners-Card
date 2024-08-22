@@ -48,10 +48,10 @@ exports.summonerSpecific = async (req, res) => {
       .onConflict('puuid')
       .merge(['puuid', 'summonerWinrate', 'lastUpdatedDate'])
       .then(() => {
-        res.json({ message: `Summoner \'${req.body.puuid}\' entry created.` })
+        res.json({ message: `Summoner \'${req.body.puuid}\' entry created/updated.` })
       })
       .catch(err => {
-        res.json({ message: `There was an error creating summoner ${req.body.puuid} entry: ${err}` })
+        res.json({ message: `There was an error creating/updating summoner ${req.body.puuid} entry: ${err}` })
       })
   }
 

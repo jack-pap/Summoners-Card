@@ -1,18 +1,20 @@
-import { getMatchTimeAgo } from "../pages/Dashboard.jsx";
-import { getKillParticipation } from "../pages/Dashboard.jsx";
-import { memo } from 'react';
+import { memo } from "react";
 
-const MatchEntry = memo(function MatchEntry({ summonerMatchInfo, counter, gameQueues }) {
+const MatchEntry = memo(function MatchEntry({
+  summonerMatchInfo,
+  counter,
+  gameQueues,
+}) {
   const matchData = summonerMatchInfo[counter];
   const gameInfo = matchData[0];
   const playerInfo = matchData[1];
 
-  const containerClassName = playerInfo.win ? "matchEntry" : "matchEntryDefeat";
+  const containerClassName = getMatchStatusName(playerInfo, gameInfo);
 
   return (
     <div className={containerClassName}>
       <div id="matchStatsContainer">
-        <div id="win">{playerInfo.win ? "Victory" : "Defeat"}</div>
+        <div id="win">{getMatchStatus(playerInfo, gameInfo)}</div>
         <div>{gameQueues.get(gameInfo.gameQueueID)}</div>
         <div>{getMatchTimeAgo(gameInfo.gameDate)}</div>
         <div>
@@ -34,21 +36,9 @@ const MatchEntry = memo(function MatchEntry({ summonerMatchInfo, counter, gameQu
         <div>
           {playerInfo.kills} / {playerInfo.deaths} / {playerInfo.assists}
         </div>
+        <div>KDA: {getKDA(playerInfo)}</div>
         <div>
-          KDA:{" "}
-          {playerInfo.deaths == 0
-            ? "Perfect"
-            : `${
-                Math.round(
-                  ((playerInfo.kills + playerInfo.assists) /
-                    playerInfo.deaths) *
-                    100
-                ) / 100
-              }:1`}
-        </div>
-        <div>
-          Kill participation:{" "}
-          {Math.round(getKillParticipation(matchData, playerInfo.win) * 100)}%
+          Kill participation: {getKillParticipation(matchData, playerInfo.win)}%
         </div>
         <div>Vision score: {playerInfo.visionScore}</div>
       </div>
@@ -59,4 +49,57 @@ const MatchEntry = memo(function MatchEntry({ summonerMatchInfo, counter, gameQu
   );
 });
 
+function getMatchStatusName(playerInfo, gameInfo) {
+  if (gameInfo.gameDuration < 300) return "matchEntryRemake"
+  return playerInfo.win ? "matchEntryWin" : "matchEntryDefeat";
+}
+
+function getMatchStatus(playerInfo, gameInfo) {
+  if (gameInfo.gameDuration < 300) return "Remake"
+  return playerInfo.win ? "Victory" : "Defeat";
+}
+
+function getKillParticipation(matchInfo, winStatus) {
+  var totalKills = 0;
+  var killParticipation = 0;
+
+  for (const participantInfo of matchInfo[2]) {
+    if (participantInfo.win == winStatus) totalKills += participantInfo.kills;
+  }
+
+  if ((matchInfo[1].kills + matchInfo[1].assists) / totalKills)
+    killParticipation =
+      (matchInfo[1].kills + matchInfo[1].assists) / totalKills;
+
+  return Math.round(killParticipation * 100);
+}
+
+function getMatchTimeAgo(milliseconds) {
+  const seconds = Math.floor(milliseconds / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) {
+    return days === 1 ? "A day ago" : `${days} days ago`;
+  } else if (hours > 0) {
+    return hours === 1 ? "An hour ago" : `${hours} hours ago`;
+  } else if (minutes > 0) {
+    return `${minutes} minutes ago`;
+  }
+}
+
+function getKDA(playerInfo) {
+  var KDAstring = "";
+  if (playerInfo.deaths == 0) {
+    KDAstring = playerInfo.kills === 0 ? "0.00:1" : "Perfect";
+  } else {
+    KDAstring = `${(
+      (playerInfo.kills + playerInfo.assists) /
+      playerInfo.deaths
+    ).toFixed(2)}:1`;
+  }
+
+  return KDAstring;
+}
 export default MatchEntry;

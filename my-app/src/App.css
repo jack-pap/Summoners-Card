@@ -459,7 +459,7 @@ select:focus {
   gap: 10px;
 }
 
-.matchEntry, .matchEntryDefeat{
+.matchEntryWin, .matchEntryDefeat, .matchEntryRemake{
   display: flex;
   gap: 15px;
   padding: 0px 15px;
@@ -474,11 +474,11 @@ select:focus {
   image-rendering: auto;
 }
 
-.matchEntry {
+.matchEntryWin {
   background: linear-gradient(96deg, rgb(98 235 140 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%); /*linear-gradient(40deg, rgb(78 255 156 / 55%) 30%, rgb(72 131 75 / 50%) 100%)*/
 }
 
-.matchEntry:hover {
+.matchEntryWin:hover {
   box-shadow: 0px 5px 35px rgba(152, 255, 161, 0.3);
 }
 
@@ -488,6 +488,14 @@ select:focus {
 
 .matchEntryDefeat:hover {
   box-shadow: 0px 5px 35px rgba(240, 56, 24, 0.384);
+}
+
+.matchEntryRemake {
+  background: linear-gradient(96deg, rgba(105, 105, 105, 0.55) 0%, rgba(49, 41, 85, 0.5) 110%);
+}
+
+.matchEntryRemake:hover {
+  box-shadow: 0px 5px 35px rgba(95, 95, 95, 0.384);
 }
 
 img {

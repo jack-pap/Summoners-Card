@@ -1,6 +1,6 @@
 import "../App.css";
 import React from "react";
-import { memo } from 'react';
+import { memo } from "react";
 import { createRoot } from "react-dom/client";
 import { getSummonerStats, getMatchList, matchInfoListDriver } from "./App.jsx";
 import {
@@ -172,13 +172,7 @@ const Dashboard = memo(function Dashboard() {
       document.getElementById("homeBody").style.animation =
         "fade-in 1s forwards";
     }
-  }, [
-    isLoading,
-    summonerInfo,
-    summonerRankedInfo,
-    summonerWinrateInfo,
-    summonerChampionWinrateInfo,
-  ]);
+  }, [isLoading, summonerInfo, summonerRankedInfo, summonerWinrateInfo, summonerChampionWinrateInfo]);
 
   ownUsername = gameName;
   if (isLoading) {
@@ -451,8 +445,6 @@ async function getGameQueues() {
   return queueMapping;
 }
 
-
-
 //TODO Add maybe loader while loading winrate
 //Filter through champions with most games in that queue
 /**
@@ -546,7 +538,6 @@ function makeComponents(winrateMappingObject, championName, champId) {
   };
 }
 
-
 async function makeMatchHistory(summonerMatchInfo) {
   const container = document.getElementById("matchList");
   const promises = [];
@@ -592,7 +583,11 @@ async function extendMatchHistory(
   const container = document.getElementById("matchList");
   const newMatchList = await getMatchList(region, puuid, matchInfoIndex, 11);
   setSummonerMatchInfoIndex(matchInfoIndex + 10);
-  const newMatchInfoList = await matchInfoListDriver(region, newMatchList, puuid);
+  const newMatchInfoList = await matchInfoListDriver(
+    region,
+    newMatchList,
+    puuid
+  );
   for (
     let counter = 0;
     counter < newMatchInfoList.matchInfoList.length - 1;
@@ -821,6 +816,7 @@ async function makeRankedEmblems(summonerRankedInfo) {
     await makeRankedEmblem(summonerRankedInfo[1], "rankedSolo");
 }
 
+//TODO Add image static request from server
 async function makeRankedEmblem(summonerRankedInfo, containerName) {
   const container = document.getElementById(containerName);
   const component = document.createElement("div");
@@ -835,6 +831,7 @@ async function makeRankedEmblem(summonerRankedInfo, containerName) {
   container.appendChild(component);
 }
 
+//TODO Add image static request from server
 async function getChampionAssets(championId, insideClass, parentComponent) {
   const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
   const championData = await apiProxyCall(championDataURL);
@@ -844,8 +841,8 @@ async function getChampionAssets(championId, insideClass, parentComponent) {
     .replace("/lol-game-data/assets/", "")
     .toLowerCase();
   const finalURL = baseImageURL + extractedPath;
-
   const championImage = await apiImageCall(finalURL);
+
   const img = document.createElement("img");
   img.src = championImage;
 
@@ -1075,31 +1072,6 @@ function loadWinrate(gameQueue, winrateNumber) {
   progressbarElement.style.stroke = `rgba(221, 156, 15, 0.5, ${
     winratePercentage / 100
   })`;
-}
-
-export function getMatchTimeAgo(milliseconds) {
-  const seconds = Math.floor(milliseconds / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-
-  if (days > 0) {
-    return days === 1 ? "A day ago" : `${days} days ago`;
-  } else if (hours > 0) {
-    return hours === 1 ? "An hour ago" : `${hours} hours ago`;
-  } else if (minutes > 0) {
-    return `${minutes} minutes ago`;
-  }
-}
-
-export function getKillParticipation(matchInfo, winStatus) {
-  var totalKills = 0;
-
-  for (const participantInfo of matchInfo[2]) {
-    if (participantInfo.win == winStatus) totalKills += participantInfo.kills;
-  }
-
-  return (matchInfo[1].kills + matchInfo[1].assists) / totalKills;
 }
 
 export default Dashboard;
