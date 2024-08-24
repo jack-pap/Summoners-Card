@@ -818,24 +818,34 @@ async function makeRankedEmblems(summonerRankedInfo) {
 
 //TODO Add image static request from server
 async function makeRankedEmblem(summonerRankedInfo, containerName) {
+  var rankedIconImage;
   const container = document.getElementById(containerName);
   const component = document.createElement("div");
   component.setAttribute("class", "rankedEmblem");
 
-  const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/ranked-emblem/emblem-${summonerRankedInfo.rankedTier.toLowerCase()}.png`;
-  const profileIconImage = await apiImageCall(imgURL);
+  if (
+    await checkFileExists(
+      `/assets/Ranked_Emblems/emblem-${summonerRankedInfo.rankedTier}.png`
+    )
+  ) {
+    rankedIconImage = `/assets/Ranked_Emblems/emblem-${summonerRankedInfo.rankedTier.toLowerCase()}.png`;
+  } else {
+    const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/ranked-emblem/emblem-${summonerRankedInfo.rankedTier.toLowerCase()}.png`;
+    rankedIconImage = await apiImageCall(imgURL);
+  }
+
   const img = document.createElement("img");
-  img.src = profileIconImage;
+  img.src = rankedIconImage;
 
   component.appendChild(img);
   container.appendChild(component);
 }
 
-//TODO Add image static request from server
 async function getChampionAssets(championId, insideClass, parentComponent) {
   var championImage;
-  if (await checkFileExists(`/champion-icons/${championId}.png`))
-    championImage = `/champion-icons/${championId}.png`;
+
+  if (await checkFileExists(`/assets/Champion_Icons/${championId}.png`))
+    championImage = `/assets/Champion_Icons/${championId}.png`;
   else {
     const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
     const championData = await apiProxyCall(championDataURL);

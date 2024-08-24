@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   server: {
     proxy: {
-      '/champion-icons': 'http://localhost:3000'
+      '/assets': 'http://localhost:3000'
     }
   },
   esbuild: {

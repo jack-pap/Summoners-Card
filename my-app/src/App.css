@@ -361,13 +361,12 @@ select:focus {
   position: relative;
   display: flex;
   justify-content: center;
-  top: -120px;
-  height: 270%;
+  top: -140px;
+  height: 290%;
   width: auto;
   object-fit: cover;
   object-position: center;
 }
-
 
 #level {
   display: block;

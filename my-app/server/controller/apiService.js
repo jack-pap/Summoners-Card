@@ -112,7 +112,6 @@ export function apiGETDatabaseCall(path, queryRoute) {
       })
       .then((data) => {
         resolve(data);
-        console.log(data);
       })
       .catch((error) => {
         reject(error);

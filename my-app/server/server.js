@@ -13,7 +13,7 @@ app.use(cors()); // Enable CORS for everywhere
 app.use(bodyParser.json()); // Parse JSON bodies
 
 //Database routes
-app.use('/champion-icons', express.static(path.join(__dirname, 'assets', 'Champion_Icons')));
+app.use('/assets', express.static(path.join(__dirname, 'assets'))); //TODO maybe make it load all image assets
 app.use('/summoner', summonerRouter);
 app.use('/match', matchRouter);
 
