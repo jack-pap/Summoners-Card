@@ -495,11 +495,15 @@ select:focus {
 }
 
 .matchEntryRemake:hover {
-  box-shadow: 0px 5px 35px rgba(95, 95, 95, 0.384);
+  box-shadow: 0px 5px 35px rgba(145, 144, 144, 0.384);
 }
 
 img {
   border-radius: 5px;
+}
+
+.matchStatsContainer {
+  min-width: 120px;
 }
 
 .championContainer {

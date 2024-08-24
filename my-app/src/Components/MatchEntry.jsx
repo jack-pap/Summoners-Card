@@ -13,7 +13,7 @@ const MatchEntry = memo(function MatchEntry({
 
   return (
     <div className={containerClassName}>
-      <div id="matchStatsContainer">
+      <div className="matchStatsContainer">
         <div id="win">{getMatchStatus(playerInfo, gameInfo)}</div>
         <div>{gameQueues.get(gameInfo.gameQueueID)}</div>
         <div>{getMatchTimeAgo(gameInfo.gameDate)}</div>

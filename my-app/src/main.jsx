@@ -1,19 +1,16 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import Header from './Header.jsx';
-import Footer from './Footer.jsx';
-import App from './pages/App.jsx'
-import Dashboard from './pages/Dashboard.jsx'
-import Champions from './pages/Champions.jsx';
-import Privacy from './pages/About.jsx';
-import ErrorPage from './pages/ErrorPage.jsx';
-import './index.css'
-import './App.css'
-import About from './pages/About.jsx';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Header from "./Header.jsx";
+import Footer from "./Footer.jsx";
+import App from "./pages/App.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import Champions from "./pages/Champions.jsx";
+import Privacy from "./pages/About.jsx";
+import ErrorPage from "./pages/ErrorPage.jsx";
+import "./index.css";
+import "./App.css";
+import About from "./pages/About.jsx";
 
 const Layout = ({ children }) => (
   <>
@@ -32,35 +29,47 @@ const Layout2 = ({ children }) => (
 
 const router = createBrowserRouter([
   {
+    // This will allow the request to pass through to the server
+    path: "champion-icons/*",
+    loader: ({ request }) => {
+      return null;
+    },
+  },
+  {
     path: "/",
-    element: <>
-      <div className="line" id="leftLine"></div>
-      <Layout2><App /></Layout2>
-      <div className="line" id="rightLine"></div>
-    </>,
-    errorElement: <Layout><ErrorPage /></Layout>,
+    element: (
+      <>
+        <div className="line" id="leftLine"></div>
+        <Layout2>
+          <App />
+        </Layout2>
+        <div className="line" id="rightLine"></div>
+      </>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
   },
   {
     path: "/player/:server/:summonerName",
-    element:
+    element: (
       <div className="dashboard">
-        <Layout><Dashboard /></Layout>
-      </div>,
-    errorElement: <Layout><ErrorPage /></Layout>,
-  },
-  {
-    path: "/champions",
-    element: <Layout><Champions /></Layout>,
-    errorElement: <Layout><ErrorPage /></Layout>,
-  },
-  {
-    path: "/about",
-    element: <Layout><About /></Layout>,
-    errorElement: <Layout><ErrorPage /></Layout>,
+        <Layout>
+          <Dashboard />
+        </Layout>
+      </div>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
   },
 ]);
 
-const container = document.getElementById('root');
+const container = document.getElementById("root");
 
 if (!container._reactRootContainer) {
   // Create the root only once
@@ -71,4 +80,3 @@ if (!container._reactRootContainer) {
   const root = container._reactRootContainer._internalRoot;
   root.render(<RouterProvider router={router} />);
 }
-

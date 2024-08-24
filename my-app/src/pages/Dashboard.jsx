@@ -445,7 +445,7 @@ async function getGameQueues() {
   return queueMapping;
 }
 
-//TODO Add maybe loader while loading winrate
+//TODO Add maybe loader while loading winrate and disable button
 //Filter through champions with most games in that queue
 /**
  * Function that displays champion winrate stats
@@ -620,11 +620,6 @@ async function extendMatchHistory(
 }
 
 async function getAllAssets(summonerMatchInfo, counter, component) {
-  await getChampionAssets(
-    summonerMatchInfo[counter][1].championId,
-    ".championImage",
-    component
-  );
   await getSummonerSpellAssets(
     summonerMatchInfo[counter][1].summoner1Id,
     summonerMatchInfo[counter][1].summoner2Id,
@@ -638,6 +633,11 @@ async function getAllAssets(summonerMatchInfo, counter, component) {
     component
   );
   await getItemAssets(summonerMatchInfo[counter][1], ".itemImages", component);
+  await getChampionAssets(
+    summonerMatchInfo[counter][1].championId,
+    ".championImage",
+    component
+  );
   await getOtherPlayerAssets(
     summonerMatchInfo[counter][2],
     ".otherPlayers",
@@ -833,15 +833,20 @@ async function makeRankedEmblem(summonerRankedInfo, containerName) {
 
 //TODO Add image static request from server
 async function getChampionAssets(championId, insideClass, parentComponent) {
-  const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
-  const championData = await apiProxyCall(championDataURL);
-  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
-  const champImageURL = championData.squarePortraitPath;
-  const extractedPath = champImageURL
-    .replace("/lol-game-data/assets/", "")
-    .toLowerCase();
-  const finalURL = baseImageURL + extractedPath;
-  const championImage = await apiImageCall(finalURL);
+  var championImage;
+  if (await checkFileExists(`/champion-icons/${championId}.png`))
+    championImage = `/champion-icons/${championId}.png`;
+  else {
+    const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
+    const championData = await apiProxyCall(championDataURL);
+    const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+    const champImageURL = championData.squarePortraitPath;
+    const extractedPath = champImageURL
+      .replace("/lol-game-data/assets/", "")
+      .toLowerCase();
+    const finalURL = baseImageURL + extractedPath;
+    championImage = await apiImageCall(finalURL);
+  }
 
   const img = document.createElement("img");
   img.src = championImage;
@@ -1072,6 +1077,16 @@ function loadWinrate(gameQueue, winrateNumber) {
   progressbarElement.style.stroke = `rgba(221, 156, 15, 0.5, ${
     winratePercentage / 100
   })`;
+}
+
+async function checkFileExists(url) {
+  try {
+    const response = await fetch(url);
+    return response.ok; // Returns true if the status code is in the range 200-299
+  } catch (error) {
+    console.error("Error checking file:", error);
+    return false;
+  }
 }
 
 export default Dashboard;
