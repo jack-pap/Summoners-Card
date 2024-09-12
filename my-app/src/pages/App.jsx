@@ -569,6 +569,7 @@ function getChampionWinrate(masteryInfo, matchInfoList) {
   }
 }
 
+//TODO Change this so it checks the length between games or time updated since
 /**
  * API call to retrieve an array of
  * summoner match IDs based on puuid

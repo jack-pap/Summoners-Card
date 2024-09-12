@@ -684,24 +684,25 @@ function makeSummonerBadges(
   root.render(<>{allSummonerChips}</>);
 }
 
+//make it break if millions stop
 function makeMillionBadge(championsInfo, summonerChampionWinrateInfo) {
   const summonerChips = [];
 
   for (const [id, value] of summonerChampionWinrateInfo.entries()) {
-    if (value.championPoints > 1000000) {
-      summonerChips.push(
-        <Chip
-          key={id}
-          label={`${championsInfo.get(id)} Million`}
-          variant="outlined"
-          sx={{
-            borderRadius: "10px",
-            borderColor: "#c89b3c",
-            color: "#c89b3c",
-          }}
-        />
-      );
-    }
+    if (value.championPoints < 1000000) break;
+
+    summonerChips.push(
+      <Chip
+        key={id}
+        label={`${championsInfo.get(id)} Million`}
+        variant="outlined"
+        sx={{
+          borderRadius: "10px",
+          borderColor: "#c89b3c",
+          color: "#c89b3c",
+        }}
+      />
+    );
   }
   return summonerChips;
 }
