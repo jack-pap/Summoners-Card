@@ -11,6 +11,9 @@ const router = express.Router()
 router.get('/allMatches', matchRoutes.matchesAll)
 
 // Add route for GET request to retrieve specific summoner matches
+router.get('/getMatches', matchRoutes.summonerMatches)
+
+// Add route for GET request to retrieve a specific match
 router.get('/getMatch', matchRoutes.matchSpecific)
 
 // Add route for GET request to retrieve match info for a specific match

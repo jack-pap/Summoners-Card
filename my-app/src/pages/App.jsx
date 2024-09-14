@@ -569,7 +569,6 @@ function getChampionWinrate(masteryInfo, matchInfoList) {
   }
 }
 
-//TODO Change this so it checks the length between games or time updated since
 /**
  * API call to retrieve an array of
  * summoner match IDs based on puuid
@@ -586,21 +585,31 @@ export async function getMatchList(
   matchAmountStart,
   matchAmount
 ) {
-  const DBMatchList = await apiGETDatabaseCall(
-    "match",
-    `getMatch?puuid=${puuid}`
-  );
-  if (DBMatchList.length > 0) {
+  if (await matchListUpdated(region, puuid, matchAmountStart, matchAmount)) {
+    const DBMatchList = await apiGETDatabaseCall(
+      "match",
+      `getMatches?puuid=${puuid}`
+    );
     return DBMatchList.map((obj) => Object.values(obj)[0]);
+  } else {
+    const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${matchAmountStart}&count=${matchAmount}&api_key=${API_KEY}`;
+    const data = await apiProxyCall(matchListApiURL);
+    var matchList = [];
+    for (const match of data) {
+      matchList.push(match);
+    }
+    return matchList;
   }
+}
 
+async function matchListUpdated(region, puuid, matchAmountStart, matchAmount) {
   const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${matchAmountStart}&count=${matchAmount}&api_key=${API_KEY}`;
   const data = await apiProxyCall(matchListApiURL);
-  var matchList = [];
-  for (const match of data) {
-    matchList.push(match);
-  }
-  return matchList;
+  const DBMatch = await apiGETDatabaseCall(
+    "match",
+    `getMatch?matchID=${data[0]}`
+  );
+  return DBMatch.length > 0;
 }
 
 /**

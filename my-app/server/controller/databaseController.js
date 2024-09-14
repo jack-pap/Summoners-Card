@@ -105,7 +105,7 @@ exports.matchesAll = async (req, res) => {
     })
 }
 
-exports.matchSpecific = async (req, res) => {
+exports.summonerMatches = async (req, res) => {
   knex
     .select('matchID')
     .from('matchInfo')
@@ -116,6 +116,20 @@ exports.matchSpecific = async (req, res) => {
     })
     .catch(error => {
       res.json({ message: `There was an error retrieving summoner's matches: ${error}` })
+    })
+}
+
+exports.matchSpecific = async (req, res) => {
+  knex
+    .select('matchID')
+    .from('matchInfo')
+    .where('matchID', req.query.matchID)
+    .orderBy('matchDate', 'desc')
+    .then(matchData => {
+      res.json(matchData)
+    })
+    .catch(error => {
+      res.json({ message: `There was an error retrieving match: ${error}`})
     })
 }
 
