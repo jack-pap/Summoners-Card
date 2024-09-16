@@ -1,10 +1,13 @@
 var express = require("express");
 var cors = require('cors')
 const path = require('path');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args)); //Allows usage of fetch
 const bodyParser = require('body-parser');
 var app = express();
 const port = 3000;
+
+const NodeCache = require( "node-cache" );
+const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });
 
 const summonerRouter = require('./routes/summoner-db-route')
 const matchRouter = require('./routes/match-db-route')
@@ -13,7 +16,7 @@ app.use(cors()); // Enable CORS for everywhere
 app.use(bodyParser.json()); // Parse JSON bodies
 
 //Database routes
-app.use('/assets', express.static(path.join(__dirname, 'assets'))); //TODO maybe make it load all image assets
+app.use('/assets', express.static(path.join(__dirname, 'assets'))); 
 app.use('/summoner', summonerRouter);
 app.use('/match', matchRouter);
 
@@ -21,8 +24,27 @@ app.get('/', (req, res) => {
   res.send('Welcome to the server!');
 });
 
+// Middleware to cache responses
+const cacheMiddleware = (req, res, next) => {
+  const key = req.query.url;
+  const cachedResponse = cache.get(key);
+
+  if (cachedResponse) {
+    console.log(`Cache hit for URL: ${key}`);
+    res.json(cachedResponse);
+  } else {
+    console.log(`Cache miss for URL: ${key}`);
+    res.sendResponse = res.json;
+    res.json = (body) => {
+      cache.set(key, body);
+      res.sendResponse(body);
+    };
+    next();
+  }
+};
+
 // Proxy route to be called by controller to fetch data from API endpoint
-app.get('/proxy', async (req, res) => {
+app.get('/proxy', cacheMiddleware, async (req, res) => {
   const apiURL = req.query.url;
   try {
     const response = await fetch(apiURL);
@@ -33,17 +55,6 @@ app.get('/proxy', async (req, res) => {
   }
 });
 
-// app.get('/image', async (req, res) => {
-//   const apiURL = req.query.url;
-//   try {
-//     const response = await fetch(apiURL);
-//     const data = await response.arrayBuffer();
-//     res.type(response.headers.get('content-type'));
-//     res.send(data);
-//   } catch (error) {
-//     res.status(500).json({ error: 'Failed to fetch image data' });
-//   }
-// });
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

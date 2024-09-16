@@ -585,7 +585,7 @@ export async function getMatchList(
   matchAmountStart,
   matchAmount
 ) {
-  if (await matchListUpdated(region, puuid, matchAmountStart, matchAmount)) {
+  if (await matchListUpdated(region, puuid)) {
     const DBMatchList = await apiGETDatabaseCall(
       "match",
       `getMatches?puuid=${puuid}`
@@ -602,12 +602,12 @@ export async function getMatchList(
   }
 }
 
-async function matchListUpdated(region, puuid, matchAmountStart, matchAmount) {
-  const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${matchAmountStart}&count=${matchAmount}&api_key=${API_KEY}`;
+async function matchListUpdated(region, puuid) {
+  const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${0}&count=${1}&api_key=${API_KEY}`;
   const data = await apiProxyCall(matchListApiURL);
   const DBMatch = await apiGETDatabaseCall(
     "match",
-    `getMatch?matchID=${data[0]}`
+    `getMatchID?matchID=${data[0]}`
   );
   return DBMatch.length > 0;
 }

@@ -124,7 +124,6 @@ exports.matchSpecific = async (req, res) => {
     .select('matchID')
     .from('matchInfo')
     .where('matchID', req.query.matchID)
-    .orderBy('matchDate', 'desc')
     .then(matchData => {
       res.json(matchData)
     })
