@@ -740,8 +740,8 @@ async function matchInfoAPICall(region, matchID) {
   const matchInfoApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
   const data = await apiProxyCall(matchInfoApiURL);
   const contents = {
-    gameDate: Date.now() - new Date(data.info.gameStartTimestamp),
-    gameDateSQLFormat: formatDateSQL(data.info.gameStartTimestamp),
+    gameDate: new Date(data.info.gameEndTimestamp),
+    gameDateSQLFormat: formatDateSQL(data.info.gameEndTimestamp),
     gameDuration: data.info.gameDuration,
     gameQueueID: data.info.queueId,
   };

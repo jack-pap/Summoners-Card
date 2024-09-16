@@ -74,7 +74,8 @@ function getKillParticipation(matchInfo, winStatus) {
   return Math.round(killParticipation * 100);
 }
 
-function getMatchTimeAgo(milliseconds) {
+function getMatchTimeAgo(gameDate) {
+  const milliseconds = Date.now() - new Date(gameDate);
   const seconds = Math.floor(milliseconds / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
