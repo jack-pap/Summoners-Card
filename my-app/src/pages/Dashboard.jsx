@@ -2,7 +2,11 @@ import "../App.css";
 import React from "react";
 import { memo } from "react";
 import { createRoot } from "react-dom/client";
-import { getSummonerStats, getMatchList, matchInfoListDriver } from "./App.jsx";
+import {
+  getSummonerStats,
+  getExtendedMatchList,
+  matchInfoListDriver,
+} from "./App.jsx";
 import {
   apiProxyCall,
   apiImageCall,
@@ -573,7 +577,12 @@ async function extendMatchHistory(
   setIsTempLoading(true);
 
   const container = document.getElementById("matchList");
-  const newMatchList = await getMatchList(region, puuid); // Make it check last game in summonermatchInfo and extend from there
+  const newMatchList = await getExtendedMatchList(
+    region,
+    puuid,
+    summonerMatchInfo[summonerMatchInfo.length - 1][0].gameDateSQLFormat
+  );
+
   const newMatchInfoList = await matchInfoListDriver(
     region,
     newMatchList,
@@ -581,7 +590,7 @@ async function extendMatchHistory(
   );
   for (
     let counter = 0;
-    counter < newMatchInfoList.matchInfoList.length - 1;
+    counter < newMatchInfoList.length - 1;
     counter++
   ) {
     const matchComponent = document.createElement("div");
@@ -595,18 +604,18 @@ async function extendMatchHistory(
 
     const entryComponent = (
       <MatchEntry
-        summonerMatchInfo={newMatchInfoList.matchInfoList}
+        summonerMatchInfo={newMatchInfoList}
         counter={counter}
         gameQueues={gameQueues}
       ></MatchEntry>
     );
     root.render(entryComponent);
-    await getAllAssets(newMatchInfoList.matchInfoList, counter, matchComponent);
+    await getAllAssets(newMatchInfoList, counter, matchComponent);
   }
 
   setIsTempLoading(false);
   setSummonerMatchInfo(
-    summonerMatchInfo.concat(newMatchInfoList.matchInfoList)
+    summonerMatchInfo.concat(newMatchInfoList)
   );
 }
 

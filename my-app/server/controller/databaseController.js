@@ -124,6 +124,22 @@ exports.summonerMatches = async (req, res) => {
     })
 }
 
+exports.summonerExtendedMatches = async (req, res) => {
+  knex
+    .select('matchID')
+    .from('matchInfo')
+    .limit(10)
+    .where('puuid', req.query.puuid)
+    .andWhere('matchDate', '<', req.query.matchDate)
+    .orderBy('matchDate', 'desc')
+    .then(matchData => {
+      res.json(matchData)
+    })
+    .catch(error => {
+      res.json({ message: `There was an error retrieving summoner's matches: ${error}` })
+    })
+}
+
 exports.matchSpecific = async (req, res) => {
   knex
     .select('*')
