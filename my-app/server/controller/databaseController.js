@@ -12,6 +12,24 @@ const knex = require('knex')({
     },
   });
 
+  async function createTables() {
+    await knex.schema.createTable('summonerInfo', (table) => {
+      table.string('puuid').primary();
+      table.json('summonerWinrate').notNullable();
+      table.dateTime('lastUpdatedDate').notNullable();
+    });
+  
+    await knex.schema.createTable('matchInfo', (table) => {
+      table.string('puuid').notNullable();
+      table.string('matchID').primary();
+      table.json('matchInfo').notNullable();
+      table.dateTime('matchDate').notNullable();
+      table.foreign('puuid').references('summonerInfo.puuid').onDelete('CASCADE');
+    });
+  
+    console.log('Tables created successfully');
+  }
+
 exports.summonersAll = async (req, res) => {
   knex
     .select('*')
@@ -54,19 +72,6 @@ exports.summonerSpecific = async (req, res) => {
         res.json({ message: `There was an error creating/updating summoner ${req.body.puuid} entry: ${err}` })
       })
   }
-
-  // exports.summonerUpdate = async (req, res) => {
-  //   //Add other changed attributes if needed
-  //   knex('summonerInfo')
-  //   .where({puuid: req.body.puuid})
-  //     .update({lastUpdatedDate: req.body.lastUpdatedDate})
-  //     .then(() => {
-  //       res.json({ message: `Summoner \'${req.body.puuid}\' entry created.` })
-  //     })
-  //     .catch(err => {
-  //       res.json({ message: `There was an error creating summoner ${req.body.puuid} entry: ${err}` })
-  //     })
-  // }
 
   exports.summonerDelete = async (req, res) => {
     knex('summonerInfo')
@@ -121,7 +126,7 @@ exports.summonerMatches = async (req, res) => {
 
 exports.matchSpecific = async (req, res) => {
   knex
-    .select('matchID')
+    .select('*')
     .from('matchInfo')
     .where('matchID', req.query.matchID)
     .then(matchData => {

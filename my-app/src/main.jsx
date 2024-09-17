@@ -5,12 +5,9 @@ import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 import App from "./pages/App.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
-import Champions from "./pages/Champions.jsx";
-import Privacy from "./pages/About.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
 import "./index.css";
 import "./App.css";
-import About from "./pages/About.jsx";
 
 const Layout = ({ children }) => (
   <>

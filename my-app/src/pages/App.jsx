@@ -334,7 +334,6 @@ async function getInput(
         summonerInfo,
         rankedInfo,
         matchInfoList,
-        matchInfoIndex,
         summonerWinrate,
         masteryInfo,
         champions,
@@ -348,7 +347,6 @@ async function getInput(
           summonerInfo: summonerInfo,
           summonerRankedInfo: rankedInfo,
           summonerMatchInfo: matchInfoList,
-          summonerMatchInfoIndex: matchInfoIndex,
           summonerWinrateInfo: summonerWinrate,
           summonerChampionWinrateInfo: masteryInfo,
           championsInfo: champions,
@@ -396,7 +394,6 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
       puuid
     );
     const matchInfoList = matchInfoListResult.matchInfoList; // Returns array that contains match information for all matches in a list
-    const matchInfoIndex = matchInfoListResult.lastIndex;
     const rankedInfo = await getRankedInfo(server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
     const summonerWinrate = getSummonerWinrates(rankedInfo); // Returns JSON object for all game mode winrates
     await getChampionWinrate(masteryInfo, matchInfoList); // Calculates for every champion their respective game mode winrates
@@ -412,7 +409,6 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
       summonerInfo,
       rankedInfo,
       matchInfoList,
-      matchInfoIndex,
       summonerWinrate,
       masteryInfo,
       champions,
@@ -607,7 +603,7 @@ async function matchListUpdated(region, puuid) {
   const data = await apiProxyCall(matchListApiURL);
   const DBMatch = await apiGETDatabaseCall(
     "match",
-    `getMatchID?matchID=${data[0]}`
+    `getMatch?matchID=${data[0]}`
   );
   return DBMatch.length > 0;
 }
