@@ -128,20 +128,20 @@ const Dashboard = memo(function Dashboard() {
         setSummonerChampionWinrateInfo(result.masteryInfo);
         setChampions(result.champions);
         setIsLoading(false);
-
-        const handleScroll = () => {
-          if (window.scrollY > 100) {
-            setIsVisible(true);
-          } else {
-            setIsVisible(false);
-          }
-        };
-        window.addEventListener("scroll", handleScroll);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
+
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
     fetchData();
+    window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -547,12 +547,11 @@ async function makeMatchHistory(summonerMatchInfo) {
   ) {
     const matchComponent = document.createElement("div");
     matchComponent.setAttribute("class", "matchHistoryContainer");
-    matchComponent.innerHTML = `
-      <div class="entry"></div>
-      `;
+    matchComponent.setAttribute("id", summonerMatchInfo[counter][0].gameID);
+    matchComponent.innerHTML = ``;
     container.append(matchComponent);
 
-    const root = createRoot(matchComponent.querySelector(".entry"));
+    const root = createRoot(matchComponent);
 
     const entryComponent = (
       <MatchEntry
@@ -577,10 +576,13 @@ async function extendMatchHistory(
   setIsTempLoading(true);
 
   const container = document.getElementById("matchList");
+  const lastMatchDate = summonerMatchInfo.find(
+    (matchObject) => matchObject[0].gameID === container.lastChild.id
+  )[0].gameDateSQLFormat 
   const newMatchList = await getExtendedMatchList(
     region,
     puuid,
-    summonerMatchInfo[summonerMatchInfo.length - 1][0].gameDateSQLFormat
+    lastMatchDate
   );
 
   const newMatchInfoList = await matchInfoListDriver(
@@ -588,19 +590,14 @@ async function extendMatchHistory(
     newMatchList,
     puuid
   );
-  for (
-    let counter = 0;
-    counter < newMatchInfoList.length - 1;
-    counter++
-  ) {
+  for (let counter = 0; counter < newMatchInfoList.length - 1; counter++) {
     const matchComponent = document.createElement("div");
     matchComponent.setAttribute("class", "matchHistoryContainer");
-    matchComponent.innerHTML = `
-        <div class="entry"></div>
-        `;
+    matchComponent.setAttribute("id", newMatchInfoList[counter][0].gameID);
+    matchComponent.innerHTML = ``;
     container.append(matchComponent);
 
-    const root = createRoot(matchComponent.querySelector(".entry"));
+    const root = createRoot(matchComponent);
 
     const entryComponent = (
       <MatchEntry
@@ -614,9 +611,7 @@ async function extendMatchHistory(
   }
 
   setIsTempLoading(false);
-  setSummonerMatchInfo(
-    summonerMatchInfo.concat(newMatchInfoList)
-  );
+  setSummonerMatchInfo(summonerMatchInfo.concat(newMatchInfoList));
 }
 
 async function getAllAssets(summonerMatchInfo, counter, component) {

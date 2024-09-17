@@ -388,14 +388,9 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
     const summonerInfo = await getSummonerInfo(server, puuid); // Array that includes summoner ID, summoner level and profile picture
     const masteryInfo = await getMasteryInfo(server, puuid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
     const matchList = await getMatchList(region, puuid, 0, 40); // Array constisting of match IDs
-    const matchInfoListResult = await matchInfoListDriver(
-      region,
-      matchList,
-      puuid
-    );
-    const matchInfoList = matchInfoListResult; // Returns array that contains match information for all matches in a list
+    const matchInfoList = await matchInfoListDriver(region, matchList, puuid); // Returns array that contains match information for all matches in a list
     const rankedInfo = await getRankedInfo(server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
-    const summonerWinrate = getSummonerWinrates(rankedInfo); // Returns JSON object for all game mode winrates
+    const summonerWinrate = getSummonerWinrates(rankedInfo, matchInfoList); // Returns JSON object for all game mode winrates
     await getChampionWinrate(masteryInfo, matchInfoList); // Calculates for every champion their respective game mode winrates
     const champions = await getAllChampions();
 
@@ -509,25 +504,34 @@ async function getMasteryInfo(server, puuid) {
 }
 
 //TODO GET NORMAL WINRATES
-function getSummonerWinrates(rankedInfo) {
+function getSummonerWinrates(rankedInfo, matchInfoList) {
+  const remakes = getRemakesNumber(matchInfoList);
   const winrates = {
     normalWinrate: 1, //TODO FIX THIS TO GET NORMAL WINRATE
     rankedFlexWinrate:
       Math.round(
         (rankedInfo[0].rankedWins /
-          (rankedInfo[0].rankedWins + rankedInfo[0].rankedLosses)) *
+          (rankedInfo[0].rankedWins + rankedInfo[0].rankedLosses - remakes)) *
           100 *
           10
       ) / 10,
     rankedSoloWinrate:
       Math.round(
         (rankedInfo[1].rankedWins /
-          (rankedInfo[1].rankedWins + rankedInfo[1].rankedLosses)) *
+          (rankedInfo[1].rankedWins + rankedInfo[1].rankedLosses - remakes)) *
           100 *
           10
       ) / 10,
   };
   return winrates;
+}
+
+function getRemakesNumber(matchInfoList) {
+  var remakeNumber = 0;
+  for (const matchInfo of matchInfoList) {
+    if (matchInfo[0].gameDuration < 300) remakeNumber++;
+  }
+  return remakeNumber;
 }
 
 /**
@@ -667,7 +671,7 @@ async function getMatchInfoList(matchIDs, region, puuid) {
 
     const { contents, participants } = await matchInfoAPICall(region, matchID);
     if (!Object.values(GAME_MODES).includes(contents.gameQueueID)) continue;
-
+    
     const participantsList = [];
     var ownPlayerInfo = null;
 
@@ -738,6 +742,7 @@ async function matchInfoAPICall(region, matchID) {
   const matchInfoApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
   const data = await apiProxyCall(matchInfoApiURL);
   const contents = {
+    gameID: matchID,
     gameDate: new Date(data.info.gameEndTimestamp),
     gameDateSQLFormat: formatDateSQL(data.info.gameEndTimestamp),
     gameDuration: data.info.gameDuration,
