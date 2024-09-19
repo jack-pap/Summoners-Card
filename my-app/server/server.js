@@ -12,18 +12,6 @@ const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });
 const summonerRouter = require('./routes/summoner-db-route')
 const matchRouter = require('./routes/match-db-route')
 
-app.use(cors()); // Enable CORS for everywhere
-app.use(bodyParser.json()); // Parse JSON bodies
-
-//Database routes
-app.use('/assets', express.static(path.join(__dirname, 'assets'))); 
-app.use('/summoner', summonerRouter);
-app.use('/match', matchRouter);
-
-app.get('/', (req, res) => {
-  res.send('Welcome to the server!');
-});
-
 // Middleware to cache responses
 const cacheMiddleware = (req, res, next) => {
   const key = req.query.url;
@@ -43,6 +31,20 @@ const cacheMiddleware = (req, res, next) => {
   }
 };
 
+app.use(cors()); // Enable CORS for everywhere
+app.use(bodyParser.json()); // Parse JSON bodies
+
+//Database middleware routes
+app.use('/assets', express.static(path.join(__dirname, 'assets'), {
+  maxAge: 10000000 
+ })); 
+app.use('/summoner', summonerRouter);
+app.use('/match', matchRouter);
+
+app.get('/', (req, res) => {
+  res.send('Welcome to the server!');
+});
+
 // Proxy route to be called by controller to fetch data from API endpoint
 app.get('/proxy', cacheMiddleware, async (req, res) => {
   const apiURL = req.query.url;
@@ -54,7 +56,6 @@ app.get('/proxy', cacheMiddleware, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch data' });
   }
 });
-
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

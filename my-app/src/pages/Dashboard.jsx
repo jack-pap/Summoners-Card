@@ -161,7 +161,6 @@ const Dashboard = memo(function Dashboard() {
         summonerInfo,
         summonerRankedInfo,
         summonerMatchInfo,
-        summonerWinrateInfo,
         summonerChampionWinrateInfo,
         championsInfo
       );
@@ -578,12 +577,8 @@ async function extendMatchHistory(
   const container = document.getElementById("matchList");
   const lastMatchDate = summonerMatchInfo.find(
     (matchObject) => matchObject[0].gameID === container.lastChild.id
-  )[0].gameDateSQLFormat 
-  const newMatchList = await getExtendedMatchList(
-    region,
-    puuid,
-    lastMatchDate
-  );
+  )[0].gameDateSQLFormat;
+  const newMatchList = await getExtendedMatchList(region, puuid, lastMatchDate);
 
   const newMatchInfoList = await matchInfoListDriver(
     region,
@@ -644,7 +639,6 @@ async function makeSummonerProfile(
   summonerInfo,
   summonerRankedInfo,
   summonerMatchInfo,
-  summonerWinrateInfo,
   summonerChampionWinrateInfo,
   championsInfo
 ) {
@@ -658,7 +652,6 @@ async function makeSummonerProfile(
   await makeRankedEmblems(summonerRankedInfo);
 }
 
-//Check summoner stats for different stats maybe push all of them in a list and render them at once
 function makeSummonerBadges(
   summonerMatchInfo,
   summonerChampionWinrateInfo,
@@ -814,18 +807,14 @@ async function makeRankedEmblems(summonerRankedInfo) {
 
 //TODO Add image static request from server
 async function makeRankedEmblem(summonerRankedInfo, containerName) {
-  var rankedIconImage;
+  var rankedIconImage = await apiImageCall(
+    `http://localhost:3000/assets/Ranked_Emblems/emblem-${summonerRankedInfo.rankedTier}.png`
+  );
   const container = document.getElementById(containerName);
   const component = document.createElement("div");
   component.setAttribute("class", "rankedEmblem");
 
-  if (
-    await checkFileExists(
-      `/assets/Ranked_Emblems/emblem-${summonerRankedInfo.rankedTier}.png`
-    )
-  ) {
-    rankedIconImage = `/assets/Ranked_Emblems/emblem-${summonerRankedInfo.rankedTier.toLowerCase()}.png`;
-  } else {
+  if (!rankedIconImage) {
     const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/ranked-emblem/emblem-${summonerRankedInfo.rankedTier.toLowerCase()}.png`;
     rankedIconImage = await apiImageCall(imgURL);
   }
@@ -838,11 +827,11 @@ async function makeRankedEmblem(summonerRankedInfo, containerName) {
 }
 
 async function getChampionAssets(championId, insideClass, parentComponent) {
-  var championImage;
+  var championImage = await apiImageCall(
+    `http://localhost:3000/assets/Champion_Icons/${championId}.png`
+  );
 
-  if (await checkFileExists(`/assets/Champion_Icons/${championId}.png`))
-    championImage = `/assets/Champion_Icons/${championId}.png`;
-  else {
+  if (!championImage) {
     const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
     const championData = await apiProxyCall(championDataURL);
     const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
@@ -908,15 +897,22 @@ async function getSummonerSpellImage(
   spellID,
   baseImageURL
 ) {
-  const summonerSpellImageURL = summonerSpellsData.find(
-    (spell) => spell.id === spellID
-  ).iconPath;
-  const extractedPath = summonerSpellImageURL
-    .replace("/lol-game-data/assets/", "")
-    .toLowerCase();
-  const finalURL = baseImageURL + extractedPath;
+  const spellObject = summonerSpellsData.find((spell) => spell.id === spellID);
+  const parts = spellObject.iconPath.split("/");
+  const spellName = parts[parts.length - 1];
+  var summonerSpellImage = await apiImageCall(
+    `http://localhost:3000/assets/Summoner_Spells/${spellName}`
+  );
 
-  const summonerSpellImage = await apiImageCall(finalURL);
+  if (!summonerSpellImage) {
+    const summonerSpellImageURL = spellObject.iconPath;
+    const extractedPath = summonerSpellImageURL
+      .replace("/lol-game-data/assets/", "")
+      .toLowerCase();
+    const finalURL = baseImageURL + extractedPath;
+    summonerSpellImage = await apiImageCall(finalURL);
+  }
+
   const img = document.createElement("img");
   img.src = summonerSpellImage;
   return img;
@@ -928,48 +924,39 @@ async function getSummonerRuneAssets(
   divClass,
   component
 ) {
-  await getRuneImage(mainRuneID, component, divClass);
-  await getSecondaryRuneImage(secondaryRuneID, component, divClass);
+  await getRuneImage(mainRuneID, component, divClass, false);
+  await getRuneImage(secondaryRuneID, component, divClass, true);
 }
 
-async function getRuneImage(runeID, component, divClass) {
-  const runeDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perks.json`;
+async function getRuneImage(runeID, component, divClass, isSecondary) {
+  const runeDataURL = isSecondary
+    ? `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perkstyles.json`
+    : `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perks.json`;
   const summonerRuneData = await apiProxyCall(runeDataURL);
-  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+  const runeObject = isSecondary
+    ? summonerRuneData.styles.find((rune) => rune.id === runeID)
+    : summonerRuneData.find((rune) => rune.id === runeID);
 
-  const runeImageURL = summonerRuneData.find(
-    (rune) => rune.id === runeID
-  ).iconPath;
-  const extractedPath = runeImageURL
-    .replace("/lol-game-data/assets/", "")
-    .toLowerCase();
-  const finalURL = baseImageURL + extractedPath;
+  const parts = runeObject.iconPath.split("/");
+  const runeName = parts[parts.length - 1];
+  const summonerRuneImage = await apiImageCall(
+    `http://localhost:3000/assets/Summoner_Runes/${runeName}`
+  );
 
-  const summonerRuneImage = await apiImageCall(finalURL);
+  if (!summonerRuneImage) {
+    const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+    const runeImageURL = runeObject.iconPath;
+
+    const extractedPath = runeImageURL
+      .replace("/lol-game-data/assets/", "")
+      .toLowerCase();
+    const finalURL = baseImageURL + extractedPath;
+
+    summonerRuneImage = await apiImageCall(finalURL);
+  }
+
   const img = document.createElement("img");
-  img.setAttribute("id", "primaryRune");
-  img.src = summonerRuneImage;
-
-  const summonerRunesImagesComponent = component.querySelector(divClass);
-  summonerRunesImagesComponent.appendChild(img);
-}
-
-async function getSecondaryRuneImage(runeID, component, divClass) {
-  const runeDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perkstyles.json`;
-  const summonerRuneData = await apiProxyCall(runeDataURL);
-  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
-
-  const runeImageURL = summonerRuneData.styles.find(
-    (rune) => rune.id === runeID
-  ).iconPath;
-  const extractedPath = runeImageURL
-    .replace("/lol-game-data/assets/", "")
-    .toLowerCase();
-  const finalURL = baseImageURL + extractedPath;
-
-  const summonerRuneImage = await apiImageCall(finalURL);
-  const img = document.createElement("img");
-  img.setAttribute("id", "secondaryRune");
+  img.setAttribute("id", isSecondary ? "secondaryRune" : "primaryRune");
   img.src = summonerRuneImage;
 
   const summonerRunesImagesComponent = component.querySelector(divClass);
@@ -1012,15 +999,22 @@ async function getItemAssets(summonerInfo, divClass, component) {
 }
 
 async function getSummonerItemImage(summonerItemData, itemID, baseImageURL) {
-  const summonerItemImageURL = summonerItemData.find(
-    (item) => item.id === itemID
-  ).iconPath;
+  const itemObject = summonerItemData.find((item) => item.id === itemID);
+  const parts = itemObject.iconPath.split("/");
+  const imageName = parts[parts.length - 1];
+  var summonerItemImage = await apiImageCall(
+    `http://localhost:3000/assets/Summoner_Items/${imageName}`
+  );
 
-  const extractedPath = summonerItemImageURL
-    .replace("/lol-game-data/assets/", "")
-    .toLowerCase();
-  const finalURL = baseImageURL + extractedPath;
-  const summonerItemImage = await apiImageCall(finalURL);
+  if (!summonerItemImage) {
+    const summonerItemImageURL = itemObject.iconPath;
+
+    const extractedPath = summonerItemImageURL
+      .replace("/lol-game-data/assets/", "")
+      .toLowerCase();
+    const finalURL = baseImageURL + extractedPath;
+    summonerItemImage = await apiImageCall(finalURL);
+  }
   const img = document.createElement("img");
   img.src = summonerItemImage;
   return img;

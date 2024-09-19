@@ -319,7 +319,7 @@ select:focus {
   align-items: center;
   text-align: center;
   background-color: #1b1f24;
-  border: solid 1px #383838;
+  border-top: solid 1px #383838;
   min-width: 570px;
   margin: 0 auto;
   margin-top: 25px;

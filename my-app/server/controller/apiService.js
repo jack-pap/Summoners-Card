@@ -48,7 +48,8 @@ export function apiImageCall(imageURL) {
         resolve(url);
       })
       .catch((error) => {
-        reject(error);
+        console.error(error);
+        resolve(null);
       });
   });
 }
