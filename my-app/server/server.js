@@ -53,7 +53,7 @@ app.get('/proxy', cacheMiddleware, async (req, res) => {
     const data = await response.json();
     res.json(data);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch data' });
+    res.status(500).json({ error: `Failed to fetch data` });
   }
 });
 

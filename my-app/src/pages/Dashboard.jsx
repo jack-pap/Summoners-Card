@@ -90,9 +90,6 @@ const Dashboard = memo(function Dashboard() {
   }
 
   useEffect(() => {
-    // apiGETDatabaseCall("match", "allMatches");
-    // apiPUTDatabaseCall("match", "deleteMatch", { matchID: "test" });
-    // apiGETDatabaseCall("match", "allMatches");
     const fetchData = async () => {
       setIsLoading(true);
       try {
@@ -357,7 +354,7 @@ const Dashboard = memo(function Dashboard() {
         </div>
 
         <div id="matchHistoryBlock">
-          MATCH HISTORY
+          <div id="matchHistoryHeader"> Match History </div>
           <div id="matchList" />
           <ButtonGroup
             variant="outlined"
@@ -805,7 +802,6 @@ async function makeRankedEmblems(summonerRankedInfo) {
     await makeRankedEmblem(summonerRankedInfo[1], "rankedSolo");
 }
 
-//TODO Add image static request from server
 async function makeRankedEmblem(summonerRankedInfo, containerName) {
   var rankedIconImage = await apiImageCall(
     `http://localhost:3000/assets/Ranked_Emblems/emblem-${summonerRankedInfo.rankedTier}.png`
@@ -939,7 +935,7 @@ async function getRuneImage(runeID, component, divClass, isSecondary) {
 
   const parts = runeObject.iconPath.split("/");
   const runeName = parts[parts.length - 1];
-  const summonerRuneImage = await apiImageCall(
+  var summonerRuneImage = await apiImageCall(
     `http://localhost:3000/assets/Summoner_Runes/${runeName}`
   );
 

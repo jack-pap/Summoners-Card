@@ -14,12 +14,16 @@ const MatchEntry = memo(function MatchEntry({
   return (
     <div className={containerClassName}>
       <div className="matchStatsContainer">
-        <div id="win">{getMatchStatus(playerInfo, gameInfo)}</div>
-        <div>{gameQueues.get(gameInfo.gameQueueID)}</div>
-        <div>{getMatchTimeAgo(gameInfo.gameDate)}</div>
-        <div>
-          {Math.trunc(gameInfo.gameDuration / 60)}m {gameInfo.gameDuration % 60}
-          s
+        <div className="matchTypeStats">
+          <div id="win">{getMatchStatus(playerInfo, gameInfo)}</div>
+          <div>{gameQueues.get(gameInfo.gameQueueID)}</div>
+        </div>
+        <div className="matchTimeStats">
+          <div>{getMatchTimeAgo(gameInfo.gameDate)}</div>
+          <div>
+            {Math.trunc(gameInfo.gameDuration / 60)}m{" "}
+            {gameInfo.gameDuration % 60}s
+          </div>
         </div>
       </div>
       <div className="championContainer">
@@ -33,10 +37,12 @@ const MatchEntry = memo(function MatchEntry({
         </div>
       </div>
       <div className="playerStats">
-        <div>
+        <div id="performanceStats">
           {playerInfo.kills} / {playerInfo.deaths} / {playerInfo.assists}
         </div>
-        <div>KDA: {getKDA(playerInfo)}</div>
+        <div className="kdaContainer">
+          KDA: <div id="kda">{getKDA(playerInfo)}</div>
+        </div>
         <div>
           Kill participation: {getKillParticipation(matchData, playerInfo.win)}%
         </div>
@@ -50,12 +56,12 @@ const MatchEntry = memo(function MatchEntry({
 });
 
 function getMatchStatusName(playerInfo, gameInfo) {
-  if (gameInfo.gameDuration < 300) return "matchEntryRemake"
+  if (gameInfo.gameDuration < 300) return "matchEntryRemake";
   return playerInfo.win ? "matchEntryWin" : "matchEntryDefeat";
 }
 
 function getMatchStatus(playerInfo, gameInfo) {
-  if (gameInfo.gameDuration < 300) return "Remake"
+  if (gameInfo.gameDuration < 300) return "Remake";
   return playerInfo.win ? "Victory" : "Defeat";
 }
 
