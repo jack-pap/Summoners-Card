@@ -15,6 +15,7 @@ import {
   apiPUTDatabaseCall,
 } from "../../server/controller/apiService.js";
 import MatchEntry from "../Components/MatchEntry";
+import ChampionEntryList from "../Components/ChampionEntryList";
 import ErrorPage from "./ErrorPage.jsx";
 import { useState, useEffect, createElement } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
@@ -239,26 +240,39 @@ const Dashboard = memo(function Dashboard() {
                 Flex
               </Button>
             </ButtonGroup>
-            <div id="games">
-              {`${summonerRankedInfo[1].rankedGames} Games`}{" "}
-            </div>
-            <div id="winrate">
-              Winrate
-              <CircularProgressbar
-                strokeWidth={5}
-                value={summonerWinrateInfo.rankedSoloWinrate}
-                text={`${summonerWinrateInfo.rankedSoloWinrate}%`}
-                styles={buildStyles({
-                  strokeLinecap: "butt",
-                  textSize: "16px",
-                  pathTransitionDuration: 0.4,
-                  pathColor: `rgba(221, 156, 15, ${
-                    summonerWinrateInfo.rankedSoloWinrate / 100
-                  })`,
-                  textColor: "#E3E4E4",
-                  trailColor: "#65645E",
-                })}
-              />
+            <div className="winrateContainer">
+              <div id="games">
+                <CircularProgressbar
+                  strokeWidth={5}
+                  value={summonerRankedInfo[1].rankedGames}
+                  text={summonerRankedInfo[1].rankedGames}
+                  styles={buildStyles({
+                    strokeLinecap: "butt",
+                    textSize: "18px",
+                    pathTransitionDuration: 0.4,
+                    pathColor: `rgba(221, 156, 15)`,
+                    textColor: "#E3E4E4",
+                    trailColor: "#65645E",
+                  })}
+                />
+                Games Played
+              </div>
+              <div id="winrate">
+                <CircularProgressbar
+                  strokeWidth={5}
+                  value={summonerWinrateInfo.rankedSoloWinrate}
+                  text={`${summonerWinrateInfo.rankedSoloWinrate}%`}
+                  styles={buildStyles({
+                    strokeLinecap: "butt",
+                    textSize: "18px",
+                    pathTransitionDuration: 0.4,
+                    pathColor: `rgba(221, 156, 15)`,
+                    textColor: "#E3E4E4",
+                    trailColor: "#65645E",
+                  })}
+                />
+                Winrate
+              </div>
             </div>
           </div>
           <div id="summonerBlock">
@@ -440,7 +454,6 @@ async function getGameQueues() {
 }
 
 //TODO Add maybe loader while loading winrate and disable button
-//Filter through champions with most games in that queue
 /**
  * Function that displays champion winrate stats
  * for a specific game queue based on champion mastery info
@@ -644,7 +657,6 @@ async function makeSummonerProfile(
     summonerChampionWinrateInfo,
     championsInfo
   );
-
   await makeProfileIcon(summonerInfo);
   await makeRankedEmblems(summonerRankedInfo);
 }
@@ -751,7 +763,7 @@ function makeStreakBadge(summonerMatchInfo) {
   const streakType = summonerMatchInfo[0][1].win;
   var streakAmount = 0;
 
-  for (let i = 1; i < Math.min(summonerMatchInfo.length, 5); i++) {
+  for (let i = 1; i < summonerMatchInfo.length; i++) {
     if (summonerMatchInfo[i][1].win != streakType) {
       streakAmount = i;
       break;
@@ -1051,12 +1063,6 @@ async function getOtherPlayerAssets(participantsInfo, divClass, component) {
 }
 
 function loadWinrate(gameQueue, winrateNumber) {
-  const gamesElement = document.getElementById("games");
-  const winrateElement = document.querySelector(".CircularProgressbar-text");
-  const progressbarElement = document.querySelector(
-    ".CircularProgressbar-path"
-  );
-
   var totalGames = 0;
   var winratePercentage = 0;
 
@@ -1065,24 +1071,22 @@ function loadWinrate(gameQueue, winrateNumber) {
     winratePercentage = winrateNumber;
   }
 
-  gamesElement.textContent = `${totalGames} Games`;
-  winrateElement.textContent = `${winratePercentage}%`;
-
-  progressbarElement.style.strokeDashoffset =
-    298.451 * (1 - winratePercentage / 100);
-  progressbarElement.style.stroke = `rgba(221, 156, 15, 0.5, ${
-    winratePercentage / 100
-  })`;
+  updateProgressBar("games", totalGames, `${totalGames}`);
+  updateProgressBar("winrate", winratePercentage, `${winratePercentage}%`);
 }
 
-async function checkFileExists(url) {
-  try {
-    const response = await fetch(url);
-    return response.ok; // Returns true if the status code is in the range 200-299
-  } catch (error) {
-    console.error("Error checking file:", error);
-    return false;
-  }
+function updateProgressBar(elementId, value, text) {
+  const progressbarTextElement = document.querySelector(
+    `#${elementId} .CircularProgressbar-text`
+  );
+  const progressbarElement = document.querySelector(
+    `#${elementId} .CircularProgressbar-path`
+  );
+
+  progressbarTextElement.textContent = text;
+  if (elementId == "games")
+    progressbarElement.style.strokeDashoffset = value > 0 ? 0 : 298.451;
+  else progressbarElement.style.strokeDashoffset = 298.451 * (1 - value / 100);
 }
 
 export default Dashboard;

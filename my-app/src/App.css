@@ -425,25 +425,47 @@ select:focus {
   border: solid 1px #383838;
   border-radius: 3%;
   margin-top: 100px;
-  gap: 25px;
-  width: 300px;
-  margin-left: 100px;
+  gap: 20px;
+  width: 350px;
+  margin-left: 50px;
 }
 
+.winrateContainer {
+  display: flex;
+  height: 180px;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  justify-content: space-evenly;
+}
 
+#games { 
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 900;
+}
 
 #winrate {
+  display: flex;
+  flex-direction: column;
   padding: 10px;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 900;
 }
+
 
 .CircularProgressbar {
   height: 110px;
 }
 
-
 #matchHistoryBlock {
   display: flex;
-  background-color: #1b1f24;
+  background-color: #1b1f248f;
   border-radius: 5px;
   flex-direction: column;
   align-items: center;
@@ -451,7 +473,7 @@ select:focus {
   min-height: 21vh;
   padding: 15px;
   padding-top: 10px;
-  gap: 10px;
+  gap: 15px;
 }
 
 #matchHistoryHeader {
@@ -822,7 +844,7 @@ img {
 
 .gamesPlayed {
   font-size: 15px;
-  width: fit-content;
+  min-width: 83px;
 }
 
 
