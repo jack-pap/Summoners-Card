@@ -502,7 +502,7 @@ select:focus {
 .matchEntryWin, .matchEntryDefeat, .matchEntryRemake{
   color: #cec9c9;
   display: flex;
-  gap: 15px;
+  gap: 25px;
   font-size: 14px;
   padding: 0px 15px;
   border: solid 2px #383838;
@@ -573,8 +573,12 @@ img {
   font-weight: 500;
 }
 
+.playerStats {
+  min-width: 140px;
+}
+
 #performanceStats {
-  font-size: 16px;
+  font-size: 17px;
   color: #f7f7f7;
 }
 
@@ -674,7 +678,7 @@ img {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  max-width: 250px;
+  max-width: 205px;
   align-items: center;
   gap: 7px;
 }
@@ -699,7 +703,7 @@ img {
   align-items: center;
   max-height: 180px;
   padding: 3px;
-  width: 240px;
+  width: 250px;
   gap: 3px 10px;
   font-size: 16px;
 }

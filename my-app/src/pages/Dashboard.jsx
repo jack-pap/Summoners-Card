@@ -244,12 +244,15 @@ const Dashboard = memo(function Dashboard() {
                 <CircularProgressbar
                   strokeWidth={5}
                   value={summonerRankedInfo[1].rankedGames}
+                  maxValue={1}
                   text={summonerRankedInfo[1].rankedGames}
                   styles={buildStyles({
                     strokeLinecap: "butt",
+                    strokeDashoffset:
+                      summonerRankedInfo[1].rankedGames > 0 ? 0 : 298.451,
                     textSize: "18px",
                     pathTransitionDuration: 0.4,
-                    pathColor: `rgba(221, 156, 15)`,
+                    pathColor: `rgb(197 134 0)`,
                     textColor: "#E3E4E4",
                     trailColor: "#65645E",
                   })}
@@ -265,7 +268,7 @@ const Dashboard = memo(function Dashboard() {
                     strokeLinecap: "butt",
                     textSize: "18px",
                     pathTransitionDuration: 0.4,
-                    pathColor: `rgba(221, 156, 15)`,
+                    pathColor: `rgb(197 134 0)`,
                     textColor: "#E3E4E4",
                     trailColor: "#65645E",
                   })}
@@ -670,17 +673,50 @@ function makeSummonerBadges(
   const allSummonerChips = [];
 
   allSummonerChips.push(
+    makeMainRoleBadge(summonerMatchInfo),
     makeMillionBadge(championsInfo, summonerChampionWinrateInfo),
-    makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo),
+    //makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo),
     makeMostPlayedBadge(championsInfo, summonerChampionWinrateInfo),
     makeStreakBadge(summonerMatchInfo)
-    //Add one for most played role
   );
 
   root.render(<>{allSummonerChips}</>);
 }
 
-//make it break if millions stop
+function makeMainRoleBadge(summonerMatchInfo) {
+  const rolesValues = new Map();
+  var mostPlayedRole = "SUPPORT";
+  rolesValues.set(mostPlayedRole, 0);
+  for (let i = 0; i < summonerMatchInfo.length; i++) {
+    var role;
+    if (role == "UTILITY") role = "SUPPORT";
+    else role = summonerMatchInfo[i][1].teamPosition;
+    const count = rolesValues.get(role) || 0;
+    rolesValues.set(role, count + 1);
+  }
+
+  for (const [role, count] of rolesValues) {
+    if (rolesValues.get(role) > rolesValues.get(mostPlayedRole))
+      mostPlayedRole = role;
+  }
+
+  mostPlayedRole = mostPlayedRole
+    .toLowerCase()
+    .replace(/^\w/, (c) => c.toUpperCase());
+  return (
+    <Chip
+      key={mostPlayedRole}
+      label={`Main ${mostPlayedRole}`}
+      variant="outlined"
+      sx={{
+        borderRadius: "10px",
+        borderColor: "#c89b3c",
+        color: "#c89b3c",
+      }}
+    />
+  );
+}
+
 function makeMillionBadge(championsInfo, summonerChampionWinrateInfo) {
   const summonerChips = [];
 
@@ -762,7 +798,7 @@ function makeStreakBadge(summonerMatchInfo) {
   const streakType = summonerMatchInfo[0][1].win;
   var streakAmount = 0;
 
-  for (let i = 1; i < summonerMatchInfo.length; i++) {
+  for (let i = 0; i < summonerMatchInfo.length; i++) {
     if (summonerMatchInfo[i][1].win != streakType) {
       streakAmount = i;
       break;

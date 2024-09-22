@@ -696,6 +696,7 @@ async function getMatchInfoList(matchIDs, region, puuid) {
         item6,
         riotIdGameName,
         riotIdTagline,
+        teamPosition 
       }) => ({
         win,
         championId,
@@ -716,6 +717,7 @@ async function getMatchInfoList(matchIDs, region, puuid) {
         item6,
         riotIdGameName,
         riotIdTagline,
+        teamPosition 
       }))(playerInfo);
 
       participantsList.push(pickedPlayerInfo);

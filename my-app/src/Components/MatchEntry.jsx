@@ -50,7 +50,6 @@ const MatchEntry = memo(function MatchEntry({
       </div>
       <div className="itemImages"></div>
       <div className="otherPlayers"></div>
-      <div className="test"></div>
     </div>
   );
 });
