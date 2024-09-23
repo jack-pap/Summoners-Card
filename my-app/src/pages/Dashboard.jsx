@@ -162,8 +162,7 @@ const Dashboard = memo(function Dashboard() {
         summonerChampionWinrateInfo,
         championsInfo
       );
-      //makeChampionWinrate(summonerChampionWinrateInfo, championsInfo, 420);
-      makeMatchHistory(summonerMatchInfo);
+      makeMatchHistory(summonerMatchInfo, setIsTempLoading);
 
       document.getElementById("footer").style.position = "relative";
       document.getElementById("homeBody").style.animation =
@@ -529,8 +528,10 @@ function makeComponents(winrateMappingObject, championName, champId) {
   };
 }
 
-async function makeMatchHistory(summonerMatchInfo) {
+async function makeMatchHistory(summonerMatchInfo, setIsTempLoading) {
+  setIsTempLoading(true);
   const container = document.getElementById("matchList");
+  container.style.display = "none"
   const promises = [];
 
   for (
@@ -557,6 +558,8 @@ async function makeMatchHistory(summonerMatchInfo) {
     promises.push(getAllAssets(summonerMatchInfo, counter, matchComponent));
   }
   await Promise.all(promises);
+  setIsTempLoading(false);
+  container.style.display = "flex"
 }
 
 async function extendMatchHistory(
