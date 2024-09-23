@@ -597,7 +597,7 @@ async function extendMatchHistory(
     newMatchList,
     puuid
   );
-  for (let counter = 0; counter < newMatchInfoList.length - 1; counter++) {
+  for (let counter = 0; counter < newMatchInfoList.length; counter++) {
     const matchComponent = document.createElement("div");
     matchComponent.setAttribute("class", "matchHistoryContainer");
     matchComponent.setAttribute("id", newMatchInfoList[counter][0].gameID);
@@ -688,7 +688,7 @@ function makeMainRoleBadge(summonerMatchInfo) {
   var mostPlayedRole = "SUPPORT";
   rolesValues.set(mostPlayedRole, 0);
   for (let i = 0; i < summonerMatchInfo.length; i++) {
-    var role;
+    var role = summonerMatchInfo[i][1].teamPosition;
     if (role == "UTILITY") role = "SUPPORT";
     else role = summonerMatchInfo[i][1].teamPosition;
     const count = rolesValues.get(role) || 0;
