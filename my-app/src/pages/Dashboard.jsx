@@ -15,6 +15,7 @@ import {
   apiPUTDatabaseCall,
 } from "../../server/controller/apiService.js";
 import MatchEntry from "../Components/MatchEntry";
+import ChampionEntryList from "../Components/ChampionEntryList";
 import ErrorPage from "./ErrorPage.jsx";
 import { useState, useEffect, createElement } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
@@ -161,7 +162,7 @@ const Dashboard = memo(function Dashboard() {
         summonerChampionWinrateInfo,
         championsInfo
       );
-      makeChampionWinrate(summonerChampionWinrateInfo, championsInfo, 420);
+      //makeChampionWinrate(summonerChampionWinrateInfo, championsInfo, 420);
       makeMatchHistory(summonerMatchInfo);
 
       document.getElementById("footer").style.position = "relative";
@@ -365,7 +366,11 @@ const Dashboard = memo(function Dashboard() {
               <div>Winrate</div>
               <div>Games</div>
             </div>
-            <div id="championEntryList"></div>
+            <ChampionEntryList
+              summonerChampionWinrateInfo={summonerChampionWinrateInfo}
+              championsInfo={championsInfo}
+              queueId={420}
+            ></ChampionEntryList>
           </div>
         </div>
 
@@ -455,7 +460,6 @@ async function getGameQueues() {
   return queueMapping;
 }
 
-//TODO Add maybe loader while loading winrate and disable button
 /**
  * Function that displays champion winrate stats
  * for a specific game queue based on champion mastery info
@@ -470,39 +474,17 @@ async function makeChampionWinrate(
   queueId
 ) {
   const container = document.getElementById("championEntryList");
-  container.innerHTML = "";
-
-  var mostPlayedChampions = [];
-  for (const [champId, champData] of summonerChampionWinrateInfo.entries()) {
-    mostPlayedChampions.push([
-      champId,
-      champData.winrateMapping.get(queueId)[0],
-    ]);
-  }
-  mostPlayedChampions = mostPlayedChampions
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5);
-
-  const components = [];
-  const promises = [];
-
-  for (const [champId] of mostPlayedChampions) {
-    const result = makeComponents(
-      summonerChampionWinrateInfo.get(champId).winrateMapping.get(queueId),
-      championsInfo.get(champId),
-      champId
-    );
-    components.push(result.components);
-    promises.push(result.promise);
-  }
-
-  await Promise.all(promises);
-
-  components.forEach(({ champComponent, progressBarComponent }) => {
-    container.appendChild(champComponent);
-    const root = createRoot(champComponent.querySelector(".champWinrate"));
-    root.render(progressBarComponent);
-  });
+  if (container._reactRoot) container._reactRoot.unmount();
+  container._reactRoot = createRoot(container);
+  var root = container._reactRoot;
+  const matchComponent = (
+    <ChampionEntryList
+      summonerChampionWinrateInfo={summonerChampionWinrateInfo}
+      championsInfo={championsInfo}
+      queueId={queueId}
+    ></ChampionEntryList>
+  );
+  root.render(matchComponent);
 }
 
 function makeComponents(winrateMappingObject, championName, champId) {
