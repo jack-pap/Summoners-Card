@@ -75,7 +75,7 @@ const ChampionEntry = ({
         animateOnRender={true}
         borderRadius="3px"
         customLabel={winrate === 0 ? "0%" : undefined}
-        labelAlignment={winrate === 0 ? "left" : "right"}
+        labelAlignment={"left"}
       />
     </div>
     <div className="gamesPlayed">{gamesPlayed} Played</div>
