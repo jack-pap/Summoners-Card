@@ -243,9 +243,17 @@ const Dashboard = memo(function Dashboard() {
               <div id="games">
                 <CircularProgressbar
                   strokeWidth={5}
-                  value={summonerRankedInfo[1].rankedGames}
+                  value={
+                    summonerRankedInfo[1].rankedGames != undefined
+                      ? summonerRankedInfo[1].rankedGames
+                      : 0
+                  }
                   maxValue={1}
-                  text={summonerRankedInfo[1].rankedGames}
+                  text={
+                    summonerRankedInfo[1].rankedGames != undefined
+                      ? summonerRankedInfo[1].rankedGames
+                      : "0"
+                  }
                   styles={buildStyles({
                     strokeLinecap: "butt",
                     strokeDashoffset:
@@ -262,8 +270,16 @@ const Dashboard = memo(function Dashboard() {
               <div id="winrate">
                 <CircularProgressbar
                   strokeWidth={5}
-                  value={summonerWinrateInfo.rankedSoloWinrate}
-                  text={`${summonerWinrateInfo.rankedSoloWinrate}%`}
+                  value={
+                    !isNaN(summonerWinrateInfo.rankedSoloWinrate)
+                      ? summonerWinrateInfo.rankedSoloWinrate
+                      : 0
+                  }
+                  text={
+                    !isNaN(summonerWinrateInfo.rankedSoloWinrate)
+                      ? `${summonerWinrateInfo.rankedSoloWinrate}%`
+                      : `0%`
+                  }
                   styles={buildStyles({
                     strokeLinecap: "butt",
                     textSize: "18px",
@@ -531,7 +547,7 @@ function makeComponents(winrateMappingObject, championName, champId) {
 async function makeMatchHistory(summonerMatchInfo, setIsTempLoading) {
   setIsTempLoading(true);
   const container = document.getElementById("matchList");
-  container.style.display = "none"
+  container.style.display = "none";
   const promises = [];
 
   for (
@@ -559,7 +575,7 @@ async function makeMatchHistory(summonerMatchInfo, setIsTempLoading) {
   }
   await Promise.all(promises);
   setIsTempLoading(false);
-  container.style.display = "flex"
+  container.style.display = "flex";
 }
 
 async function extendMatchHistory(

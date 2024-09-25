@@ -6,6 +6,7 @@
 
 a {
   text-decoration: none;
+  height: 22px;
 }
 
 #homeBody.dissapear {
@@ -115,7 +116,7 @@ footer {
   min-height: 50px;
   text-align: center;
   border-top: 1px solid #a09b8c;
-  z-index: -1;
+  z-index: -111;
 }
 
 #errorPopup {
@@ -137,7 +138,8 @@ footer {
   justify-content: center;
   height: 13px;
   gap: 5px;
-  margin-top: 9px;
+  margin-top: 10px;
+  margin-bottom: 2px;
 }
 
 #gitIcon {
@@ -318,10 +320,12 @@ select:focus {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  justify-content: center;
   background-color: #1b1f24;
   border: 1px solid #272727;
   border-top: 1px solid #383838;
   min-width: 570px;
+  min-height: 490px;
   margin: 0 auto;
   margin-top: 25px;
   border-radius: 3%;

@@ -42,7 +42,7 @@ app.use('/summoner', summonerRouter);
 app.use('/match', matchRouter);
 
 app.get('/', (req, res) => {
-  res.send('Welcome to the server!');
+  res.send('Welcome to Summoners Card!');
 });
 
 // Proxy route to be called by controller to fetch data from API endpoint
