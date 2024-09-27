@@ -209,9 +209,9 @@ footer {
 #infoIcon {
   height: 21px;
   width: 21px;
-  background-color: #ada89b;
+  background-color: #918c84;
   background-size: 1px;
-  border: #ada89b 2px solid;
+  border: #918c84 2px solid;
   border-radius: 15px;
   transition: all 0.3s ease-in-out;
 }
