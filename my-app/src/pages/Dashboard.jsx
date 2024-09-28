@@ -50,7 +50,7 @@ const serverOptions = [
 
 const spinnerStyles = {
   position: "absolute",
-  top: "40%",
+  top: "43%",
   left: "50%",
   transform: "translateX(-50%)",
 };

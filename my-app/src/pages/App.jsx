@@ -105,7 +105,7 @@ const customStyles = {
 
 const spinnerStyles = {
   position: "absolute",
-  top: "40%",
+  top: "45%",
   left: "50%",
   transform: "translateX(-50%)",
 };
