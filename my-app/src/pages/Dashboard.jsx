@@ -60,7 +60,7 @@ const spinnerStyles = {
   transform: "translateX(-50%)",
 };
 
-const gameQueues = await getGameQueues();
+var gameQueues;
 var ownUsername;
 
 const Dashboard = memo(function Dashboard() {
@@ -92,6 +92,7 @@ const Dashboard = memo(function Dashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
+      gameQueues = await getGameQueues();
       setIsLoading(true);
       try {
         let newGameName, result;
@@ -694,9 +695,9 @@ function makeSummonerBadges(
 
   allSummonerChips.push(
     makeMainRoleBadge(summonerMatchInfo),
-    makeMillionBadge(championsInfo, summonerChampionWinrateInfo),
+    makeMillionBadge(summonerChampionWinrateInfo, championsInfo),
     //makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo),
-    makeMostPlayedBadge(championsInfo, summonerChampionWinrateInfo),
+    makeMostPlayedBadge(summonerChampionWinrateInfo, championsInfo),
     makeStreakBadge(summonerMatchInfo)
   );
 
@@ -1039,14 +1040,14 @@ async function getSummonerRuneAssets(
 }
 
 /**
- * Sends API call to gather JSON data for runes based on it's type 
+ * Sends API call to gather JSON data for runes based on it's type
  * (primary or secondary), sends API call to retrieve image from the iconpath
- * in the JSON data and then creates a HTMLImageElement to append the file image 
- * 
- * @param {number} runeID 
+ * in the JSON data and then creates a HTMLImageElement to append the file image
+ *
+ * @param {number} runeID
  * @param {HTMLDivElement} component
- * @param {string} divClass 
- * @param {boolean} isSecondary 
+ * @param {string} divClass
+ * @param {boolean} isSecondary
  */
 async function getRuneImage(runeID, component, divClass, isSecondary) {
   const runeDataURL = isSecondary
@@ -1174,7 +1175,7 @@ async function getOtherPlayerAssets(participantsInfo, divClass, component) {
     const playerComponent = document.createElement("div");
     playerComponent.setAttribute("class", "player");
 
-    checkIfOwnPlayer(playerName, playerComponent, playerTagLine);
+    checkIfOwnPlayer(playerName, playerTagLine, playerComponent);
 
     const playerParentComponent = component.querySelector(divClass);
     playerParentComponent.append(playerComponent);
