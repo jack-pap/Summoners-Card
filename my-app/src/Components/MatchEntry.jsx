@@ -21,7 +21,7 @@ const MatchEntry = memo(function MatchEntry({
         <div className="matchTimeStats">
           <div>{getMatchTimeAgo(gameInfo.gameDate)}</div>
           <div>
-            {Math.trunc(gameInfo.gameDuration / 60)}m{" "}
+            {Math.trunc(gameInfo.gameDuration / 60)}min{" "}
             {gameInfo.gameDuration % 60}s
           </div>
         </div>
