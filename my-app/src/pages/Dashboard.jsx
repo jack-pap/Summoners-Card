@@ -909,7 +909,7 @@ async function makeRankedEmblems(summonerRankedInfo) {
 
 async function makeRankedEmblem(summonerRankedInfo, containerName) {
   var rankedIconImage = await apiImageCall(
-    `http://localhost:3001/assets/Ranked_Emblems/emblem-${summonerRankedInfo.rankedTier}.png`
+    `http://localhost:3000/assets/Ranked_Emblems/emblem-${summonerRankedInfo.rankedTier}.png`
   );
   const container = document.getElementById(containerName);
   const component = document.createElement("div");
@@ -929,7 +929,7 @@ async function makeRankedEmblem(summonerRankedInfo, containerName) {
 
 async function getChampionAssets(championId, insideClass, parentComponent) {
   var championImage = await apiImageCall(
-    `http://localhost:3001/assets/Champion_Icons/${championId}.png`
+    `http://localhost:3000/assets/Champion_Icons/${championId}.png`
   );
 
   if (!championImage) {
@@ -1002,7 +1002,7 @@ async function getSummonerSpellImage(
   const parts = spellObject.iconPath.split("/");
   const spellName = parts[parts.length - 1];
   var summonerSpellImage = await apiImageCall(
-    `http://localhost:3001/assets/Summoner_Spells/${spellName}`
+    `http://localhost:3000/assets/Summoner_Spells/${spellName}`
   );
 
   if (!summonerSpellImage) {
@@ -1060,7 +1060,7 @@ async function getRuneImage(runeID, component, divClass, isSecondary) {
   const parts = runeObject.iconPath.split("/");
   const runeName = parts[parts.length - 1];
   var summonerRuneImage = await apiImageCall(
-    `http://localhost:3001/assets/Summoner_Runes/${runeName}`
+    `http://localhost:3000/assets/Summoner_Runes/${runeName}`
   );
 
   if (!summonerRuneImage) {
@@ -1141,7 +1141,7 @@ async function getSummonerItemImage(summonerItemData, itemID, baseImageURL) {
   const parts = itemObject.iconPath.split("/");
   const imageName = parts[parts.length - 1];
   var summonerItemImage = await apiImageCall(
-    `http://localhost:3001/assets/Summoner_Items/${imageName}`
+    `http://localhost:3000/assets/Summoner_Items/${imageName}`
   );
 
   if (!summonerItemImage) {

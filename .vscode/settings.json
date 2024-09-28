@@ -18,8 +18,5 @@
       "username": "root"
     }
   ],
-  "sqltools.useNodeRuntime": true,
-  "[css]": {
-    "editor.defaultFormatter": "aeschli.vscode-css-formatter"
-  }
+  "sqltools.useNodeRuntime": true
 }

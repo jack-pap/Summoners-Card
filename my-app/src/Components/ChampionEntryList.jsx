@@ -84,7 +84,7 @@ const ChampionEntry = ({
 
 async function getChampionImage(championId) {
   let championImage = await apiImageCall(
-    `http://localhost:3001/assets/Champion_Icons/${championId}.png`
+    `http://localhost:3000/assets/Champion_Icons/${championId}.png`
   );
 
   if (!championImage) {
@@ -146,7 +146,7 @@ function makeComponents(winrateMappingObject, championName, champId) {
 
 async function getChampionAssets(championId, insideClass, parentComponent) {
   var championImage = await apiImageCall(
-    `http://localhost:3001/assets/Champion_Icons/${championId}.png`
+    `http://localhost:3000/assets/Champion_Icons/${championId}.png`
   );
 
   if (!championImage) {

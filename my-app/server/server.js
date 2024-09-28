@@ -4,7 +4,7 @@ const path = require('path');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args)); //Allows usage of fetch
 const bodyParser = require('body-parser');
 var app = express();
-const port = 3001;
+const port = 3000;
 
 const NodeCache = require( "node-cache" );
 const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });

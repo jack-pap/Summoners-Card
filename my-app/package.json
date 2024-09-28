@@ -2,7 +2,7 @@
     "name": "my-app",
     "private": true,
     "version": "0.0.0",
-    "proxy": "http://localhost:3001",
+    "proxy": "http://localhost:3000",
     "scripts": {
         "start": "node server/server.js",
         "dev": "vite",
