@@ -291,6 +291,12 @@ async function loadVersion() {
   });
 }
 
+/**
+ * Method to retrieve JSON data of champions
+ * to return mapping between their respective ids and names
+ * 
+ * @returns {Map<number, string>}
+ */
 async function getAllChampions() {
   const championApiURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-summary.json`;
   const data = await apiProxyCall(championApiURL);
@@ -475,7 +481,7 @@ async function getSummonerInfo(server, puuid) {
  *
  * @param {string} server
  * @param {string} puuid
- * @returns {Promise<Array<Object>>} An array of objects representing champion mastery information.
+ * @returns {Map<number, [Object]>} A map of objects representing champion mastery information.
  * Each object includes:
  *   - championId {number} - The ID of the champion.
  *   - championPoints {number} - The champion mastery points.
@@ -636,7 +642,7 @@ async function matchListUpdated(region, puuid) {
  *
  * @param {[string]} matchIDs
  * @param {string} puuid
- * @returns {[[string],[string], [string]]}
+ * @returns {[[string], [string], [string]]}
  */
 export async function matchInfoListDriver(region, matchIDs, puuid) {
   var matchInfoList = await getMatchInfoList(matchIDs, region, puuid);
@@ -671,7 +677,7 @@ async function getMatchInfoList(matchIDs, region, puuid) {
 
     const { contents, participants } = await matchInfoAPICall(region, matchID);
     if (!Object.values(GAME_MODES).includes(contents.gameQueueID)) continue;
-    
+
     const participantsList = [];
     var ownPlayerInfo = null;
 
@@ -696,7 +702,7 @@ async function getMatchInfoList(matchIDs, region, puuid) {
         item6,
         riotIdGameName,
         riotIdTagline,
-        teamPosition 
+        teamPosition,
       }) => ({
         win,
         championId,
@@ -717,7 +723,7 @@ async function getMatchInfoList(matchIDs, region, puuid) {
         item6,
         riotIdGameName,
         riotIdTagline,
-        teamPosition 
+        teamPosition,
       }))(playerInfo);
 
       participantsList.push(pickedPlayerInfo);
