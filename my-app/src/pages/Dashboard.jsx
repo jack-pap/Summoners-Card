@@ -48,17 +48,17 @@ const serverOptions = [
   { value: "VN2", label: "VN", region: "asia" },
 ];
 
-const serverDictionary = serverOptions.reduce((acc, option) => {
-  acc[option.label] = option.value;
-  return acc;
-}, {});
-
 const spinnerStyles = {
   position: "absolute",
   top: "40%",
   left: "50%",
   transform: "translateX(-50%)",
 };
+
+const serverDictionary = serverOptions.reduce((acc, option) => {
+  acc[option.label] = option.value;
+  return acc;
+}, {});
 
 const gameQueues = await getGameQueues();
 var ownUsername;
@@ -648,16 +648,6 @@ async function getAllAssets(summonerMatchInfo, counter, component) {
   );
 }
 
-/**
- * Driver method to build the main summoner profile
- * block with info regarding ranked mode and their gameplay
- *
- * @param {[string]} summonerInfo
- * @param {[[string]]} summonerRankedInfo
- * @param {[[string], [string], [string]]} summonerMatchInfo
- * @param {Map<number, [Object]} summonerChampionWinrateInfo
- * @param {Map<number, string>} championsInfo
- */
 async function makeSummonerProfile(
   summonerInfo,
   summonerRankedInfo,
@@ -674,15 +664,6 @@ async function makeSummonerProfile(
   await makeRankedEmblems(summonerRankedInfo);
 }
 
-/**
- * Driver method to display badges on profile block
- * that represent key information about the player
- * and his performance
- *
- * @param {[[string], [string], [string]]} summonerMatchInfo
- * @param {Map<number, [Object]} summonerChampionWinrateInfo
- * @param {Map<number, string>} championsInfo
- */
 function makeSummonerBadges(
   summonerMatchInfo,
   summonerChampionWinrateInfo,
@@ -703,13 +684,6 @@ function makeSummonerBadges(
   root.render(<>{allSummonerChips}</>);
 }
 
-/**
- * Gathers most played position in ranked from
- * summoner match info and displays it on badge
- *
- * @param {[[string], [string], [string]]} summonerMatchInfo
- * @returns {<Chip>}
- */
 function makeMainRoleBadge(summonerMatchInfo) {
   const rolesValues = new Map();
   var mostPlayedRole = "SUPPORT";
@@ -744,16 +718,7 @@ function makeMainRoleBadge(summonerMatchInfo) {
   );
 }
 
-/**
- * Iterates first couple champions on their mastery info
- * to determine which ones have a million plus mastery points
- * and then displays it on badge
- *
- * @param {Map<number, [Object]} summonerChampionWinrateInfo
- * @param {Map<number, string>} championsInfo
- * @returns {<Chip>}
- */
-function makeMillionBadge(summonerChampionWinrateInfo, championsInfo) {
+function makeMillionBadge(championsInfo, summonerChampionWinrateInfo) {
   const summonerChips = [];
 
   for (const [id, value] of summonerChampionWinrateInfo.entries()) {
@@ -803,15 +768,7 @@ function makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo) {
   );
 }
 
-/**
- * Scans games played on all champs in all modes
- * to determine the top champion with the most games played
- * and then displays it on a badge
- * @param {Map<number, [Object]} summonerChampionWinrateInfo
- * @param {Map<number, string>} championsInfo
- * @returns {<Chip>}
- */
-function makeMostPlayedBadge(summonerChampionWinrateInfo, championsInfo) {
+function makeMostPlayedBadge(championsInfo, summonerChampionWinrateInfo) {
   var [bestChampName, bestChampGames] = ["null", 0];
   for (const [id, value] of summonerChampionWinrateInfo.entries()) {
     const normalGames = value.winrateMapping.get(490)[0];
@@ -838,14 +795,6 @@ function makeMostPlayedBadge(summonerChampionWinrateInfo, championsInfo) {
   );
 }
 
-/**
- * Scans games until the win outcome changes to
- * determine if a player is on a winning streak or
- * a losing streak and displays it on a badge
- *
- * @param {[[string], [string], [string]]} summonerMatchInfo
- * @returns {<Chip>}
- */
 function makeStreakBadge(summonerMatchInfo) {
   const streakType = summonerMatchInfo[0][1].win;
   var streakAmount = 0;
@@ -872,12 +821,6 @@ function makeStreakBadge(summonerMatchInfo) {
   );
 }
 
-/**
- * API call to retrieve the profile icon image
- * and then display it on profile
- *
- * @param {[string]} summonerInfo
- */
 async function makeProfileIcon(summonerInfo) {
   const container = document.getElementById("profileIconGroupContainer");
 
@@ -986,7 +929,7 @@ async function getSummonerSpellAssets(
 
 /**
  * Executes API call to get image data
- * and return image component from it
+ * and creates image component from it
  *
  * @param {JSON} summonerSpellsData
  * @param {string} spellID
@@ -1019,15 +962,6 @@ async function getSummonerSpellImage(
   return img;
 }
 
-/**
- * Driver method to get rune image files and make
- * HTMLImageElement components
- *
- * @param {number} mainRuneID
- * @param {number*} secondaryRuneID
- * @param {string} divClass
- * @param {HTMLDivElement} component
- */
 async function getSummonerRuneAssets(
   mainRuneID,
   secondaryRuneID,
@@ -1038,16 +972,6 @@ async function getSummonerRuneAssets(
   await getRuneImage(secondaryRuneID, component, divClass, true);
 }
 
-/**
- * Sends API call to gather JSON data for runes based on it's type 
- * (primary or secondary), sends API call to retrieve image from the iconpath
- * in the JSON data and then creates a HTMLImageElement to append the file image 
- * 
- * @param {number} runeID 
- * @param {HTMLDivElement} component
- * @param {string} divClass 
- * @param {boolean} isSecondary 
- */
 async function getRuneImage(runeID, component, divClass, isSecondary) {
   const runeDataURL = isSecondary
     ? `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perkstyles.json`
@@ -1083,14 +1007,6 @@ async function getRuneImage(runeID, component, divClass, isSecondary) {
   summonerRunesImagesComponent.appendChild(img);
 }
 
-/**
- * Driver method that sends API call to retrieve item JSON data
- * in order to get icon paths based on item ID
- *
- * @param {[string]} summonerInfo
- * @param {string} divClass
- * @param {HTMLDivElement} component
- */
 async function getItemAssets(summonerInfo, divClass, component) {
   const itemDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/items.json`;
   const summonerItemData = await apiProxyCall(itemDataURL);
@@ -1126,16 +1042,6 @@ async function getItemAssets(summonerInfo, divClass, component) {
   }
 }
 
-/**
- * Queries JSON data to get URL for the icon path of
- * a specific item. API call is sent to that URL and
- * a HTMLImageElement is returned with that image on it
- *
- * @param {JSON} summonerItemData
- * @param {number} itemID
- * @param {string} baseImageURL
- * @returns {HTMLImageElement}
- */
 async function getSummonerItemImage(summonerItemData, itemID, baseImageURL) {
   const itemObject = summonerItemData.find((item) => item.id === itemID);
   const parts = itemObject.iconPath.split("/");
@@ -1158,14 +1064,6 @@ async function getSummonerItemImage(summonerItemData, itemID, baseImageURL) {
   return img;
 }
 
-/**
- * Creates HTMLDivElement entry to display player name and champion picture
- * retrieved from API call
- *
- * @param {[[string], [string], [string]]} participantsInfo
- * @param {string} divClass
- * @param {HTMLDivElement} component
- */
 async function getOtherPlayerAssets(participantsInfo, divClass, component) {
   for (const participantInfo of participantsInfo) {
     const playerName = participantInfo.riotIdGameName;
@@ -1174,7 +1072,20 @@ async function getOtherPlayerAssets(participantsInfo, divClass, component) {
     const playerComponent = document.createElement("div");
     playerComponent.setAttribute("class", "player");
 
-    checkIfOwnPlayer(playerName, playerComponent, playerTagLine);
+    if (playerName == ownUsername) {
+      playerComponent.innerHTML = `
+      <div class="playerImage" id="ownImage"></div>
+      <a class="ownUsername" href="${playerName}-${playerTagLine}" target="_blank">${playerName}</a> 
+      <span class="tooltip-text">${playerName} #${playerTagLine}</span>
+
+      `;
+    } else {
+      playerComponent.innerHTML = `
+      <div class="playerImage"></div>
+      <a class="playerUsername" href="${playerName}-${playerTagLine}" target="_blank">${playerName}</a>
+      <span class="tooltip-text">${playerName} #${playerTagLine}</span>
+      `;
+    }
 
     const playerParentComponent = component.querySelector(divClass);
     playerParentComponent.append(playerComponent);
@@ -1187,38 +1098,6 @@ async function getOtherPlayerAssets(participantsInfo, divClass, component) {
   }
 }
 
-/**
- * Check to see if the player is the one being displayed on profile
- * in order to highlight it with a different class name
- *
- * @param {string} playerName
- * @param {string} playerTagLine
- * @param {HTMLDivElement} playerComponent
- */
-function checkIfOwnPlayer(playerName, playerTagLine, playerComponent) {
-  if (playerName == ownUsername) {
-    playerComponent.innerHTML = `
-      <div class="playerImage" id="ownImage"></div>
-      <a class="ownUsername" href="${playerName}-${playerTagLine}" target="_blank">${playerName}</a> 
-      <span class="tooltip-text">${playerName} #${playerTagLine}</span>
-
-      `;
-  } else {
-    playerComponent.innerHTML = `
-      <div class="playerImage"></div>
-      <a class="playerUsername" href="${playerName}-${playerTagLine}" target="_blank">${playerName}</a>
-      <span class="tooltip-text">${playerName} #${playerTagLine}</span>
-      `;
-  }
-}
-
-/**
- * Driver method to update games played and winrate percentage
- * based on ranked game mode (solo, flex)
- *
- * @param {number} gameQueue
- * @param {number} winrateNumber
- */
 function loadWinrate(gameQueue, winrateNumber) {
   var totalGames = 0;
   var winratePercentage = 0;
@@ -1232,14 +1111,6 @@ function loadWinrate(gameQueue, winrateNumber) {
   updateProgressBar("winrate", winratePercentage, `${winratePercentage}%`);
 }
 
-/**
- * Button method to change winrate and games played
- * value on the circular progress bars
- *
- * @param {string} elementId
- * @param {number} value
- * @param {string} text
- */
 function updateProgressBar(elementId, value, text) {
   const progressbarTextElement = document.querySelector(
     `#${elementId} .CircularProgressbar-text`
