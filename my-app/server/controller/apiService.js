@@ -6,7 +6,7 @@
  * @returns {Promise}
  */
 export function apiProxyCall(apiURL) {
-  const proxyURL = `http://localhost:3000/proxy?url=${encodeURIComponent(
+  const proxyURL = `http://localhost:3001/proxy?url=${encodeURIComponent(
     apiURL
   )}`;
   return new Promise((resolve, reject) => {
@@ -64,7 +64,7 @@ export function apiImageCall(imageURL) {
  * @returns {Promise}
  */
 export function apiPOSTDatabaseCall(path, queryRoute, summonerJSONObject) {
-  const queryRouteURL = `http://localhost:3000/${path}/${queryRoute}`;
+  const queryRouteURL = `http://localhost:3001/${path}/${queryRoute}`;
 
   return new Promise((resolve, reject) => {
     fetch(queryRouteURL, {
@@ -101,7 +101,7 @@ export function apiPOSTDatabaseCall(path, queryRoute, summonerJSONObject) {
  * @returns {Promise}
  */
 export function apiGETDatabaseCall(path, queryRoute) {
-  const queryRouteURL = `http://localhost:3000/${path}/${queryRoute}`;
+  const queryRouteURL = `http://localhost:3001/${path}/${queryRoute}`;
 
   return new Promise((resolve, reject) => {
     fetch(queryRouteURL)
@@ -131,7 +131,7 @@ export function apiGETDatabaseCall(path, queryRoute) {
  * @returns {Promise}
  */
 export function apiPUTDatabaseCall(path, queryRoute) {
-  const queryRouteURL = `http://localhost:3000/${path}/${queryRoute}`;
+  const queryRouteURL = `http://localhost:3001/${path}/${queryRoute}`;
 
   return new Promise((resolve, reject) => {
     fetch(queryRouteURL, {
