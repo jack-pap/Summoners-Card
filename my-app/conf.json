@@ -18,9 +18,9 @@
     },
     "opts": {
         "template": "./node_modules/docdash",
-        "destination": "./jsdocs",
+        "destination": "./docs",
         "recurse": true,
-        "readme": "../README.md"
+        "readme": "./docs/README.md"
     },
     "metadata": { "title": "Summoners Card" },
     "docdash": {

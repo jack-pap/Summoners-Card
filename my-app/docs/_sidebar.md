@@ -1,8 +1,0 @@
-- **Getting Started**
-- [Home](#summoners-card)
-- [Installing](#installing)
-- [Running](#running)
-- [Methods](#methods)
-- [Features](#Features)
-- [Testing](#Testing)
-- [Screenshots](#Screenshots)

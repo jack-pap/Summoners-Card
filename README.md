@@ -24,7 +24,7 @@
 - MySQL
 - Riot.txt file
 
-## Environments Variables
+## Environment Variables
 ```js
 VITE_API_KEY= Riot API key
 SQL_PASSWORD= MySQL database server password

@@ -582,7 +582,7 @@ function getChampionWinrate(masteryInfo, matchInfoList) {
  * API call to retrieve an array of
  * summoner match IDs based on puuid
  *
-- * @param {string} region
+ * @param {string} region
  * @param {string} puuid
  * @param {number} matchAmountStart
  * @param {number} matchAmount
