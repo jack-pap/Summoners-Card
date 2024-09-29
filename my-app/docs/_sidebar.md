@@ -1,5 +1,4 @@
 - [Home](README.md)
-- [Requirements](requirements.md)
-- [Getting Started](gettingstarted.md)
+- [Installing](_installing.md)
 - [Running](running.md)
-- [Methods](methods.md)
+- [Methods](_methods.md)

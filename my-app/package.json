@@ -7,6 +7,7 @@
         "start": "node server/server.js",
         "dev": "vite",
         "build": "vite build",
+        "docs": "jsdoc -c conf.json",
         "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview"
     },
@@ -19,11 +20,13 @@
         "@mui/styled-engine-sc": "^6.0.0-alpha.16",
         "@ramonak/react-progress-bar": "^5.2.0",
         "cors": "^2.8.5",
+        "docdash": "^2.0.2",
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
         "knex": "^3.1.0",
         "mysql": "^2.18.1",
         "mysql2": "^3.11.0",
+        "node": "^22.9.0",
         "node-cache": "^5.1.2",
         "node-fetch": "^3.3.2",
         "prop-types": "^15.8.1",
@@ -43,6 +46,8 @@
         "eslint-plugin-react": "^7.33.2",
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.4.4",
+        "foodoc": "^0.0.9",
+        "jsdoc": "^3.6.7",
         "vite": "^5.4.8"
     },
     "eslintConfig": {

@@ -1,4 +1,51 @@
-/* eslint-disable no-unused-vars */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>src/pages/App.jsx - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-apiService.html">apiService</a><ul class='methods'><li data-type='method'><a href="module-apiService.html#.apiGETDatabaseCall">apiGETDatabaseCall</a></li><li data-type='method'><a href="module-apiService.html#.apiImageCall">apiImageCall</a></li><li data-type='method'><a href="module-apiService.html#.apiPOSTDatabaseCall">apiPOSTDatabaseCall</a></li><li data-type='method'><a href="module-apiService.html#.apiPUTDatabaseCall">apiPUTDatabaseCall</a></li><li data-type='method'><a href="module-apiService.html#.exports.apiProxyCall">exports.apiProxyCall</a></li></ul></li><li><a href="module-App.html">App</a><ul class='methods'><li data-type='method'><a href="module-App.html#.getMatchList">getMatchList</a></li><li data-type='method'><a href="module-App.html#.getSummonerStats">getSummonerStats</a></li><li data-type='method'><a href="module-App.html#.makeApiCall">makeApiCall</a></li><li data-type='method'><a href="module-App.html#.matchInfoListDriver">matchInfoListDriver</a></li><li data-type='method'><a href="module-App.html#~findMoreMatches">findMoreMatches</a></li><li data-type='method'><a href="module-App.html#~formatDateSQL">formatDateSQL</a></li><li data-type='method'><a href="module-App.html#~getAllChampions">getAllChampions</a></li><li data-type='method'><a href="module-App.html#~getChampionWinrate">getChampionWinrate</a></li><li data-type='method'><a href="module-App.html#~getInput">getInput</a></li><li data-type='method'><a href="module-App.html#~getMasteryInfo">getMasteryInfo</a></li><li data-type='method'><a href="module-App.html#~getPUUID">getPUUID</a></li><li data-type='method'><a href="module-App.html#~getRankedInfo">getRankedInfo</a></li><li data-type='method'><a href="module-App.html#~getSummonerInfo">getSummonerInfo</a></li><li data-type='method'><a href="module-App.html#~loadVersion">loadVersion</a></li></ul></li><li><a href="module-Dashboard.html">Dashboard</a><ul class='methods'><li data-type='method'><a href="module-Dashboard.html#~checkIfOwnPlayer">checkIfOwnPlayer</a></li><li data-type='method'><a href="module-Dashboard.html#~getItemAssets">getItemAssets</a></li><li data-type='method'><a href="module-Dashboard.html#~getOtherPlayerAssets">getOtherPlayerAssets</a></li><li data-type='method'><a href="module-Dashboard.html#~getRuneImage">getRuneImage</a></li><li data-type='method'><a href="module-Dashboard.html#~getSummonerItemImage">getSummonerItemImage</a></li><li data-type='method'><a href="module-Dashboard.html#~getSummonerRuneAssets">getSummonerRuneAssets</a></li><li data-type='method'><a href="module-Dashboard.html#~getSummonerSpellAssets">getSummonerSpellAssets</a></li><li data-type='method'><a href="module-Dashboard.html#~getSummonerSpellImage">getSummonerSpellImage</a></li><li data-type='method'><a href="module-Dashboard.html#~loadWinrate">loadWinrate</a></li><li data-type='method'><a href="module-Dashboard.html#~makeChampionWinrate">makeChampionWinrate</a></li><li data-type='method'><a href="module-Dashboard.html#~makeMainRoleBadge">makeMainRoleBadge</a></li><li data-type='method'><a href="module-Dashboard.html#~makeMillionBadge">makeMillionBadge</a></li><li data-type='method'><a href="module-Dashboard.html#~makeMostPlayedBadge">makeMostPlayedBadge</a></li><li data-type='method'><a href="module-Dashboard.html#~makeProfileIcon">makeProfileIcon</a></li><li data-type='method'><a href="module-Dashboard.html#~makeStreakBadge">makeStreakBadge</a></li><li data-type='method'><a href="module-Dashboard.html#~makeSummonerBadges">makeSummonerBadges</a></li><li data-type='method'><a href="module-Dashboard.html#~makeSummonerProfile">makeSummonerProfile</a></li><li data-type='method'><a href="module-Dashboard.html#~updateProgressBar">updateProgressBar</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/pages/App.jsx</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* eslint-disable no-unused-vars */
 import React from "react";
 import "../App.css";
 import Select from "react-select";
@@ -64,7 +111,7 @@ const customStyles = {
     cursor: "pointer",
     transition: "border-color 0.25s, transform 300ms ease-in-out",
     outline: state.isFocused ? "1px solid #C89B3C" : "none",
-    "&:hover": {
+    "&amp;:hover": {
       borderColor: "#C89B3C",
     },
   }),
@@ -77,7 +124,7 @@ const customStyles = {
     padding: 4,
     backgroundColor: state.isSelected ? "#C89B3C" : "transparent",
     color: state.isSelected ? "white" : "#A09B8C",
-    "&:hover": {
+    "&amp;:hover": {
       backgroundColor: "#C89B3C",
       color: "white",
     },
@@ -94,7 +141,7 @@ const customStyles = {
     transform: state.selectProps.menuIsOpen
       ? "rotate(-180deg)"
       : "rotate(0deg)",
-    "&:hover": {
+    "&amp;:hover": {
       color: "#A09B8C",
     },
   }),
@@ -141,13 +188,13 @@ function App() {
   }, []);
 
   return (
-    <>
-      <div id="homeBody">
-        <h1>
-          SUMMONERS <br /> CARD
-        </h1>
-        <div className="fieldBox">
-          <input
+    &lt;>
+      &lt;div id="homeBody">
+        &lt;h1>
+          SUMMONERS &lt;br /> CARD
+        &lt;/h1>
+        &lt;div className="fieldBox">
+          &lt;input
             type="text"
             className="summonerField"
             id="summonerName"
@@ -165,34 +212,34 @@ function App() {
                 );
             }}
           />
-          <div className="tooltip">
-            <a
+          &lt;div className="tooltip">
+            &lt;a
               id="link"
               href="https://support-leagueoflegends.riotgames.com/hc/en-us/articles/360041788533-Riot-ID-FAQ#:~:text=If%20your%20Riot%20ID%20is,not%20have%20to%20be%20unique."
               target="_blank"
               rel="noreferrer"
             >
-              <svg
+              &lt;svg
                 id="infoIcon"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
               >
-                <path
+                &lt;path
                   d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2.033 16.01c.564-1.789 
                   1.632-3.932 1.821-4.474.273-.787-.211-1.136-1.74.209l-.34-.64c1.744-1.897 5.335-2.326 4.113.613-.763 
                   1.835-1.309 3.074-1.621 4.03-.455 1.393.694.828 1.819-.211.153.25.203.331.356.619-2.498 2.378-5.271 
                   2.588-4.408-.146zm4.742-8.169c-.532.453-1.32.443-1.761-.022-.441-.465-.367-1.208.164-1.661.532-.453 
                   1.32-.442 1.761.022.439.466.367 1.209-.164 1.661z"
                 />
-              </svg>{" "}
-            </a>
-            <span className="tooltip-text">Click for more help</span>
-          </div>
-        </div>
-        <div className="box">
-          <Select
+              &lt;/svg>{" "}
+            &lt;/a>
+            &lt;span className="tooltip-text">Click for more help&lt;/span>
+          &lt;/div>
+        &lt;/div>
+        &lt;div className="box">
+          &lt;Select
             id="serverList"
             options={serverOptions}
             onChange={handleChange}
@@ -202,7 +249,7 @@ function App() {
             isSearchable={false}
             menuPortalTarget={document.body}
           />
-          <button
+          &lt;button
             className="customButton"
             id="search"
             onClick={() =>
@@ -218,17 +265,17 @@ function App() {
           >
             {" "}
             Search{" "}
-          </button>
-        </div>
-        <div id="patcher">Patch Version: {patchVersion}</div>
-        <Box sx={{ width: "100%" }}>
-          <Collapse in={open}>
-            <Alert
+          &lt;/button>
+        &lt;/div>
+        &lt;div id="patcher">Patch Version: {patchVersion}&lt;/div>
+        &lt;Box sx={{ width: "100%" }}>
+          &lt;Collapse in={open}>
+            &lt;Alert
               id="errorPopup"
               variant="outlined"
               severity="error"
               action={
-                <IconButton
+                &lt;IconButton
                   aria-label="close"
                   color="inherit"
                   size="small"
@@ -236,8 +283,8 @@ function App() {
                     setOpen(false);
                   }}
                 >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
+                  &lt;CloseIcon fontSize="inherit" />
+                &lt;/IconButton>
               }
               sx={{
                 mb: 2,
@@ -251,10 +298,10 @@ function App() {
                 },
               }}
             />
-          </Collapse>
-        </Box>
-      </div>
-      <GridLoader
+          &lt;/Collapse>
+        &lt;/Box>
+      &lt;/div>
+      &lt;GridLoader
         color={"#9b792f"}
         loading={isLoading}
         cssOverride={spinnerStyles}
@@ -264,7 +311,7 @@ function App() {
         aria-label="Loading Spinner"
         data-testid="loader"
       />
-    </>
+    &lt;/>
   );
 }
 
@@ -299,7 +346,7 @@ async function loadVersion() {
  * Method to retrieve JSON data of champions
  * to return mapping between their respective ids and names
  * 
- * @returns {Map<number, string>}
+ * @returns {Map&lt;number, string>}
  */
 async function getAllChampions() {
   const championApiURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-summary.json`;
@@ -485,7 +532,7 @@ async function getSummonerInfo(server, puuid) {
  *
  * @param {string} server
  * @param {string} puuid
- * @returns {Object<number, Object[]>} A map of objects representing champion mastery information.
+ * @returns {Object&lt;number, Object[]>} A map of objects representing champion mastery information.
  * Each object includes:
  *   - championId {number} - The ID of the champion.
  *   - championPoints {number} - The champion mastery points.
@@ -539,7 +586,7 @@ function getSummonerWinrates(rankedInfo, matchInfoList) {
 function getRemakesNumber(matchInfoList) {
   var remakeNumber = 0;
   for (const matchInfo of matchInfoList) {
-    if (matchInfo[0].gameDuration < 300) remakeNumber++;
+    if (matchInfo[0].gameDuration &lt; 300) remakeNumber++;
   }
   return remakeNumber;
 }
@@ -586,7 +633,7 @@ function getChampionWinrate(masteryInfo, matchInfoList) {
  * @param {string} puuid
  * @param {number} matchAmountStart
  * @param {number} matchAmount
- * @returns {Promise<Array<Object>>}
+ * @returns {Promise&lt;Array&lt;Object>>}
  */
 export async function getMatchList(
   region,
@@ -601,7 +648,7 @@ export async function getMatchList(
     );
     return DBMatchList.map((obj) => Object.values(obj)[0]);
   } else {
-    const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${matchAmountStart}&count=${matchAmount}&type=ranked&api_key=${API_KEY}`;
+    const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${matchAmountStart}&amp;count=${matchAmount}&amp;type=ranked&amp;api_key=${API_KEY}`;
     const data = await apiProxyCall(matchListApiURL);
     var matchList = [];
     for (const match of data) {
@@ -615,10 +662,10 @@ export async function getExtendedMatchList(region, puuid, lastGameDate) {
   const APIFormatDate = new Date(lastGameDate).getTime() / 1000;
   const DBExtendedMatchList = await apiGETDatabaseCall(
     "match",
-    `getMoreMatches?puuid=${puuid}&matchDate=${lastGameDate}`
+    `getMoreMatches?puuid=${puuid}&amp;matchDate=${lastGameDate}`
   );
-  if (DBExtendedMatchList.length < 10) {
-    const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?endTime=${APIFormatDate}&start=1&count=10&type=ranked&api_key=${API_KEY}`;
+  if (DBExtendedMatchList.length &lt; 10) {
+    const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?endTime=${APIFormatDate}&amp;start=1&amp;count=10&amp;type=ranked&amp;api_key=${API_KEY}`;
     const data = await apiProxyCall(matchListApiURL);
     var matchList = [];
     for (const match of data) {
@@ -631,7 +678,7 @@ export async function getExtendedMatchList(region, puuid, lastGameDate) {
 }
 
 async function matchListUpdated(region, puuid) {
-  const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${0}&count=${1}&type=ranked&api_key=${API_KEY}`;
+  const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${0}&amp;count=${1}&amp;type=ranked&amp;api_key=${API_KEY}`;
   const data = await apiProxyCall(matchListApiURL);
   const DBMatch = await apiGETDatabaseCall(
     "match",
@@ -650,7 +697,7 @@ async function matchListUpdated(region, puuid) {
 export async function matchInfoListDriver(region, matchIDs, puuid) {
   var matchInfoList = await getMatchInfoList(matchIDs, region, puuid);
 
-  if (matchInfoList.length < matchIDs.length) {
+  if (matchInfoList.length &lt; matchIDs.length) {
     const moreMatchesObject = await findMoreMatches(region, puuid);
     if (moreMatchesObject) {
       matchInfoList = matchInfoList.concat(moreMatchesObject);
@@ -773,7 +820,7 @@ async function matchInfoAPICall(region, matchID) {
  * @param {string} puuid
  * @param {string[]} matchIDs
  * @param {string[][]} matchInfoList
- * @returns {Promise<Array<Object>,Object>}
+ * @returns {Promise&lt;Array&lt;Object>,Object>}
  */
 async function findMoreMatches(region, puuid) {
   const newMatchIDS = await getMatchList(region, puuid, 20);
@@ -795,7 +842,7 @@ async function getRankedInfo(server, id) {
   const data = await apiProxyCall(rankedApiURL);
   var rankedSoloInfo = null;
   var rankedFlexInfo = null;
-  for (let i = 0; i < data.length; i++) {
+  for (let i = 0; i &lt; data.length; i++) {
     const currentRankedInfo = {
       queueType: data[i].queueType, // Solo/duo or Flex queue (RANKED_SOLO_5x5, RANKED_FLEX_SR)
       rankedTier: data[i].tier, // Iron - Challenger
@@ -836,3 +883,28 @@ function formatDateSQL(timestamp) {
 }
 
 export default App;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Sep 29 2024 14:31:42 GMT+0300 (Eastern European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

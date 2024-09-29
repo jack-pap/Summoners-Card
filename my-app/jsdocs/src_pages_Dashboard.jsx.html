@@ -1,4 +1,51 @@
-import "../App.css";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>src/pages/Dashboard.jsx - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-apiService.html">apiService</a><ul class='methods'><li data-type='method'><a href="module-apiService.html#.apiGETDatabaseCall">apiGETDatabaseCall</a></li><li data-type='method'><a href="module-apiService.html#.apiImageCall">apiImageCall</a></li><li data-type='method'><a href="module-apiService.html#.apiPOSTDatabaseCall">apiPOSTDatabaseCall</a></li><li data-type='method'><a href="module-apiService.html#.apiPUTDatabaseCall">apiPUTDatabaseCall</a></li><li data-type='method'><a href="module-apiService.html#.exports.apiProxyCall">exports.apiProxyCall</a></li></ul></li><li><a href="module-App.html">App</a><ul class='methods'><li data-type='method'><a href="module-App.html#.getMatchList">getMatchList</a></li><li data-type='method'><a href="module-App.html#.getSummonerStats">getSummonerStats</a></li><li data-type='method'><a href="module-App.html#.makeApiCall">makeApiCall</a></li><li data-type='method'><a href="module-App.html#.matchInfoListDriver">matchInfoListDriver</a></li><li data-type='method'><a href="module-App.html#~findMoreMatches">findMoreMatches</a></li><li data-type='method'><a href="module-App.html#~formatDateSQL">formatDateSQL</a></li><li data-type='method'><a href="module-App.html#~getAllChampions">getAllChampions</a></li><li data-type='method'><a href="module-App.html#~getChampionWinrate">getChampionWinrate</a></li><li data-type='method'><a href="module-App.html#~getInput">getInput</a></li><li data-type='method'><a href="module-App.html#~getMasteryInfo">getMasteryInfo</a></li><li data-type='method'><a href="module-App.html#~getPUUID">getPUUID</a></li><li data-type='method'><a href="module-App.html#~getRankedInfo">getRankedInfo</a></li><li data-type='method'><a href="module-App.html#~getSummonerInfo">getSummonerInfo</a></li><li data-type='method'><a href="module-App.html#~loadVersion">loadVersion</a></li></ul></li><li><a href="module-Dashboard.html">Dashboard</a><ul class='methods'><li data-type='method'><a href="module-Dashboard.html#~checkIfOwnPlayer">checkIfOwnPlayer</a></li><li data-type='method'><a href="module-Dashboard.html#~getItemAssets">getItemAssets</a></li><li data-type='method'><a href="module-Dashboard.html#~getOtherPlayerAssets">getOtherPlayerAssets</a></li><li data-type='method'><a href="module-Dashboard.html#~getRuneImage">getRuneImage</a></li><li data-type='method'><a href="module-Dashboard.html#~getSummonerItemImage">getSummonerItemImage</a></li><li data-type='method'><a href="module-Dashboard.html#~getSummonerRuneAssets">getSummonerRuneAssets</a></li><li data-type='method'><a href="module-Dashboard.html#~getSummonerSpellAssets">getSummonerSpellAssets</a></li><li data-type='method'><a href="module-Dashboard.html#~getSummonerSpellImage">getSummonerSpellImage</a></li><li data-type='method'><a href="module-Dashboard.html#~loadWinrate">loadWinrate</a></li><li data-type='method'><a href="module-Dashboard.html#~makeChampionWinrate">makeChampionWinrate</a></li><li data-type='method'><a href="module-Dashboard.html#~makeMainRoleBadge">makeMainRoleBadge</a></li><li data-type='method'><a href="module-Dashboard.html#~makeMillionBadge">makeMillionBadge</a></li><li data-type='method'><a href="module-Dashboard.html#~makeMostPlayedBadge">makeMostPlayedBadge</a></li><li data-type='method'><a href="module-Dashboard.html#~makeProfileIcon">makeProfileIcon</a></li><li data-type='method'><a href="module-Dashboard.html#~makeStreakBadge">makeStreakBadge</a></li><li data-type='method'><a href="module-Dashboard.html#~makeSummonerBadges">makeSummonerBadges</a></li><li data-type='method'><a href="module-Dashboard.html#~makeSummonerProfile">makeSummonerProfile</a></li><li data-type='method'><a href="module-Dashboard.html#~updateProgressBar">updateProgressBar</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/pages/Dashboard.jsx</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import "../App.css";
 import React from "react";
 import { memo } from "react";
 import { createRoot } from "react-dom/client";
@@ -91,7 +138,7 @@ const Dashboard = memo(function Dashboard() {
   const [championsInfo, setChampions] = useState(null);
 
   if (!serverOptions.find((option) => option.label === server)) {
-    return <ErrorPage errorMessage={`Invalid server "${server}"`} />;
+    return &lt;ErrorPage errorMessage={`Invalid server "${server}"`} />;
   }
 
   useEffect(() => {
@@ -152,12 +199,12 @@ const Dashboard = memo(function Dashboard() {
 
   useEffect(() => {
     if (
-      !isLoading &&
-      summonerInfo &&
-      summonerRankedInfo &&
-      summonerMatchInfo &&
-      summonerWinrateInfo &&
-      summonerChampionWinrateInfo &&
+      !isLoading &amp;&amp;
+      summonerInfo &amp;&amp;
+      summonerRankedInfo &amp;&amp;
+      summonerMatchInfo &amp;&amp;
+      summonerWinrateInfo &amp;&amp;
+      summonerChampionWinrateInfo &amp;&amp;
       championsInfo
     ) {
       makeSummonerProfile(
@@ -178,7 +225,7 @@ const Dashboard = memo(function Dashboard() {
   ownUsername = gameName;
   if (isLoading) {
     return (
-      <GridLoader
+      &lt;GridLoader
         color={"#9b792f"}
         loading={isLoading}
         cssOverride={spinnerStyles}
@@ -191,15 +238,15 @@ const Dashboard = memo(function Dashboard() {
     );
   }
   return (
-    <>
-      <div id="homeBody">
-        <div id="summonerContainer">
-          <div id="winrateBlock">
-            <ButtonGroup
+    &lt;>
+      &lt;div id="homeBody">
+        &lt;div id="summonerContainer">
+          &lt;div id="winrateBlock">
+            &lt;ButtonGroup
               variant="outlined"
               sx={{
                 ".MuiButtonGroup-grouped": {
-                  "&:hover": {
+                  "&amp;:hover": {
                     color: "#C89B3C",
                     backgroundColor: "#262c33",
                     borderColor: "#C89B3C",
@@ -213,7 +260,7 @@ const Dashboard = memo(function Dashboard() {
               aria-label="Basic button group"
               fullWidth
             >
-              {/* <Button
+              {/* &lt;Button
                   onClick={() => {
                     loadWinrate(
                       summonerRankedInfo[1],
@@ -222,8 +269,8 @@ const Dashboard = memo(function Dashboard() {
                   }}
                 >
                   Normal
-                </Button> */}
-              <Button
+                &lt;/Button> */}
+              &lt;Button
                 onClick={() => {
                   loadWinrate(
                     summonerRankedInfo[1],
@@ -232,8 +279,8 @@ const Dashboard = memo(function Dashboard() {
                 }}
               >
                 Solo
-              </Button>
-              <Button
+              &lt;/Button>
+              &lt;Button
                 onClick={() => {
                   loadWinrate(
                     summonerRankedInfo[0],
@@ -242,11 +289,11 @@ const Dashboard = memo(function Dashboard() {
                 }}
               >
                 Flex
-              </Button>
-            </ButtonGroup>
-            <div className="winrateContainer">
-              <div id="games">
-                <CircularProgressbar
+              &lt;/Button>
+            &lt;/ButtonGroup>
+            &lt;div className="winrateContainer">
+              &lt;div id="games">
+                &lt;CircularProgressbar
                   strokeWidth={5}
                   value={
                     summonerRankedInfo[1].rankedGames != undefined
@@ -271,9 +318,9 @@ const Dashboard = memo(function Dashboard() {
                   })}
                 />
                 Games Played
-              </div>
-              <div id="winrate">
-                <CircularProgressbar
+              &lt;/div>
+              &lt;div id="winrate">
+                &lt;CircularProgressbar
                   strokeWidth={5}
                   value={
                     !isNaN(summonerWinrateInfo.rankedSoloWinrate)
@@ -295,44 +342,44 @@ const Dashboard = memo(function Dashboard() {
                   })}
                 />
                 Winrate
-              </div>
-            </div>
-          </div>
-          <div id="summonerBlock">
-            <div className="profileGroup">
-              <div id="profileIconGroupContainer"></div>
-              <div id="name">
-                <div id="gameName"> {gameName} </div>
-                <div id="server"> #{server} </div>
-              </div>
-              <div className="summonerChips"></div>
-            </div>
-            <div className="rankedInfo">
-              {summonerRankedInfo[1] !== "Unranked" && (
-                <div id="rankedSolo">
-                  <div>{`${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}</div>
-                  <div>{`${summonerRankedInfo[1].rankedPoints} LP`}</div>
-                  <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}</div>
-                  <div>{`${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L`}</div>
-                </div>
+              &lt;/div>
+            &lt;/div>
+          &lt;/div>
+          &lt;div id="summonerBlock">
+            &lt;div className="profileGroup">
+              &lt;div id="profileIconGroupContainer">&lt;/div>
+              &lt;div id="name">
+                &lt;div id="gameName"> {gameName} &lt;/div>
+                &lt;div id="server"> #{server} &lt;/div>
+              &lt;/div>
+              &lt;div className="summonerChips">&lt;/div>
+            &lt;/div>
+            &lt;div className="rankedInfo">
+              {summonerRankedInfo[1] !== "Unranked" &amp;&amp; (
+                &lt;div id="rankedSolo">
+                  &lt;div>{`${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}&lt;/div>
+                  &lt;div>{`${summonerRankedInfo[1].rankedPoints} LP`}&lt;/div>
+                  &lt;div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}&lt;/div>
+                  &lt;div>{`${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L`}&lt;/div>
+                &lt;/div>
               )}
-              {summonerRankedInfo[0] !== "Unranked" && (
-                <div id="rankedFlex">
-                  <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision}`}</div>
-                  <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
-                  <div>{`${summonerWinrateInfo.rankedFlexWinrate}% Winrate`}</div>
-                  <div>{`${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L`}</div>
-                </div>
+              {summonerRankedInfo[0] !== "Unranked" &amp;&amp; (
+                &lt;div id="rankedFlex">
+                  &lt;div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision}`}&lt;/div>
+                  &lt;div>{`${summonerRankedInfo[0].rankedPoints} LP`}&lt;/div>
+                  &lt;div>{`${summonerWinrateInfo.rankedFlexWinrate}% Winrate`}&lt;/div>
+                  &lt;div>{`${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L`}&lt;/div>
+                &lt;/div>
               )}
-            </div>
-          </div>
-          <div id="championBlock">
-            <ButtonGroup
+            &lt;/div>
+          &lt;/div>
+          &lt;div id="championBlock">
+            &lt;ButtonGroup
               id="championButtonGroup"
               variant="outlined"
               sx={{
                 ".MuiButtonGroup-grouped": {
-                  "&:hover": {
+                  "&amp;:hover": {
                     color: "#C89B3C",
                     backgroundColor: "#262c33",
                     borderColor: "#C89B3C",
@@ -347,7 +394,7 @@ const Dashboard = memo(function Dashboard() {
               fullWidth
             >
               makeChampionWinrate
-              <Button
+              &lt;Button
                 onClick={() => {
                   makeChampionWinrate(
                     summonerChampionWinrateInfo,
@@ -357,8 +404,8 @@ const Dashboard = memo(function Dashboard() {
                 }}
               >
                 Normal
-              </Button>
-              <Button
+              &lt;/Button>
+              &lt;Button
                 onClick={() => {
                   makeChampionWinrate(
                     summonerChampionWinrateInfo,
@@ -368,8 +415,8 @@ const Dashboard = memo(function Dashboard() {
                 }}
               >
                 Solo
-              </Button>
-              <Button
+              &lt;/Button>
+              &lt;Button
                 onClick={() => {
                   makeChampionWinrate(
                     summonerChampionWinrateInfo,
@@ -379,29 +426,29 @@ const Dashboard = memo(function Dashboard() {
                 }}
               >
                 Flex
-              </Button>
-            </ButtonGroup>
-            <div id="statNames">
-              <div>Name</div>
-              <div>Winrate</div>
-              <div>Games</div>
-            </div>
-            <ChampionEntryList
+              &lt;/Button>
+            &lt;/ButtonGroup>
+            &lt;div id="statNames">
+              &lt;div>Name&lt;/div>
+              &lt;div>Winrate&lt;/div>
+              &lt;div>Games&lt;/div>
+            &lt;/div>
+            &lt;ChampionEntryList
               summonerChampionWinrateInfo={summonerChampionWinrateInfo}
               championsInfo={championsInfo}
               queueId={420}
-            ></ChampionEntryList>
-          </div>
-        </div>
+            >&lt;/ChampionEntryList>
+          &lt;/div>
+        &lt;/div>
 
-        <div id="matchHistoryBlock">
-          <div id="matchHistoryHeader"> Match History </div>
-          <div id="matchList" />
-          <ButtonGroup
+        &lt;div id="matchHistoryBlock">
+          &lt;div id="matchHistoryHeader"> Match History &lt;/div>
+          &lt;div id="matchList" />
+          &lt;ButtonGroup
             variant="outlined"
             sx={{
               ".MuiButtonGroup-grouped": {
-                "&:hover": {
+                "&amp;:hover": {
                   color: "#C89B3C",
                   backgroundColor: "#262c33",
                   borderColor: "#C89B3C",
@@ -415,10 +462,10 @@ const Dashboard = memo(function Dashboard() {
             aria-label="Basic button group"
             width="300px"
           >
-            <LoadingButton
+            &lt;LoadingButton
               loading={isTempLoading}
               loadingIndicator={
-                <CircularProgress sx={{ color: "#d8a841" }} size={35} />
+                &lt;CircularProgress sx={{ color: "#d8a841" }} size={35} />
               }
               loadingPosition="center"
               onClick={() => {
@@ -432,13 +479,13 @@ const Dashboard = memo(function Dashboard() {
               }}
             >
               Load More
-            </LoadingButton>
-          </ButtonGroup>
-        </div>
-        <div id="friendBlock"></div>
-      </div>
+            &lt;/LoadingButton>
+          &lt;/ButtonGroup>
+        &lt;/div>
+        &lt;div id="friendBlock">&lt;/div>
+      &lt;/div>
       {isVisible ? (
-        <div
+        &lt;div
           onClick={() =>
             window.scrollTo({
               top: 0,
@@ -446,7 +493,7 @@ const Dashboard = memo(function Dashboard() {
             })
           }
         >
-          <svg
+          &lt;svg
             id="scrollUpIcon"
             clipRule="evenodd"
             fillRule="evenodd"
@@ -455,17 +502,17 @@ const Dashboard = memo(function Dashboard() {
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path
+            &lt;path
               d="m2.019 11.993c0 5.518 4.48 9.998 9.998 9.998 5.517 0 9.997-4.48 9.997-9.998s-4.48-9.998-9.997-9.998c-5.518 0-9.998 4.48-9.998 
           9.998zm1.5 0c0-4.69 3.808-8.498 8.498-8.498s8.497 3.808 8.497 8.498-3.807 8.498-8.497 8.498-8.498-3.808-8.498-8.498zm4.715-1.528s1.505-1.502
           3.259-3.255c.147-.146.338-.219.53-.219s.384.073.53.219c1.754 1.753 3.259 3.254 3.259 3.254.145.145.217.336.216.527 0 
           .191-.074.383-.22.53-.293.293-.766.294-1.057.004l-1.978-1.978v6.694c0
           .413-.336.75-.75.75s-.75-.337-.75-.75v-6.694l-1.978 1.979c-.29.289-.762.286-1.055-.007-.147-.146-.22-.338-.221-.53-.001-.19.071-.38.215-.524z"
             />
-          </svg>{" "}
-        </div>
+          &lt;/svg>{" "}
+        &lt;/div>
       ) : null}
-    </>
+    &lt;/>
   );
 });
 
@@ -485,8 +532,8 @@ async function getGameQueues() {
  * for a specific game queue based on champion mastery info
  *
  * @method makeChampionWinrate
- * @param {Object<number, Object>} summonerChampionWinrateInfo
- * @param {Object<number, string>} championsInfo
+ * @param {Object&lt;number, Object>} summonerChampionWinrateInfo
+ * @param {Object&lt;number, string>} championsInfo
  * @param {number} queueId
  */
 async function makeChampionWinrate(
@@ -499,11 +546,11 @@ async function makeChampionWinrate(
   container._reactRoot = createRoot(container);
   var root = container._reactRoot;
   const matchComponent = (
-    <ChampionEntryList
+    &lt;ChampionEntryList
       summonerChampionWinrateInfo={summonerChampionWinrateInfo}
       championsInfo={championsInfo}
       queueId={queueId}
-    ></ChampionEntryList>
+    >&lt;/ChampionEntryList>
   );
   root.render(matchComponent);
 }
@@ -515,17 +562,17 @@ function makeComponents(winrateMappingObject, championName, champId) {
 
   champComponent.setAttribute("class", "champEntry");
   champComponent.innerHTML = `
-      <div id="champContainer">
-      <div class="champImage"></div>
-      <div class="champName">${championName}</div>
+      &lt;div id="champContainer">
+      &lt;div class="champImage">&lt;/div>
+      &lt;div class="champName">${championName}&lt;/div>
   
-      </div>
-      <div class="champWinrate"></div>
-      <div class="gamesPlayed">${gamesPlayed} \nPlayed</div>
+      &lt;/div>
+      &lt;div class="champWinrate">&lt;/div>
+      &lt;div class="gamesPlayed">${gamesPlayed} \nPlayed&lt;/div>
       `;
 
   const progressBarComponent = (
-    <ProgressBar
+    &lt;ProgressBar
       completed={winrate === 0 ? 1 : winrate}
       width="140px"
       height="17px"
@@ -558,7 +605,7 @@ async function makeMatchHistory(summonerMatchInfo, setIsTempLoading) {
 
   for (
     let counter = 0;
-    counter < Math.min(20, summonerMatchInfo.length);
+    counter &lt; Math.min(20, summonerMatchInfo.length);
     counter++
   ) {
     const matchComponent = document.createElement("div");
@@ -570,11 +617,11 @@ async function makeMatchHistory(summonerMatchInfo, setIsTempLoading) {
     const root = createRoot(matchComponent);
 
     const entryComponent = (
-      <MatchEntry
+      &lt;MatchEntry
         summonerMatchInfo={summonerMatchInfo}
         counter={counter}
         gameQueues={gameQueues}
-      ></MatchEntry>
+      >&lt;/MatchEntry>
     );
     root.render(entryComponent);
     promises.push(getAllAssets(summonerMatchInfo, counter, matchComponent));
@@ -604,7 +651,7 @@ async function extendMatchHistory(
     newMatchList,
     puuid
   );
-  for (let counter = 0; counter < newMatchInfoList.length; counter++) {
+  for (let counter = 0; counter &lt; newMatchInfoList.length; counter++) {
     const matchComponent = document.createElement("div");
     matchComponent.setAttribute("class", "matchHistoryContainer");
     matchComponent.setAttribute("id", newMatchInfoList[counter][0].gameID);
@@ -614,11 +661,11 @@ async function extendMatchHistory(
     const root = createRoot(matchComponent);
 
     const entryComponent = (
-      <MatchEntry
+      &lt;MatchEntry
         summonerMatchInfo={newMatchInfoList}
         counter={counter}
         gameQueues={gameQueues}
-      ></MatchEntry>
+      >&lt;/MatchEntry>
     );
     root.render(entryComponent);
     await getAllAssets(newMatchInfoList, counter, matchComponent);
@@ -661,8 +708,8 @@ async function getAllAssets(summonerMatchInfo, counter, component) {
  * @param {string[]} summonerInfo
  * @param {string[][]} summonerRankedInfo
  * @param {string[][]} summonerMatchInfo
- * @param {Object<number, Object[]>} summonerChampionWinrateInfo
- * @param {Object<number, string>} championsInfo
+ * @param {Object&lt;number, Object[]>} summonerChampionWinrateInfo
+ * @param {Object&lt;number, string>} championsInfo
  */
 async function makeSummonerProfile(
   summonerInfo,
@@ -686,8 +733,8 @@ async function makeSummonerProfile(
  * and his performance
  *
  * @param {string[][]} summonerMatchInfo
- * @param {Object<number, Object[]>} summonerChampionWinrateInfo
- * @param {Object<number, string>} championsInfo
+ * @param {Object&lt;number, Object[]>} summonerChampionWinrateInfo
+ * @param {Object&lt;number, string>} championsInfo
  */
 function makeSummonerBadges(
   summonerMatchInfo,
@@ -706,7 +753,7 @@ function makeSummonerBadges(
     makeStreakBadge(summonerMatchInfo)
   );
 
-  root.render(<>{allSummonerChips}</>);
+  root.render(&lt;>{allSummonerChips}&lt;/>);
 }
 
 /**
@@ -720,7 +767,7 @@ function makeMainRoleBadge(summonerMatchInfo) {
   const rolesValues = new Map();
   var mostPlayedRole = "SUPPORT";
   rolesValues.set(mostPlayedRole, 0);
-  for (let i = 0; i < summonerMatchInfo.length; i++) {
+  for (let i = 0; i &lt; summonerMatchInfo.length; i++) {
     var role = summonerMatchInfo[i][1].teamPosition;
     if (role == "UTILITY") role = "SUPPORT";
     else role = summonerMatchInfo[i][1].teamPosition;
@@ -737,7 +784,7 @@ function makeMainRoleBadge(summonerMatchInfo) {
     .toLowerCase()
     .replace(/^\w/, (c) => c.toUpperCase());
   return (
-    <Chip
+    &lt;Chip
       key={mostPlayedRole}
       label={`Main ${mostPlayedRole}`}
       variant="outlined"
@@ -755,18 +802,18 @@ function makeMainRoleBadge(summonerMatchInfo) {
  * to determine which ones have a million plus mastery points
  * and then displays it on badge
  *
- * @param {Object<number, Object[]>} summonerChampionWinrateInfo
- * @param {Object<number, string>} championsInfo
+ * @param {Object&lt;number, Object[]>} summonerChampionWinrateInfo
+ * @param {Object&lt;number, string>} championsInfo
  * @returns {React.ComponentType}
  */
 function makeMillionBadge(summonerChampionWinrateInfo, championsInfo) {
   const summonerChips = [];
 
   for (const [id, value] of summonerChampionWinrateInfo.entries()) {
-    if (value.championPoints < 1000000) break;
+    if (value.championPoints &lt; 1000000) break;
 
     summonerChips.push(
-      <Chip
+      &lt;Chip
         key={id}
         label={`${championsInfo.get(id)} Million`}
         variant="outlined"
@@ -796,7 +843,7 @@ function makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo) {
 
   if (bestChampName == "null") return;
   return (
-    <Chip
+    &lt;Chip
       key={`Best ${bestChampName}`}
       label={`Skilled ${bestChampName}`}
       variant="outlined"
@@ -813,8 +860,8 @@ function makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo) {
  * Scans games played on all champs in all modes
  * to determine the top champion with the most games played
  * and then displays it on a badge
- * @param {Object<number, Object[]>} summonerChampionWinrateInfo
- * @param {Object<number, string>} championsInfo
+ * @param {Object&lt;number, Object[]>} summonerChampionWinrateInfo
+ * @param {Object&lt;number, string>} championsInfo
  * @returns {React.ComponentType}
  */
 function makeMostPlayedBadge(summonerChampionWinrateInfo, championsInfo) {
@@ -831,7 +878,7 @@ function makeMostPlayedBadge(summonerChampionWinrateInfo, championsInfo) {
   }
 
   return (
-    <Chip
+    &lt;Chip
       key={`OTP ${bestChampName}`}
       label={`OTP ${bestChampName}`}
       variant="outlined"
@@ -856,16 +903,16 @@ function makeStreakBadge(summonerMatchInfo) {
   const streakType = summonerMatchInfo[0][1].win;
   var streakAmount = 0;
 
-  for (let i = 0; i < summonerMatchInfo.length; i++) {
+  for (let i = 0; i &lt; summonerMatchInfo.length; i++) {
     if (summonerMatchInfo[i][1].win != streakType) {
       streakAmount = i;
       break;
     }
   }
 
-  if (streakAmount < 3) return;
+  if (streakAmount &lt; 3) return;
   return (
-    <Chip
+    &lt;Chip
       key={streakType}
       label={streakType ? `Winning streak` : `Losing streak`}
       variant="outlined"
@@ -891,8 +938,8 @@ async function makeProfileIcon(summonerInfo) {
   component.setAttribute("class", "profileIconGroup");
 
   component.innerHTML = `
-    <div id="summonerIcon"></div>
-    <div id="level">${summonerInfo[1]}</div>
+    &lt;div id="summonerIcon">&lt;/div>
+    &lt;div id="level">${summonerInfo[1]}&lt;/div>
     `;
 
   const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${summonerInfo[2]}.jpg`;
@@ -1112,7 +1159,7 @@ async function getItemAssets(summonerInfo, divClass, component) {
   ];
   var emptyImagesCounter = 0;
 
-  for (var i = 0; i < 7; i++) {
+  for (var i = 0; i &lt; 7; i++) {
     if (itemIds[i] != 0) {
       var image = await getSummonerItemImage(
         summonerItemData,
@@ -1124,7 +1171,7 @@ async function getItemAssets(summonerInfo, divClass, component) {
     } else emptyImagesCounter++;
   }
 
-  for (var j = 0; j < emptyImagesCounter; j++) {
+  for (var j = 0; j &lt; emptyImagesCounter; j++) {
     var emptyImage = document.createElement("div");
     emptyImage.className = "emptyItem";
     const itemsImagesComponent = component.querySelector(divClass);
@@ -1204,16 +1251,16 @@ async function getOtherPlayerAssets(participantsInfo, divClass, component) {
 function checkIfOwnPlayer(playerName, playerTagLine, playerComponent) {
   if (playerName == ownUsername) {
     playerComponent.innerHTML = `
-      <div class="playerImage" id="ownImage"></div>
-      <a class="ownUsername" href="${playerName}-${playerTagLine}" target="_blank">${playerName}</a> 
-      <span class="tooltip-text">${playerName} #${playerTagLine}</span>
+      &lt;div class="playerImage" id="ownImage">&lt;/div>
+      &lt;a class="ownUsername" href="${playerName}-${playerTagLine}" target="_blank">${playerName}&lt;/a> 
+      &lt;span class="tooltip-text">${playerName} #${playerTagLine}&lt;/span>
 
       `;
   } else {
     playerComponent.innerHTML = `
-      <div class="playerImage"></div>
-      <a class="playerUsername" href="${playerName}-${playerTagLine}" target="_blank">${playerName}</a>
-      <span class="tooltip-text">${playerName} #${playerTagLine}</span>
+      &lt;div class="playerImage">&lt;/div>
+      &lt;a class="playerUsername" href="${playerName}-${playerTagLine}" target="_blank">${playerName}&lt;/a>
+      &lt;span class="tooltip-text">${playerName} #${playerTagLine}&lt;/span>
       `;
   }
 }
@@ -1262,3 +1309,28 @@ function updateProgressBar(elementId, value, text) {
 
 export default Dashboard;
 
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Sep 29 2024 14:31:42 GMT+0300 (Eastern European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

@@ -7,3 +7,10 @@
 
 > A stats viewing web application for the Riot API
 
+# Why did I make this
+
+# Features
+
+# Screenshots
+
+

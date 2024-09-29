@@ -10,10 +10,6 @@
 </head>
 <body>
   <div id="app"></div>
-  <!-- Docsify v4 -->
-  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify@5/dist/plugins/search.min.js"></script>
-
   <script>
     window.$docsify = {
         name: "Summoners Card",  
@@ -24,14 +20,19 @@
         coverpage: '_coverpage.md',
         loadSidebar: true,
         search: {
+          paths: 'auto',
           insertAfter: '.app-name',
-          insertBefore: '.sidebar-nav',
           placeholder: 'Type to search',
           noData: 'No matches found.',
-          depth: 2,
+          depth: 6,
       }
       };
       
   </script>
+  <!-- Docsify v4 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+
+
 </body>
 </html>

@@ -1,7 +1,11 @@
+/**
+ * @module apiService
+ */
 
 /**
  * API call to Riot for data by calling the proxy route
  * server and passing the apiURL endpoint
+ * @memberof module:apiService  
  * @param {string} apiURL
  * @returns {Promise}
  */

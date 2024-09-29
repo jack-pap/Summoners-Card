@@ -1,0 +1,25 @@
+{
+    "recurseDepth": 10,
+    "tags": {
+        "allowUnknownTags": true,
+        "dictionaries": ["jsdoc", "closure"]
+    },
+    "source": {
+        "include": ["src", "server"],
+        "includePattern": ".+\\.(js|jsx)$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false,
+        "default": {
+            "outputSourceFiles": true
+        }
+    },
+    "opts": {
+        "template": "./node_modules/docdash",
+        "destination": "./jsdocs",
+        "recurse": true
+    },
+    "metadata": { "title": "Summoners Card" }
+}
