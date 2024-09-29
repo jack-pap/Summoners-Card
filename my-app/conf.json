@@ -20,7 +20,7 @@
         "template": "./node_modules/docdash",
         "destination": "./docs",
         "recurse": true,
-        "readme": "./docs/README.md"
+        "readme": "./docs/assets/README.md"
     },
     "metadata": { "title": "Summoners Card" },
     "docdash": {
