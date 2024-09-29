@@ -19,7 +19,30 @@
     "opts": {
         "template": "./node_modules/docdash",
         "destination": "./jsdocs",
-        "recurse": true
+        "recurse": true,
+        "readme": "../README.md"
     },
-    "metadata": { "title": "Summoners Card" }
+    "metadata": { "title": "Summoners Card" },
+    "docdash": {
+        "static": true,
+        "sort": true,
+		"meta": {
+			"title": "Summoners Card",
+			"description": "A stats viewing fullstack web application using the Riot API",
+			"keyword": "jsdoc, docdash"
+		},
+        "search": true,
+        "collapse": true,
+        "typedefs": true,
+        "removeQuotes": "none",
+        "scripts": [],
+        "menu":{
+            "Github repo":{
+                "href":"https://github.com/jack-pap/Summoners-Card",
+                "target":"_blank",
+                "class":"menu-item",
+                "id":"repository"
+            }
+        }
+    }
 }

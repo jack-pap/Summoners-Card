@@ -5,5 +5,7 @@
 ![Static Badge](https://img.shields.io/badge/Node.js-gray?logo=nodedotjs&logoColor=%235FA04E)
 ![Static Badge](https://img.shields.io/badge/MySQL-gray?logo=mysql&logoColor=orange)
 
+A stats viewing fullstack web application using the Riot API
+
 [Github](https://github.com/jack-pap/Summoners-Card)
 [Getting Started](#summoners-card)
