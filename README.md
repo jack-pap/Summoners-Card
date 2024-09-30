@@ -45,9 +45,9 @@ SQL_PASSWORD= MySQL database server password
 > npm start 
 > npm run dev 
 ```
-## Methods
+## Documentation
 
-## Features
+Documentation for all methods that have been documented can be found [here](https://jack-pap.github.io/Summoners-Card/index.html)
 
 ## Testing
 
