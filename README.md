@@ -54,6 +54,6 @@ Documentation for all methods that have been documented can be found [here](http
 ## Screenshots
 ![homepage](https://github.com/user-attachments/assets/6191574a-2d2e-4fbe-955f-8b30944513d3)
 
-![dashboard](https://github.com/user-attachments/assets/b7179061-7f9d-4c86-9cbc-3423d00b4f16)
+![dashboard](https://github.com/user-attachments/assets/678e1470-fa80-4f3c-a10f-d2829f8761ec)
 
 
