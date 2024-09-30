@@ -42,9 +42,11 @@ jobs:
     - name: Run tests #Add jest at some point for testing 
       run: npm test --if-present
       working-directory: ./my-app
-    - name: Deploy to GitHub Pages
+    - name: Build docs
+      run: npm run docs --if-present
+    - name: Deploy docs to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./my-app/docs 
-        force_orphan: true  # This will help with clean deployments
+        force_orphan: true
