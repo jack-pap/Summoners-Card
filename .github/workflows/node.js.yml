@@ -43,7 +43,7 @@ jobs:
       run: npm test --if-present
       working-directory: ./my-app
     - name: Build docs
-      run: npm run docs --if-present
+      run: npm run docs 
     - name: Deploy docs to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
