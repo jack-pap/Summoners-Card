@@ -236,7 +236,7 @@ const Dashboard = memo(function Dashboard() {
                   );
                 }}
               >
-                Solo
+                Solo/Duo
               </Button>
               <Button
                 onClick={() => {
@@ -313,21 +313,32 @@ const Dashboard = memo(function Dashboard() {
               </div>
               <div className="summonerChips"></div>
             </div>
+            <div id="lineDivider"></div>
             <div className="rankedInfo">
               {summonerRankedInfo[1] !== "Unranked" && (
                 <div id="rankedSolo">
-                  <div>{`${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision}`}</div>
-                  <div>{`${summonerRankedInfo[1].rankedPoints} LP`}</div>
-                  <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}</div>
-                  <div>{`${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L`}</div>
+                  <div className="rankedRank">
+                    <div>{`${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision} --`}</div>
+                    <div>{`${summonerRankedInfo[1].rankedPoints} LP`}</div>
+                  </div>
+                  <div className="rankedTitle">Ranked Solo/Duo</div>
+                  <div className="rankedWinrate">
+                    <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}</div>
+                    <div>{`(${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L)`}</div>
+                  </div>
                 </div>
               )}
               {summonerRankedInfo[0] !== "Unranked" && (
                 <div id="rankedFlex">
-                  <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision}`}</div>
-                  <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
-                  <div>{`${summonerWinrateInfo.rankedFlexWinrate}% Winrate`}</div>
-                  <div>{`${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L`}</div>
+                  <div className="rankedRank">
+                    <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision} --`}</div>
+                    <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
+                  </div>
+                  <div className="rankedTitle">Ranked Flex</div>
+                  <div className="rankedWinrate">
+                    <div>{`${summonerWinrateInfo.rankedFlexWinrate}% Winrate`}</div>
+                    <div>{`(${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L)`}</div>
+                  </div>
                 </div>
               )}
             </div>
@@ -373,7 +384,7 @@ const Dashboard = memo(function Dashboard() {
                   );
                 }}
               >
-                Solo
+                Solo/Duo
               </Button>
               <Button
                 onClick={() => {
@@ -491,7 +502,7 @@ async function getProfileBackground(
   championsInfo
 ) {
   const [championId] = summonerChampionWinrateInfo.keys();
-  const championName = championsInfo.get(championId).replace(/\s/g, "");;
+  const championName = championsInfo.get(championId).replace(/[\s\W]/g, "");
   const container = document.getElementById("profileBg");
 
   var championImage = await apiImageCall(

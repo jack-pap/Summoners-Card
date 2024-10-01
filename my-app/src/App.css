@@ -324,12 +324,13 @@ select:focus {
   background-color: #1b1f24;
   border: 1px solid #272727;
   border-top: 1px solid #383838;
+  max-width: 600px;
   min-width: 570px;
   min-height: 490px;
   margin: 0 auto;
   margin-top: 25px;
   border-radius: 3%;
-  gap: 25px;
+  gap: 20px;
 }
 
 
@@ -362,6 +363,11 @@ select:focus {
 }
 
 .profileGroup {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
   width: 100%;
   z-index: 0;
 }
@@ -390,19 +396,20 @@ select:focus {
 
 .rankedEmblem {
   display: flex;
-  height: 150px;
-  width: 200px;
+  height: 130px;
+  width: 100%;
+  padding-top: 10px;
   overflow: hidden;
   justify-content: center;
+  text-align: center;
 }
 
 .rankedEmblem img {
   position: relative;
   display: flex;
   justify-content: center;
-  top: -140px;
-  height: 290%;
-  width: auto;
+  text-align: center;
+  transform: scale(2.8);
 }
 
 #level {
@@ -421,7 +428,7 @@ select:focus {
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-size: 25px;
+  font-size: 19pt;
   padding: 5px;
   gap: 5px;
 }
@@ -438,17 +445,57 @@ select:focus {
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
+  width: 400px;
   justify-content: center;
-  align-items: center;
+}
+
+#lineDivider {
+  width: 85%;
+  border: 1px solid #785b28cc;
+  z-index: 1;
 }
 
 .rankedInfo {
   display: flex;
   width: 100%;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
   text-align: center;
   z-index: 0;
+}
+
+#rankedSolo {
+  width: 100%;
+}
+
+#rankedFlex {
+  width: 100%;
+}
+
+
+.rankedRank {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: 15pt;
+  font-weight: 900;
+  gap: 5px;
+}
+
+
+.rankedWinrate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11pt;
+  color: #a19e9e;
+  gap: 5px;
+}
+
+.rankedTitle {
+  font-size: 11pt;
+  color: #a19e9e;
 }
 
 #winrateBlock {

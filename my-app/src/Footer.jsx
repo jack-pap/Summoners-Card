@@ -5,7 +5,6 @@ function Footer() {
   return (
     <>
       <footer className="footer" id="footer">
-        <div id="footerLine" />
         <div className="image-container">
           © 2023 JACK PAPAIOANNOU
           <a
