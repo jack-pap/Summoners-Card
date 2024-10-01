@@ -19,6 +19,9 @@ router.get('/getMoreMatches', matchRoutes.summonerExtendedMatches)
 // Route for GET request to retrieve a specific match entry
 router.get('/getMatch', matchRoutes.matchSpecific)
 
+// Route for GET request to retrieve a specific match entry for a specific summoner
+router.get('/getMatchSpecific', matchRoutes.matchSpecificSummoner)
+
 // Route for GET request to retrieve match info for a specific match
 router.get('/getMatchInfo', matchRoutes.matchSpecificInfo)
 

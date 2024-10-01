@@ -491,7 +491,7 @@ async function getProfileBackground(
   championsInfo
 ) {
   const [championId] = summonerChampionWinrateInfo.keys();
-  const championName = championsInfo.get(championId);
+  const championName = championsInfo.get(championId).replace(/\s/g, "");;
   const container = document.getElementById("profileBg");
 
   var championImage = await apiImageCall(

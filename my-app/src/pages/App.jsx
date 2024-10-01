@@ -645,7 +645,7 @@ async function matchListUpdated(region, puuid) {
   const data = await apiProxyCall(matchListApiURL);
   const DBMatch = await apiGETDatabaseCall(
     "match",
-    `getMatch?matchID=${data[0]}`
+    `getMatchSpecific?matchID=${data[0]}&puuid=${puuid}`
   );
   return DBMatch.length > 0;
 }

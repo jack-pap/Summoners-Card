@@ -153,6 +153,20 @@ exports.matchSpecific = async (req, res) => {
     })
 }
 
+exports.matchSpecificSummoner = async (req, res) => {
+  knex
+    .select('*')
+    .from('matchInfo')
+    .where('matchID', req.query.matchID)
+    .andWhere('puuid', req.query.puuid)
+    .then(matchData => {
+      res.json(matchData)
+    })
+    .catch(error => {
+      res.json({ message: `There was an error retrieving summoner's match: ${error}`})
+    })
+}
+
 exports.matchSpecificInfo = async (req, res) => {
   knex
     .select('matchInfo')
