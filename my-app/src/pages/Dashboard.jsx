@@ -2,7 +2,7 @@ import "../App.css";
 import React from "react";
 import { memo } from "react";
 import { createRoot } from "react-dom/client";
-import {
+import App, {
   getSummonerStats,
   getExtendedMatchList,
   matchInfoListDriver,
@@ -133,6 +133,11 @@ const Dashboard = memo(function Dashboard() {
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
+        navigate("/", {
+          state: {
+            errorName: summonerName,
+          },
+        });
       }
     };
 
@@ -300,6 +305,7 @@ const Dashboard = memo(function Dashboard() {
           </div>
           <div id="summonerBlock">
             <div className="profileGroup">
+              <div id="profileBg"> </div>
               <div id="profileIconGroupContainer"></div>
               <div id="name">
                 <div id="gameName"> {gameName} </div>
@@ -480,6 +486,33 @@ async function getGameQueues() {
   return queueMapping;
 }
 
+async function getProfileBackground(
+  summonerChampionWinrateInfo,
+  championsInfo
+) {
+  const [championId] = summonerChampionWinrateInfo.keys();
+  const championName = championsInfo.get(championId);
+  const container = document.getElementById("profileBg");
+
+  var championImage = await apiImageCall(
+    `http://localhost:3001/assets/Champion_Backgrounds/${championName}_splash_centered_0.jpg`
+  );
+
+  if (!championImage) {
+    const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+    const champImageURL = `/lol-game-data/assets/ASSETS/Characters/${championName}/Skins/Base/Images/${championName}_splash_centered_0.jpg`;
+    const extractedPath = champImageURL
+      .replace("/lol-game-data/assets/", "")
+      .toLowerCase();
+    const finalURL = baseImageURL + extractedPath;
+    championImage = await apiImageCall(finalURL);
+  }
+
+  const img = document.createElement("img");
+  img.src = championImage;
+  container.appendChild(img);
+}
+
 /**
  * Function that displays champion winrate stats
  * for a specific game queue based on champion mastery info
@@ -625,6 +658,7 @@ async function makeSummonerProfile(
     summonerChampionWinrateInfo,
     championsInfo
   );
+  await getProfileBackground(summonerChampionWinrateInfo, championsInfo);
   await makeProfileIcon(summonerInfo);
   await makeRankedEmblems(summonerRankedInfo);
 }
@@ -693,6 +727,7 @@ function makeMainRoleBadge(summonerMatchInfo) {
       sx={{
         borderRadius: "10px",
         borderColor: "#c89b3c",
+        backgroundColor: "#1b1f24",
         color: "#c89b3c",
       }}
     />
@@ -722,6 +757,7 @@ function makeMillionBadge(summonerChampionWinrateInfo, championsInfo) {
         sx={{
           borderRadius: "10px",
           borderColor: "#c89b3c",
+          backgroundColor: "#1b1f24",
           color: "#c89b3c",
         }}
       />
@@ -752,6 +788,7 @@ function makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo) {
       sx={{
         borderRadius: "10px",
         borderColor: "#c89b3c",
+        backgroundColor: "#1b1f24",
         color: "#c89b3c",
       }}
     />
@@ -787,6 +824,7 @@ function makeMostPlayedBadge(summonerChampionWinrateInfo, championsInfo) {
       sx={{
         borderRadius: "10px",
         borderColor: "#c89b3c",
+        backgroundColor: "#1b1f24",
         color: "#c89b3c",
       }}
     />
@@ -821,6 +859,7 @@ function makeStreakBadge(summonerMatchInfo) {
       sx={{
         borderRadius: "10px",
         borderColor: "#c89b3c",
+        backgroundColor: "#1b1f24",
         color: "#c89b3c",
       }}
     />

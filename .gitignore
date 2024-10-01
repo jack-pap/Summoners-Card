@@ -23,6 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 *.png
+*.jpg
 
 node_modules
 config.json

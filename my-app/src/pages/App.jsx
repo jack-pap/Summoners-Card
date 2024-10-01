@@ -3,7 +3,7 @@ import React from "react";
 import "../App.css";
 import Select from "react-select";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   apiProxyCall,
   apiImageCall,
@@ -120,6 +120,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false); // Spinner state for when data is loading
   const [open, setOpen] = useState(false);
 
+  const location = useLocation();
+  const errorName = location.state?.errorName ?? null;
   const navigate = useNavigate();
 
   const handleChange = (server) => {
@@ -138,6 +140,14 @@ function App() {
       .catch((error) => {
         console.error("Error loading version:", error);
       });
+    if (errorName) {
+      document.querySelector(
+        ".MuiAlert-message"
+      ).textContent = `Trouble finding summoner ${errorName}`;
+      setOpen(true);
+      window.history.replaceState({}, "");
+      return;
+    }
   }, []);
 
   return (
@@ -298,7 +308,7 @@ async function loadVersion() {
 /**
  * Method to retrieve JSON data of champions
  * to return mapping between their respective ids and names
- * 
+ *
  * @returns {Map<number, string>}
  */
 async function getAllChampions() {
