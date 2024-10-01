@@ -508,57 +508,46 @@ async function makeChampionWinrate(
   root.render(matchComponent);
 }
 
-function makeComponents(winrateMappingObject, championName, champId) {
-  const champComponent = document.createElement("div");
-  const gamesPlayed = winrateMappingObject[0];
-  const winrate = winrateMappingObject[2];
-
-  champComponent.setAttribute("class", "champEntry");
-  champComponent.innerHTML = `
-      <div id="champContainer">
-      <div class="champImage"></div>
-      <div class="champName">${championName}</div>
-  
-      </div>
-      <div class="champWinrate"></div>
-      <div class="gamesPlayed">${gamesPlayed} \nPlayed</div>
-      `;
-
-  const progressBarComponent = (
-    <ProgressBar
-      completed={winrate === 0 ? 1 : winrate}
-      width="140px"
-      height="17px"
-      bgColor="#C89B3C"
-      baseBgColor="#383838"
-      animateOnRender={true}
-      borderRadius="3px"
-      customLabel={winrate === 0 ? "0%" : undefined}
-      labelAlignment={winrate === 0 ? "left" : "right"}
-    />
-  );
-
-  const assetPromise = getChampionAssets(
-    champId,
-    ".champImage",
-    champComponent
-  );
-
-  return {
-    components: { champComponent, progressBarComponent },
-    promise: assetPromise,
-  };
-}
-
 async function makeMatchHistory(summonerMatchInfo, setIsTempLoading) {
   setIsTempLoading(true);
+  await makeMatchEntries(summonerMatchInfo, 15);
+  setIsTempLoading(false);
+}
+
+async function extendMatchHistory(
+  summonerMatchInfo,
+  region,
+  puuid,
+  setSummonerMatchInfo,
+  setIsTempLoading
+) {
+  setIsTempLoading(true);
+
+  const lastMatchDate = summonerMatchInfo.find(
+    (matchObject) =>
+      matchObject[0].gameID ===
+      document.getElementById("matchList").lastChild.id
+  )[0].gameDateSQLFormat;
+  const newMatchList = await getExtendedMatchList(region, puuid, lastMatchDate);
+  const newMatchInfoList = await matchInfoListDriver(
+    region,
+    newMatchList,
+    puuid
+  );
+
+  await makeMatchEntries(newMatchInfoList, 10);
+  setSummonerMatchInfo(summonerMatchInfo.concat(newMatchInfoList));
+  setIsTempLoading(false);
+}
+
+async function makeMatchEntries(summonerMatchInfo, minLimit) {
   const container = document.getElementById("matchList");
-  container.style.display = "none";
+  const components = [];
   const promises = [];
 
   for (
     let counter = 0;
-    counter < Math.min(20, summonerMatchInfo.length);
+    counter < Math.min(minLimit, summonerMatchInfo.length);
     counter++
   ) {
     const matchComponent = document.createElement("div");
@@ -576,56 +565,16 @@ async function makeMatchHistory(summonerMatchInfo, setIsTempLoading) {
         gameQueues={gameQueues}
       ></MatchEntry>
     );
+
     root.render(entryComponent);
+    matchComponent.style.display = "none";
+    components.push(matchComponent);
     promises.push(getAllAssets(summonerMatchInfo, counter, matchComponent));
   }
   await Promise.all(promises);
-  setIsTempLoading(false);
-  container.style.display = "flex";
-}
-
-async function extendMatchHistory(
-  summonerMatchInfo,
-  region,
-  puuid,
-  setSummonerMatchInfo,
-  setIsTempLoading
-) {
-  setIsTempLoading(true);
-
-  const container = document.getElementById("matchList");
-  const lastMatchDate = summonerMatchInfo.find(
-    (matchObject) => matchObject[0].gameID === container.lastChild.id
-  )[0].gameDateSQLFormat;
-  const newMatchList = await getExtendedMatchList(region, puuid, lastMatchDate);
-
-  const newMatchInfoList = await matchInfoListDriver(
-    region,
-    newMatchList,
-    puuid
-  );
-  for (let counter = 0; counter < newMatchInfoList.length; counter++) {
-    const matchComponent = document.createElement("div");
-    matchComponent.setAttribute("class", "matchHistoryContainer");
-    matchComponent.setAttribute("id", newMatchInfoList[counter][0].gameID);
-    matchComponent.innerHTML = ``;
-    container.append(matchComponent);
-
-    const root = createRoot(matchComponent);
-
-    const entryComponent = (
-      <MatchEntry
-        summonerMatchInfo={newMatchInfoList}
-        counter={counter}
-        gameQueues={gameQueues}
-      ></MatchEntry>
-    );
-    root.render(entryComponent);
-    await getAllAssets(newMatchInfoList, counter, matchComponent);
-  }
-
-  setIsTempLoading(false);
-  setSummonerMatchInfo(summonerMatchInfo.concat(newMatchInfoList));
+  components.forEach((component) => {
+    component.style.display = "flex";
+  });
 }
 
 async function getAllAssets(summonerMatchInfo, counter, component) {
@@ -1261,4 +1210,3 @@ function updateProgressBar(elementId, value, text) {
 }
 
 export default Dashboard;
-
