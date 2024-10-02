@@ -45,7 +45,7 @@ const serverOptions = [
   { value: "PH2", label: "PH", region: "asia" },
   { value: "SG2", label: "SG", region: "sea" },
   { value: "TH2", label: "TH", region: "asia" },
-  { value: "TW2", label: "TW", region: "asia" },
+  { value: "TW2", label: "TW", region: "sea" },
   { value: "VN2", label: "VN", region: "asia" },
 ];
 
@@ -97,9 +97,10 @@ const Dashboard = memo(function Dashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      gameQueues = await getGameQueues();
-      setIsLoading(true);
       try {
+        gameQueues = await getGameQueues();
+        setIsLoading(true);
+
         let newGameName, result;
         if (state == null || !(await matchListUpdated(region, state.puuid))) {
           newGameName = summonerName.split("-")[0].trim();
@@ -310,6 +311,33 @@ const Dashboard = memo(function Dashboard() {
               <div id="name">
                 <div id="gameName"> {gameName} </div>
                 <div id="server"> #{server} </div>
+                <div
+                  id="iconContainer"
+                  onClick={() => {
+                    copyToClipBoard(gameName, server);
+                  }}
+                  onMouseEnter={resetCopyButton}
+                >
+                  <span id="copyToClipboardIconText" class="tooltip-text">
+                    Copy to clipboard
+                  </span>
+                  <svg
+                    id="copyToClipboardIcon"
+                    clip-rule="evenodd"
+                    fill-rule="evenodd"
+                    stroke-linejoin="round"
+                    stroke-miterlimit="2"
+                    viewBox="0 -1 21 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m6 18h-3c-.48 0-1-.379-1-1v-14c0-.481.38-1 1-1h14c.621 0 1 .522 1 1v3h3c.621 0 1 .522 
+                    1 1v14c0 .621-.522 1-1 1h-14c-.48
+                    0-1-.379-1-1zm1.5-10.5v13h13v-13zm9-1.5v-2.5h-13v13h2.5v-9.5c0-.481.38-1 1-1z"
+                      fill-rule="nonzero"
+                    />
+                  </svg>
+                </div>
               </div>
               <div className="summonerChips"></div>
             </div>
@@ -498,6 +526,17 @@ async function getGameQueues() {
     queueMapping.set(gameQueueData[queue].id, gameQueueData[queue].name);
   }
   return queueMapping;
+}
+
+function copyToClipBoard(gameName, server) {
+  var toolTip = document.getElementById("copyToClipboardIconText");
+  navigator.clipboard.writeText(gameName + "#" + server);
+  toolTip.innerHTML = "Copied!";
+}
+
+function resetCopyButton() {
+  var toolTip = document.getElementById("copyToClipboardIconText");
+  toolTip.innerHTML = "Copy to clipboard";
 }
 
 async function getProfileBackground(
@@ -818,7 +857,7 @@ function makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo) {
  * @returns {React.ComponentType}
  */
 function makeMostPlayedBadge(summonerChampionWinrateInfo, championsInfo) {
-  var [bestChampName, bestChampGames] = ["null", 0];
+  var [bestChampName, bestChampGames] = [null, 0];
   for (const [id, value] of summonerChampionWinrateInfo.entries()) {
     const normalGames = value.winrateMapping.get(490)[0];
     const soloGames = value.winrateMapping.get(420)[0];
@@ -830,6 +869,7 @@ function makeMostPlayedBadge(summonerChampionWinrateInfo, championsInfo) {
     }
   }
 
+  if (bestChampName == null) return;
   return (
     <Chip
       key={`OTP ${bestChampName}`}

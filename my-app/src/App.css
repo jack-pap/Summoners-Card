@@ -119,6 +119,10 @@ footer {
   z-index: -111;
 }
 
+.dashboard footer {
+  z-index: 2;
+}
+
 #errorPopup {
   display: flex;
   justify-content: center;
@@ -159,6 +163,55 @@ footer {
   transform: scale(1.1);
 }
 
+#iconContainer { 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+#copyToClipboardIcon {
+  height: 17px;
+  width: 17px;
+  background-color: #8f8b8b;
+  border-radius: 30px;
+  border: 3px solid transparent;
+  transition: all 0.3s ease-in-out;
+  z-index: 2;
+}
+
+#copyToClipboardIcon:hover {
+  background-color: #b99038;
+  cursor: pointer;
+}
+
+#iconContainer .tooltip-text {
+  opacity: 0;
+  width: max-content;
+  background-color: #1a1a1a;
+  border: solid 1px #c89b3c;
+  color: #ada89b;
+  font-size: 9.5pt;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px 8px;
+  pointer-events: none;
+  z-index: 2;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all ease-in-out 0.3s;
+}
+
+#iconContainer:hover .tooltip-text {
+  opacity: 1;
+  z-index: 3;
+  top: -160%;
+}
+
+#copyToClipboardIcon path {
+  transform: scale(0.9);
+}
+
 #scrollUpIcon {
   position: fixed;
   bottom: 3%;
@@ -174,6 +227,7 @@ footer {
 #scrollUpIcon:hover {
   background-color: #b99038;
   cursor: pointer;
+  transform: scale(1.05);
 }
 
 .tooltip {

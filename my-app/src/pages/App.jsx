@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   apiProxyCall,
+  apiProxyNoCacheCall,
   apiImageCall,
   apiGETDatabaseCall,
   apiPOSTDatabaseCall,
@@ -16,7 +17,6 @@ import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
-import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import ErrorPage from "./ErrorPage";
 
@@ -37,7 +37,7 @@ const serverOptions = [
   { value: "PH2", label: "PH", region: "asia" },
   { value: "SG2", label: "SG", region: "sea" },
   { value: "TH2", label: "TH", region: "asia" },
-  { value: "TW2", label: "TW", region: "asia" },
+  { value: "TW2", label: "TW", region: "sea" },
   { value: "VN2", label: "VN", region: "asia" },
 ];
 
@@ -321,6 +321,36 @@ async function getAllChampions() {
   return championMapping;
 }
 
+async function getBackgrounds(championsInfo) {
+  const [championId] = summonerChampionWinrateInfo.keys();
+  const championName = championsInfo.get(championId).replace(/[\s\W]/g, "");
+  for (const [queueId, winrateData] of champInfo.winrateMapping.entries()) {
+  }
+  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+  const champImageURL = `/lol-game-data/assets/ASSETS/Characters/${championName}/Skins/Base/Images/${championName}_splash_centered_0.jpg`;
+  const extractedPath = champImageURL
+    .replace("/lol-game-data/assets/", "")
+    .toLowerCase();
+  const finalURL = baseImageURL + extractedPath;
+  championImage = await apiImageCall(finalURL);
+
+  const url = window.URL.createObjectURL(championImage);
+  const a = document.createElement("a");
+  a.style.display = "none";
+  a.href = url;
+  a.download = "image.jpg"; // Specify the filename
+  document.body.appendChild(a);
+  a.click();
+
+  // Clean up
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+
+  // const img = document.createElement("img");
+  // img.src = championImage;
+  // container.appendChild(img);
+}
+
 /**
  * Gathers input from field, executes Riot API call
  * based on input to gather user account data
@@ -407,11 +437,11 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
     const puuid = await getPUUID(tagLine, gameName); // puuid identifier for summoner
     const summonerInfo = await getSummonerInfo(server, puuid); // Array that includes summoner ID, summoner level and profile picture
     const masteryInfo = await getMasteryInfo(server, puuid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
-    const matchList = await getMatchList(region, puuid, 0, 40); // Array constisting of match IDs
+    const matchList = await getMatchList(region, puuid, 0, 30); // Array constisting of match IDs
     const matchInfoList = await matchInfoListDriver(region, matchList, puuid); // Returns array that contains match information for all matches in a list
     const rankedInfo = await getRankedInfo(server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
     const summonerWinrate = getSummonerWinrates(rankedInfo, matchInfoList); // Returns JSON object for all game mode winrates
-    await getChampionWinrate(masteryInfo, matchInfoList); // Calculates for every champion their respective game mode winrates
+    await getChampionWinrate(masteryInfo, matchInfoList, rankedInfo); // Calculates for every champion their respective game mode winrates
     const champions = await getAllChampions();
 
     apiPOSTDatabaseCall("summoner", "createSummoner", {
@@ -563,9 +593,13 @@ function getRemakesNumber(matchInfoList, rankedInfo) {
  *
  * @param {Map} masteryInfo
  * @param {string[]} matchInfoList
+ * @param {JSON} rankedInfo
  */
-function getChampionWinrate(masteryInfo, matchInfoList) {
-  for (const matchInfo of matchInfoList) {
+function getChampionWinrate(masteryInfo, matchInfoList, rankedInfo) {
+  const allRankedGames =
+    rankedInfo[0].rankedGames ?? 0 + rankedInfo[1].rankedGames ?? 0;
+
+  for (const matchInfo of matchInfoList.slice(0, allRankedGames)) {
     const queueId = matchInfo[0].gameQueueID; // What type of game was played
     for (const mode of Object.values(GAME_MODES)) {
       if (queueId == mode) {
@@ -645,7 +679,7 @@ export async function getExtendedMatchList(region, puuid, lastGameDate) {
 
 export async function matchListUpdated(region, puuid) {
   const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${0}&count=${1}&type=ranked&api_key=${API_KEY}`;
-  const data = await apiProxyCall(matchListApiURL);
+  const data = await apiProxyNoCacheCall(matchListApiURL);
   const DBMatch = await apiGETDatabaseCall(
     "match",
     `getMatchSpecific?matchID=${data[0]}&puuid=${puuid}`

@@ -5,12 +5,47 @@
 /**
  * API call to Riot for data by calling the proxy route
  * server and passing the apiURL endpoint
- * @memberof module:apiService  
+ * 
  * @param {string} apiURL
  * @returns {Promise}
  */
 export function apiProxyCall(apiURL) {
   const proxyURL = `http://localhost:3001/proxy?url=${encodeURIComponent(
+    apiURL
+  )}`;
+  return new Promise((resolve, reject) => {
+    fetch(proxyURL)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        resolve(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        reject(error);
+        console.log(data);
+      });
+  });
+}
+
+/**
+ * @module apiService
+ */
+
+/**
+ * API call to Riot for data by calling the proxy route
+ * server that doesnt cache the request and passing the 
+ * apiURL endpoint 
+ *  
+ * @param {string} apiURL
+ * @returns {Promise}
+ */
+export function apiProxyNoCacheCall(apiURL) {
+  const proxyURL = `http://localhost:3001/proxyNoCache?url=${encodeURIComponent(
     apiURL
   )}`;
   return new Promise((resolve, reject) => {
