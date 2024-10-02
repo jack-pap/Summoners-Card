@@ -6,6 +6,7 @@ import App, {
   getSummonerStats,
   getExtendedMatchList,
   matchInfoListDriver,
+  matchListUpdated,
 } from "./App.jsx";
 import {
   apiProxyCall,
@@ -100,8 +101,7 @@ const Dashboard = memo(function Dashboard() {
       setIsLoading(true);
       try {
         let newGameName, result;
-
-        if (state == null) {
+        if (state == null || !(await matchListUpdated(region, state.puuid))) {
           newGameName = summonerName.split("-")[0].trim();
           result = await getSummonerStats(
             summonerName.split("-")[1],
@@ -313,7 +313,10 @@ const Dashboard = memo(function Dashboard() {
               </div>
               <div className="summonerChips"></div>
             </div>
-            <div id="lineDivider"></div>
+            {(summonerRankedInfo[0] !== "Unranked" ||
+              summonerRankedInfo[1] !== "Unranked") && (
+              <div id="lineDivider"></div>
+            )}
             <div className="rankedInfo">
               {summonerRankedInfo[1] !== "Unranked" && (
                 <div id="rankedSolo">

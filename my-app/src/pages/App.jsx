@@ -525,7 +525,7 @@ async function getMasteryInfo(server, puuid) {
 
 //TODO GET NORMAL WINRATES
 function getSummonerWinrates(rankedInfo, matchInfoList) {
-  const remakes = getRemakesNumber(matchInfoList);
+  const remakes = getRemakesNumber(matchInfoList, rankedInfo);
   const winrates = {
     normalWinrate: 1, //TODO FIX THIS TO GET NORMAL WINRATE
     rankedFlexWinrate:
@@ -546,9 +546,12 @@ function getSummonerWinrates(rankedInfo, matchInfoList) {
   return winrates;
 }
 
-function getRemakesNumber(matchInfoList) {
+function getRemakesNumber(matchInfoList, rankedInfo) {
   var remakeNumber = 0;
-  for (const matchInfo of matchInfoList) {
+  for (const matchInfo of matchInfoList.slice(
+    0,
+    rankedInfo[0].rankedWins + rankedInfo[0].rankedLosses
+  )) {
     if (matchInfo[0].gameDuration < 300) remakeNumber++;
   }
   return remakeNumber;
@@ -640,7 +643,7 @@ export async function getExtendedMatchList(region, puuid, lastGameDate) {
   return DBExtendedMatchList.map((obj) => Object.values(obj)[0]);
 }
 
-async function matchListUpdated(region, puuid) {
+export async function matchListUpdated(region, puuid) {
   const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${0}&count=${1}&type=ranked&api_key=${API_KEY}`;
   const data = await apiProxyCall(matchListApiURL);
   const DBMatch = await apiGETDatabaseCall(
@@ -675,7 +678,7 @@ async function getMatchInfoList(matchIDs, region, puuid) {
   for (const matchID of matchIDs) {
     const DBMatchInfo = await apiGETDatabaseCall(
       "match",
-      `getMatchInfo?matchID=${matchID}`
+      `getMatchInfo?matchID=${matchID}&puuid=${puuid}`
     );
 
     if (DBMatchInfo.length > 0) {
@@ -786,7 +789,7 @@ async function matchInfoAPICall(region, matchID) {
  * @returns {Promise<Array<Object>,Object>}
  */
 async function findMoreMatches(region, puuid) {
-  const newMatchIDS = await getMatchList(region, puuid, 20);
+  const newMatchIDS = await getMatchList(region, puuid, 0, 20);
   const newMatchInfoList = await getMatchInfoList(newMatchIDS, region, puuid);
   return newMatchInfoList.length == 0 ? null : newMatchInfoList.matchInfoList;
 }

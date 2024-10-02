@@ -445,13 +445,17 @@ select:focus {
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
+  row-gap: 9px;
   width: 400px;
   justify-content: center;
 }
 
 #lineDivider {
   width: 85%;
-  border: 1px solid #785b28cc;
+  height: 0.5px;
+  background-color: #785b28;
+  border-radius: 10px;
+  border: 0.5px solid #785b28cc;
   z-index: 1;
 }
 
@@ -550,7 +554,7 @@ select:focus {
 
 #matchHistoryBlock {
   display: flex;
-  background-color: #1b1f248f;
+  background-color: #1b1f2475;
   border-radius: 5px;
   flex-direction: column;
   align-items: center;
@@ -603,7 +607,7 @@ select:focus {
 }
 
 .matchEntryWin {
-  background: linear-gradient(96deg, rgb(98 235 140 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%);
+  background: linear-gradient(96deg, rgb(98 235 140 / 50%) -10%, rgba(49, 41, 85, 0.6) 100%);
   /*linear-gradient(40deg, rgb(78 255 156 / 55%) 30%, rgb(72 131 75 / 50%) 100%)*/
 }
 
@@ -612,7 +616,7 @@ select:focus {
 }
 
 .matchEntryDefeat {
-  background: linear-gradient(96deg, rgb(231 67 67 / 55%) 0%, rgba(49, 41, 85, 0.5) 110%);
+  background: linear-gradient(96deg, rgb(231 67 67 / 50%) -10%, rgba(49, 41, 85, 0.6) 110%);
 }
 
 .matchEntryDefeat:hover {
@@ -620,7 +624,7 @@ select:focus {
 }
 
 .matchEntryRemake {
-  background: linear-gradient(96deg, rgba(105, 105, 105, 0.55) 0%, rgba(49, 41, 85, 0.5) 110%);
+  background: linear-gradient(96deg, rgba(105, 105, 105, 0.55) 0%, rgba(49, 41, 85, 0.6) 110%);
 }
 
 .matchEntryRemake:hover {
