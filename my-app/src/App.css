@@ -163,7 +163,7 @@ footer {
   transform: scale(1.1);
 }
 
-#iconContainer { 
+#iconContainer {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -360,11 +360,13 @@ select:focus {
 
 #summonerContainer {
   display: flex;
-  align-items: center;
+  align-items: end;
   text-align: center;
-  justify-content: space-evenly;
+  justify-content: center;
+  margin-top: 25px;
   min-width: 1600px;
   width: 100%;
+  gap: 40px
 }
 
 #summonerBlock {
@@ -382,9 +384,7 @@ select:focus {
   max-width: 600px;
   min-width: 570px;
   min-height: 490px;
-  margin: 0 auto;
-  margin-top: 25px;
-  border-radius: 3%;
+  border-radius: 10px;
   gap: 20px;
 }
 
@@ -559,6 +559,7 @@ select:focus {
 
 #winrateBlock {
   height: auto;
+  width: 400px;
   min-height: 200px;
   display: flex;
   flex-direction: column;
@@ -567,11 +568,9 @@ select:focus {
   justify-content: space-around;
   background-color: #1b1f24;
   border: solid 1px #383838;
-  border-radius: 3%;
-  margin-top: 100px;
+  border-radius: 10px;
   gap: 20px;
-  width: 350px;
-  margin-left: 50px;
+
 }
 
 .winrateContainer {
@@ -609,28 +608,27 @@ select:focus {
 
 #matchHistoryBlock {
   display: flex;
-  background-color: #1b1f2475;
-  border-radius: 5px;
+  background-color: #1b1f24b0;
+  border: 1px solid #272727;
+  border-radius: 10px;
   flex-direction: column;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 40px;
   height: auto;
   min-width: 1100px;
   padding: 15px;
-  padding-top: 10px;
   gap: 15px;
 }
 
 #matchHistoryHeader {
   display: flex;
-  color: #fffefc;
+  color: #A09B8C;
   font-size: 21px;
   font-weight: 900;
-  background-image: linear-gradient(130deg, rgba(133, 131, 131, 0.189) -140.79%, rgba(2, 2, 2, 0.055));
-  border-bottom: 1px solid #272727;
-  border-top: 1px solid #383838;
-  border-radius: 12px;
-  box-shadow: #01080fcc 0px 8px 24px;
+  background-color: #1b1f24;
+  border: 1px solid #785b28;
+  border-radius: 10px;
+  box-shadow: #01080fd7 0px 8px 24px;
   width: 100%;
   height: 38px;
   text-align: center;
@@ -941,8 +939,7 @@ img {
   text-align: center;
   background-color: #1b1f24;
   border: solid 1px #383838;
-  border-radius: 3%;
-  margin-top: 100px;
+  border-radius: 10px;
 }
 
 #championBlock img {

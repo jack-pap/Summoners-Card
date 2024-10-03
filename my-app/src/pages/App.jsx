@@ -321,35 +321,33 @@ async function getAllChampions() {
   return championMapping;
 }
 
-async function getBackgrounds(championsInfo) {
-  const [championId] = summonerChampionWinrateInfo.keys();
-  const championName = championsInfo.get(championId).replace(/[\s\W]/g, "");
-  for (const [queueId, winrateData] of champInfo.winrateMapping.entries()) {
-  }
-  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
-  const champImageURL = `/lol-game-data/assets/ASSETS/Characters/${championName}/Skins/Base/Images/${championName}_splash_centered_0.jpg`;
-  const extractedPath = champImageURL
-    .replace("/lol-game-data/assets/", "")
-    .toLowerCase();
-  const finalURL = baseImageURL + extractedPath;
-  championImage = await apiImageCall(finalURL);
+// async function getBackgrounds(championsInfo) {
+//   for (const [id, name] of championsInfo.entries()) {
+//     if (name == "None" || name == "Hwei" || name == "Aurora" || name == "Wukong" || name == "Renata Glasc" || name == "Lee Sin" || name == "Nunu & Willump") {
+//       continue;
+//     } 
+//     const championName = name.replace(/[\s\W]/g, "");
 
-  const url = window.URL.createObjectURL(championImage);
-  const a = document.createElement("a");
-  a.style.display = "none";
-  a.href = url;
-  a.download = "image.jpg"; // Specify the filename
-  document.body.appendChild(a);
-  a.click();
+//     const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+//     const champImageURL = `/lol-game-data/assets/ASSETS/Characters/${championName}/Skins/Base/Images/${championName}_splash_centered_0.jpg`;
+//     const extractedPath = champImageURL
+//       .replace("/lol-game-data/assets/", "")
+//       .toLowerCase();
+//     const finalURL = baseImageURL + extractedPath;
+//     const championImage = await apiImageCall(finalURL);
 
-  // Clean up
-  window.URL.revokeObjectURL(url);
-  document.body.removeChild(a);
+//     const a = document.createElement("a");
+//     a.style.display = "none";
+//     a.href = championImage;
+//     a.download = `${championName}_splash_centered_0.jpg`; // Specify the filename
+//     document.body.appendChild(a);
+//     a.click();
 
-  // const img = document.createElement("img");
-  // img.src = championImage;
-  // container.appendChild(img);
-}
+//     // Clean up
+//     window.URL.revokeObjectURL(championImage);
+//     document.body.removeChild(a);
+//   }
+// }
 
 /**
  * Gathers input from field, executes Riot API call

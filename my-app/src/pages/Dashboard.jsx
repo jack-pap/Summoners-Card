@@ -446,7 +446,7 @@ const Dashboard = memo(function Dashboard() {
         </div>
 
         <div id="matchHistoryBlock">
-          <div id="matchHistoryHeader"> Match History </div>
+          <div id="matchHistoryHeader"> MATCH HISTORY </div>
           <div id="matchList" />
           <ButtonGroup
             variant="outlined"
@@ -486,7 +486,6 @@ const Dashboard = memo(function Dashboard() {
             </LoadingButton>
           </ButtonGroup>
         </div>
-        <div id="friendBlock"></div>
       </div>
       {isVisible ? (
         <div
@@ -781,7 +780,7 @@ function makeMainRoleBadge(summonerMatchInfo) {
       label={`Main ${mostPlayedRole}`}
       variant="outlined"
       sx={{
-        borderRadius: "10px",
+        borderRadius: "8px",
         borderColor: "#c89b3c",
         backgroundColor: "#1b1f24",
         color: "#c89b3c",
@@ -811,7 +810,7 @@ function makeMillionBadge(summonerChampionWinrateInfo, championsInfo) {
         label={`${championsInfo.get(id)} Million`}
         variant="outlined"
         sx={{
-          borderRadius: "10px",
+          borderRadius: "8px",
           borderColor: "#c89b3c",
           backgroundColor: "#1b1f24",
           color: "#c89b3c",
@@ -842,7 +841,7 @@ function makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo) {
       label={`Skilled ${bestChampName}`}
       variant="outlined"
       sx={{
-        borderRadius: "10px",
+        borderRadius: "8px",
         borderColor: "#c89b3c",
         backgroundColor: "#1b1f24",
         color: "#c89b3c",
@@ -880,7 +879,7 @@ function makeMostPlayedBadge(summonerChampionWinrateInfo, championsInfo) {
       label={`OTP ${bestChampName}`}
       variant="outlined"
       sx={{
-        borderRadius: "10px",
+        borderRadius: "8px",
         borderColor: "#c89b3c",
         backgroundColor: "#1b1f24",
         color: "#c89b3c",
@@ -915,7 +914,7 @@ function makeStreakBadge(summonerMatchInfo) {
       label={streakType ? `Winning streak` : `Losing streak`}
       variant="outlined"
       sx={{
-        borderRadius: "10px",
+        borderRadius: "8px",
         borderColor: "#c89b3c",
         backgroundColor: "#1b1f24",
         color: "#c89b3c",
