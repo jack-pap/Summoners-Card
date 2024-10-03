@@ -17,7 +17,7 @@ const ChampionEntryList = memo(
             winrate: champData.winrateMapping.get(queueId)[0],
           }))
           .sort((a, b) => b.winrate - a.winrate)
-          .slice(0, 5);
+          .slice(0, 7);
 
         const processedChampions = await Promise.all(
           champions.map(async ({ champId }) => {

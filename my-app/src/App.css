@@ -364,9 +364,9 @@ select:focus {
   text-align: center;
   justify-content: center;
   margin-top: 25px;
-  min-width: 1600px;
-  width: 100%;
-  gap: 40px
+  min-width: 1300px;
+  width: auto;
+  gap: 20px
 }
 
 #summonerBlock {
@@ -381,9 +381,8 @@ select:focus {
   background-color: #1b1f24;
   border: 1px solid #272727;
   border-top: 1px solid #383838;
-  max-width: 600px;
-  min-width: 570px;
-  min-height: 490px;
+  min-width: 600px;
+  min-height: 530px;
   border-radius: 10px;
   gap: 20px;
 }
@@ -537,7 +536,7 @@ select:focus {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  font-size: 15pt;
+  font-size: 15.5pt;
   font-weight: 900;
   gap: 5px;
 }
@@ -555,6 +554,16 @@ select:focus {
 .rankedTitle {
   font-size: 11pt;
   color: #a19e9e;
+}
+
+#winrateBlockContainer {
+  height: 530px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
 }
 
 #winrateBlock {
@@ -601,9 +610,22 @@ select:focus {
   font-weight: 900;
 }
 
-
 .CircularProgressbar {
   height: 110px;
+}
+
+.winrateGraph {
+  height: 300px;
+  width: 400px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  background-color: #1b1f24;
+  border: solid 1px #383838;
+  border-radius: 10px;
 }
 
 #matchHistoryBlock {
@@ -613,7 +635,7 @@ select:focus {
   border-radius: 10px;
   flex-direction: column;
   align-items: center;
-  margin-top: 40px;
+  margin-top: 20px;
   height: auto;
   min-width: 1100px;
   padding: 15px;
@@ -932,7 +954,7 @@ img {
 
 #championBlock {
   width: 400px;
-  height: 398px;
+  height: 527px;
   display: flex;
   flex-direction: column;
   align-items: center;

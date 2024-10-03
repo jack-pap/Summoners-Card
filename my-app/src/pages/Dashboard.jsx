@@ -25,6 +25,7 @@ import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Chip from "@mui/material/Chip";
+import { LineChart } from "@mui/x-charts";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import CircularProgress from "@mui/material/CircularProgress";
 import "react-circular-progressbar/dist/styles.css";
@@ -203,26 +204,27 @@ const Dashboard = memo(function Dashboard() {
     <>
       <div id="homeBody">
         <div id="summonerContainer">
-          <div id="winrateBlock">
-            <ButtonGroup
-              variant="outlined"
-              sx={{
-                ".MuiButtonGroup-grouped": {
-                  "&:hover": {
-                    color: "#C89B3C",
-                    backgroundColor: "#262c33",
+          <div id="winrateBlockContainer">
+            <div id="winrateBlock">
+              <ButtonGroup
+                variant="outlined"
+                sx={{
+                  ".MuiButtonGroup-grouped": {
+                    "&:hover": {
+                      color: "#C89B3C",
+                      backgroundColor: "#262c33",
+                      borderColor: "#C89B3C",
+                    },
+                    color: "#A09B8C",
+                    backgroundColor: "262c33",
                     borderColor: "#C89B3C",
                   },
-                  color: "#A09B8C",
-                  backgroundColor: "262c33",
-                  borderColor: "#C89B3C",
-                },
-              }}
-              size="Large"
-              aria-label="Basic button group"
-              fullWidth
-            >
-              {/* <Button
+                }}
+                size="Large"
+                aria-label="Basic button group"
+                fullWidth
+              >
+                {/* <Button
                   onClick={() => {
                     loadWinrate(
                       summonerRankedInfo[1],
@@ -232,79 +234,114 @@ const Dashboard = memo(function Dashboard() {
                 >
                   Normal
                 </Button> */}
-              <Button
-                onClick={() => {
-                  loadWinrate(
-                    summonerRankedInfo[1],
-                    summonerWinrateInfo.rankedSoloWinrate
-                  );
-                }}
-              >
-                Solo/Duo
-              </Button>
-              <Button
-                onClick={() => {
-                  loadWinrate(
-                    summonerRankedInfo[0],
-                    summonerWinrateInfo.rankedFlexWinrate
-                  );
-                }}
-              >
-                Flex
-              </Button>
-            </ButtonGroup>
-            <div className="winrateContainer">
-              <div id="games">
-                <CircularProgressbar
-                  strokeWidth={5}
-                  value={
-                    summonerRankedInfo[1].rankedGames != undefined
-                      ? summonerRankedInfo[1].rankedGames
-                      : 0
-                  }
-                  maxValue={1}
-                  text={
-                    summonerRankedInfo[1].rankedGames != undefined
-                      ? summonerRankedInfo[1].rankedGames
-                      : "0"
-                  }
-                  styles={buildStyles({
-                    strokeLinecap: "butt",
-                    strokeDashoffset:
-                      summonerRankedInfo[1].rankedGames > 0 ? 0 : 298.451,
-                    textSize: "18px",
-                    pathTransitionDuration: 0.4,
-                    pathColor: `rgb(197 134 0)`,
-                    textColor: "#E3E4E4",
-                    trailColor: "#65645E",
-                  })}
-                />
-                Games Played
+                <Button
+                  onClick={() => {
+                    loadWinrate(
+                      summonerRankedInfo[1],
+                      summonerWinrateInfo.rankedSoloWinrate
+                    );
+                  }}
+                >
+                  Solo/Duo
+                </Button>
+                <Button
+                  onClick={() => {
+                    loadWinrate(
+                      summonerRankedInfo[0],
+                      summonerWinrateInfo.rankedFlexWinrate
+                    );
+                  }}
+                >
+                  Flex
+                </Button>
+              </ButtonGroup>
+              <div className="winrateContainer">
+                <div id="games">
+                  <CircularProgressbar
+                    strokeWidth={5}
+                    value={
+                      summonerRankedInfo[1].rankedGames != undefined
+                        ? summonerRankedInfo[1].rankedGames
+                        : 0
+                    }
+                    maxValue={1}
+                    text={
+                      summonerRankedInfo[1].rankedGames != undefined
+                        ? summonerRankedInfo[1].rankedGames
+                        : "0"
+                    }
+                    styles={buildStyles({
+                      strokeLinecap: "butt",
+                      strokeDashoffset:
+                        summonerRankedInfo[1].rankedGames > 0 ? 0 : 298.451,
+                      textSize: "18px",
+                      pathTransitionDuration: 0.4,
+                      pathColor: `rgb(197 134 0)`,
+                      textColor: "#E3E4E4",
+                      trailColor: "#65645E",
+                    })}
+                  />
+                  Games Played
+                </div>
+                <div id="winrate">
+                  <CircularProgressbar
+                    strokeWidth={5}
+                    value={
+                      !isNaN(summonerWinrateInfo.rankedSoloWinrate)
+                        ? summonerWinrateInfo.rankedSoloWinrate
+                        : 0
+                    }
+                    text={
+                      !isNaN(summonerWinrateInfo.rankedSoloWinrate)
+                        ? `${summonerWinrateInfo.rankedSoloWinrate}%`
+                        : `0%`
+                    }
+                    styles={buildStyles({
+                      strokeLinecap: "butt",
+                      textSize: "18px",
+                      pathTransitionDuration: 0.4,
+                      pathColor: `rgb(197 134 0)`,
+                      textColor: "#E3E4E4",
+                      trailColor: "#65645E",
+                    })}
+                  />
+                  Winrate
+                </div>
               </div>
-              <div id="winrate">
-                <CircularProgressbar
-                  strokeWidth={5}
-                  value={
-                    !isNaN(summonerWinrateInfo.rankedSoloWinrate)
-                      ? summonerWinrateInfo.rankedSoloWinrate
-                      : 0
-                  }
-                  text={
-                    !isNaN(summonerWinrateInfo.rankedSoloWinrate)
-                      ? `${summonerWinrateInfo.rankedSoloWinrate}%`
-                      : `0%`
-                  }
-                  styles={buildStyles({
-                    strokeLinecap: "butt",
-                    textSize: "18px",
-                    pathTransitionDuration: 0.4,
-                    pathColor: `rgb(197 134 0)`,
-                    textColor: "#E3E4E4",
-                    trailColor: "#65645E",
-                  })}
-                />
-                Winrate
-              </div>
+            </div>
+            <div className="winrateGraph">
+              <LineChart
+                xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+                series={[
+                  {
+                    data: [true, false, 2, 8.5, 1.5, 5],
+                    color: "rgb(197, 134, 0)",
+                  },
+                ]}
+                width={450}
+                height={300}
+                grid={{ vertical: true, horizontal: true }}
+                sx={{
+                  ".MuiMarkElement-root": { // Marks in the grid
+                    fill: "rgb(27, 31, 36) !important",
+                  },
+                  ".MuiChartsAxisHighlight-root": { // Inside of the mark color
+                    stroke: "rgb(101, 100, 94) !important",
+                  },
+                  ".MuiChartsAxis-line": { // Axis lines color
+                    stroke: "rgb(101, 100, 94) !important",
+                  },
+                  ".MuiChartsGrid-line": { // Grid lines color
+                    stroke: "rgb(48, 48, 48) !important",
+                  },
+                  ".MuiChartsAxis-tick": { // Little line next to the marks
+                    stroke: "rgb(101, 100, 94) !important",
+                  },
+                  ".MuiChartsAxis-tickLabel": { // Text on axis labels
+                    fill: "rgb(101, 100, 94) !important",
+                  },
+                }}
+              />
             </div>
           </div>
           <div id="summonerBlock">
