@@ -69,7 +69,7 @@ a {
 header {
   color: #c89b3c;
   background: radial-gradient(circle farthest-side, #020f20, #01070e);
-  border-bottom: 2px solid #9b792f;
+  border-bottom: 1px solid #9b792f;
   font-family: Beaufort;
   font-size: 1em;
   position: fixed;
@@ -88,20 +88,20 @@ header {
 
 .headerChildren {
   height: 100%;
-  width: 10%;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: color 0.28s, background-color 0.45s ease-out;
+  border-bottom: 1px solid #9b792f;
 }
 
 .headerChildren:hover {
-  border-bottom: 2px solid #f7ba39;
+  border-bottom: 1px solid #f7ba39;
   background: linear-gradient(to top, #2e2819, #1b1917);
   background-color: #1b1917;
-  color: #f7ba39;
+  color: #fdbf39;
 }
 
 footer {
@@ -175,9 +175,9 @@ footer {
   width: 17px;
   background-color: #8f8b8b;
   border-radius: 30px;
-  border: 3px solid transparent;
+  border: 2.5px solid transparent;
   transition: all 0.3s ease-in-out;
-  z-index: 2;
+  z-index: 1;
 }
 
 #copyToClipboardIcon:hover {
@@ -197,15 +197,16 @@ footer {
   padding: 5px 8px;
   pointer-events: none;
   z-index: 2;
+  top: -100%;
   left: 50%;
   transform: translateX(-50%);
-  transition: all ease-in-out 0.3s;
+  transition: all ease-in-out 0.25s;
 }
 
 #iconContainer:hover .tooltip-text {
   opacity: 1;
   z-index: 3;
-  top: -160%;
+  top: -175%;
 }
 
 #copyToClipboardIcon path {
@@ -252,7 +253,7 @@ footer {
   z-index: 3;
   top: -8px;
   left: 100%;
-  transition: all ease-in-out 0.3s;
+  transition: all ease-in-out 0.25s;
 }
 
 .tooltip:hover .tooltip-text {
@@ -491,7 +492,7 @@ select:focus {
   z-index: 100;
 }
 
-#server {
+#tagLine {
   color: #a5a0a0;
 }
 

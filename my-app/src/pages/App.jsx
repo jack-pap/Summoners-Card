@@ -394,6 +394,7 @@ async function getInput(
           serverLabel,
           puuid: puuid,
           gameName: gameName,
+          tagLine: tagLine,
           summonerInfo: summonerInfo,
           summonerRankedInfo: rankedInfo,
           summonerMatchInfo: matchInfoList,
@@ -451,6 +452,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
     });
     return {
       puuid,
+      tagLine,
       summonerInfo,
       rankedInfo,
       matchInfoList,

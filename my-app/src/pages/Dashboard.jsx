@@ -82,6 +82,7 @@ const Dashboard = memo(function Dashboard() {
   const [isVisible, setIsVisible] = useState(false);
 
   const [gameName, setGameName] = useState("");
+  const [tagLine, setTagLine] = useState("");
   const [puuid, setPuuid] = useState(null);
   const [summonerInfo, setSummonerInfo] = useState(null);
   const [summonerRankedInfo, setSummonerRankedInfo] = useState(null);
@@ -114,6 +115,7 @@ const Dashboard = memo(function Dashboard() {
           newGameName = state.gameName;
           result = {
             puuid: state.puuid,
+            tagLine: state.tagLine,
             summonerInfo: state.summonerInfo,
             rankedInfo: state.summonerRankedInfo,
             matchInfoList: state.summonerMatchInfo,
@@ -124,6 +126,7 @@ const Dashboard = memo(function Dashboard() {
         }
 
         setGameName(newGameName);
+        setTagLine(result.tagLine);
         setPuuid(result.puuid);
         setSummonerInfo(result.summonerInfo);
         setSummonerRankedInfo(result.rankedInfo);
@@ -310,23 +313,23 @@ const Dashboard = memo(function Dashboard() {
               <div id="profileIconGroupContainer"></div>
               <div id="name">
                 <div id="gameName"> {gameName} </div>
-                <div id="server"> #{server} </div>
+                <div id="tagLine"> #{tagLine} </div>
                 <div
                   id="iconContainer"
                   onClick={() => {
-                    copyToClipBoard(gameName, server);
+                    copyToClipBoard(gameName, tagLine);
                   }}
                   onMouseEnter={resetCopyButton}
                 >
-                  <span id="copyToClipboardIconText" class="tooltip-text">
+                  <span id="copyToClipboardIconText" className="tooltip-text">
                     Copy to clipboard
                   </span>
                   <svg
                     id="copyToClipboardIcon"
-                    clip-rule="evenodd"
-                    fill-rule="evenodd"
-                    stroke-linejoin="round"
-                    stroke-miterlimit="2"
+                    clipRule="evenodd"
+                    fillRule="evenodd"
+                    strokeLinejoin="round"
+                    strokeMiterlimit="2"
                     viewBox="0 -1 21 24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
@@ -334,7 +337,7 @@ const Dashboard = memo(function Dashboard() {
                       d="m6 18h-3c-.48 0-1-.379-1-1v-14c0-.481.38-1 1-1h14c.621 0 1 .522 1 1v3h3c.621 0 1 .522 
                     1 1v14c0 .621-.522 1-1 1h-14c-.48
                     0-1-.379-1-1zm1.5-10.5v13h13v-13zm9-1.5v-2.5h-13v13h2.5v-9.5c0-.481.38-1 1-1z"
-                      fill-rule="nonzero"
+                      fillRule="nonzero"
                     />
                   </svg>
                 </div>
@@ -528,9 +531,9 @@ async function getGameQueues() {
   return queueMapping;
 }
 
-function copyToClipBoard(gameName, server) {
+function copyToClipBoard(gameName, tagLine) {
   var toolTip = document.getElementById("copyToClipboardIconText");
-  navigator.clipboard.writeText(gameName + "#" + server);
+  navigator.clipboard.writeText(gameName + "#" + tagLine);
   toolTip.innerHTML = "Copied!";
 }
 
@@ -852,6 +855,7 @@ function makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo) {
  * Scans games played on all champs in all modes
  * to determine the top champion with the most games played
  * and then displays it on a badge
+ *
  * @param {Object<number, Object[]>} summonerChampionWinrateInfo
  * @param {Object<number, string>} championsInfo
  * @returns {React.ComponentType}
