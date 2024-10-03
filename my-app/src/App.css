@@ -954,13 +954,14 @@ img {
 
 #championBlock {
   width: 400px;
-  height: 527px;
+  min-height: 527px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   background-color: #1b1f24;
   border: solid 1px #383838;
+  border-bottom: 0px transparent;
   border-radius: 10px;
 }
 

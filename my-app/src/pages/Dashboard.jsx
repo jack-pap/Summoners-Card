@@ -311,35 +311,74 @@ const Dashboard = memo(function Dashboard() {
             </div>
             <div className="winrateGraph">
               <LineChart
-                xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+                xAxis={[
+                  {
+                    data: getGraphDates(summonerMatchInfo).map(
+                      (item) => item.date
+                    ),
+                    scaleType: "band",
+                  },
+                ]}
                 series={[
                   {
-                    data: [true, false, 2, 8.5, 1.5, 5],
+                    data: getGraphDates(summonerMatchInfo).map(
+                      (item) => item.value
+                    ),
                     color: "rgb(197, 134, 0)",
+                    label: "Win/Loss Counter",
                   },
                 ]}
                 width={450}
                 height={300}
                 grid={{ vertical: true, horizontal: true }}
+                slotProps={{
+                  popper: {
+                    sx: {
+                      "& .css-12667wq-MuiChartsTooltip-container": {
+                        backgroundColor: "#1b1f24 !important",
+                        border: "1px solid #C89B3C !important"
+                      },
+                      "& .css-s3y5yc-MuiChartsTooltip-cell": {
+                        color: "#C89B3C !important",
+                      },
+                      "& .css-gxsr2b-MuiChartsTooltip-mark": {
+                        border: "0px !important",
+                      },
+                      "& .css-2hvfka-MuiChartsTooltip-table tbody tr td": {
+                        borderTop: "1px solid #383838 !important",
+                      },
+                    },
+                  },
+                }}
                 sx={{
-                  ".MuiMarkElement-root": { // Marks in the grid
+                  "& .MuiMarkElement-root": {
+                    // Marks in the grid
                     fill: "rgb(27, 31, 36) !important",
                   },
-                  ".MuiChartsAxisHighlight-root": { // Inside of the mark color
+                  "& .MuiChartsAxisHighlight-root": {
+                    // Inside of the mark color
                     stroke: "rgb(101, 100, 94) !important",
                   },
-                  ".MuiChartsAxis-line": { // Axis lines color
+                  "& .MuiChartsAxis-line": {
+                    // Axis lines color
                     stroke: "rgb(101, 100, 94) !important",
                   },
-                  ".MuiChartsGrid-line": { // Grid lines color
+                  "& .MuiChartsGrid-line": {
+                    // Grid lines color
                     stroke: "rgb(48, 48, 48) !important",
                   },
-                  ".MuiChartsAxis-tick": { // Little line next to the marks
+                  "& .MuiChartsAxis-tick": {
+                    // Little line next to the marks
                     stroke: "rgb(101, 100, 94) !important",
                   },
-                  ".MuiChartsAxis-tickLabel": { // Text on axis labels
+                  "& .MuiChartsAxis-tickLabel": {
+                    // Text on axis labels
                     fill: "rgb(101, 100, 94) !important",
                   },
+                  "& .MuiChartsLegend-root text": {
+                    // Text on axis labels
+                    fill: "rgb(101, 100, 94) !important",
+                  }
                 }}
               />
             </div>
@@ -1340,6 +1379,27 @@ function updateProgressBar(elementId, value, text) {
   if (elementId == "games")
     progressbarElement.style.strokeDashoffset = value > 0 ? 0 : 298.451;
   else progressbarElement.style.strokeDashoffset = 298.451 * (1 - value / 100);
+}
+
+function getGraphDates(summonerMatchInfo) {
+  const dates = [];
+  var winCounter = 0;
+  var currentDate = "";
+  for (const matchDate of summonerMatchInfo.reverse()) {
+    const formattedDate = matchDate[0].gameDateSQLFormat.split(" ")[0];
+    if (matchDate[1].win) winCounter++;
+    else winCounter--;
+    if (formattedDate != currentDate) {
+      const dataPoint = {
+        date: formattedDate,
+        value: winCounter,
+      };
+      dates.push(dataPoint);
+      currentDate = formattedDate;
+    }
+  }
+
+  return dates;
 }
 
 export default Dashboard;
