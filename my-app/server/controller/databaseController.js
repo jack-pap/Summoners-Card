@@ -1,16 +1,30 @@
 require('dotenv').config();
 const SQL_PASS = process.env.SQL_PASSWORD;
+const AWS_ENDPOINT= process.env.AWS_ENDPOINT;
 
+  // AWS DB INSTANCE
 const knex = require('knex')({
     client: 'mysql',
     connection: {
-      host: '127.0.0.1',
+      host: AWS_ENDPOINT,
       port: 3306,
-      user: 'root',
+      user: 'admin',
       password: SQL_PASS,
-      database: 'summoner',
+      database: 'summonerscard',
     },
   });
+
+  // LOCAL DB INSTANCE
+  // const knex = require('knex')({
+  //   client: 'mysql',
+  //   connection: {
+  //     host: '127.0.0.1',
+  //     port: 3306,
+  //     user: 'root',
+  //     password: SQL_PASS,
+  //     database: 'summoner',
+  //   },
+  // });
 
   async function createTables() {
     await knex.schema.createTable('summonerInfo', (table) => {
