@@ -14,9 +14,16 @@ const ChampionEntryList = memo(
         const champions = Array.from(summonerChampionWinrateInfo.entries())
           .map(([champId, champData]) => ({
             champId,
-            winrate: champData.winrateMapping.get(queueId)[0],
+            gamesPlayed: champData.winrateMapping.get(queueId)[0],
+            winrate: champData.winrateMapping.get(queueId)[1],
           }))
-          .sort((a, b) => b.winrate - a.winrate)
+          .sort((a, b) => {
+            if (b.gamesPlayed !== a.gamesPlayed) {
+              return b.gamesPlayed - a.gamesPlayed; // Sort by games played in descending order
+            } else {
+              return b.winrate - a.winrate; // If games played are equal sort by winrate 
+            }
+          })
           .slice(0, 7);
 
         const processedChampions = await Promise.all(
@@ -68,7 +75,7 @@ const ChampionEntry = ({
     <div className="champWinrate">
       <ProgressBar
         completed={winrate === 0 ? 1 : winrate}
-        width="140px"
+        width="125px"
         height="17px"
         bgColor="#C89B3C"
         baseBgColor="#383838"

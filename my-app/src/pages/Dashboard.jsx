@@ -329,7 +329,7 @@ const Dashboard = memo(function Dashboard() {
                   },
                 ]}
                 width={450}
-                height={300}
+                height={320}
                 grid={{ vertical: true, horizontal: true }}
                 slotProps={{
                   popper: {

@@ -649,7 +649,7 @@ export async function getMatchList(
     return DBMatchList.map((obj) => Object.values(obj)[0]);
   } else {
     const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${matchAmountStart}&count=${matchAmount}&type=ranked&api_key=${API_KEY}`;
-    const data = await apiProxyCall(matchListApiURL);
+    const data = await apiProxyNoCacheCall(matchListApiURL);
     var matchList = [];
     for (const match of data) {
       matchList.push(match);

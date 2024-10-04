@@ -68,7 +68,7 @@ a {
 
 header {
   color: #c89b3c;
-  background: radial-gradient(circle farthest-side, #020f20, #01070e);
+  background: radial-gradient(circle farthest-side, #020f20b0, #01070eb0);
   border-bottom: 1px solid #9b792f;
   font-family: Beaufort;
   font-size: 1em;
@@ -84,7 +84,9 @@ header {
   align-items: center;
   justify-content: center;
   z-index: 5;
+  backdrop-filter: blur(25px);
 }
+
 
 .headerChildren {
   height: 100%;
@@ -95,13 +97,13 @@ header {
   cursor: pointer;
   transition: color 0.28s, background-color 0.45s ease-out;
   border-bottom: 1px solid #9b792f;
+  z-index: 5;
 }
 
 .headerChildren:hover {
   border-bottom: 1px solid #f7ba39;
-  background: linear-gradient(to top, #2e2819, #1b1917);
-  background-color: #1b1917;
-  color: #fdbf39;
+  background: linear-gradient(to top, #2e2819, #1b191700);
+  background-color: #1b191700;
 }
 
 footer {
@@ -381,7 +383,7 @@ select:focus {
   background-color: #1b1f24;
   border: 1px solid #272727;
   border-top: 1px solid #383838;
-  min-width: 600px;
+  min-width: 588px;
   min-height: 530px;
   border-radius: 10px;
   gap: 20px;
@@ -568,7 +570,7 @@ select:focus {
 
 #winrateBlock {
   height: auto;
-  width: 400px;
+  width: 378px;
   min-height: 200px;
   display: flex;
   flex-direction: column;
@@ -616,7 +618,7 @@ select:focus {
 
 .winrateGraph {
   height: 300px;
-  width: 400px;
+  width: 378px;
   min-height: 200px;
   display: flex;
   flex-direction: column;
@@ -637,7 +639,7 @@ select:focus {
   align-items: center;
   margin-top: 20px;
   height: auto;
-  min-width: 1100px;
+  width: 1358px;
   padding: 15px;
   gap: 15px;
 }
@@ -953,7 +955,7 @@ img {
 }
 
 #championBlock {
-  width: 400px;
+  width: 378px;
   min-height: 527px;
   display: flex;
   flex-direction: column;
@@ -1015,6 +1017,6 @@ img {
 }
 
 .gamesPlayed {
-  font-size: 15px;
-  min-width: 83px;
+  font-size: 11pt;
+  width: 83px;
 }
