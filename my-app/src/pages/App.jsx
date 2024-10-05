@@ -682,7 +682,7 @@ export async function matchListUpdated(region, puuid, stateMatch) {
     "match",
     `getMatchSpecific?matchID=${data[0]}&puuid=${puuid}`
   );
-  if (stateMatch) return stateMatch == DBMatch[0].matchID;
+  if (stateMatch && DBMatch[0]) return stateMatch == DBMatch[0].matchID;
   return DBMatch.length > 0;
 }
 
@@ -738,6 +738,7 @@ async function getMatchInfoList(matchIDs, region, puuid) {
         kills,
         deaths,
         assists,
+        totalMinionsKilled,
         visionScore,
         summoner1Id,
         summoner2Id,
@@ -759,6 +760,7 @@ async function getMatchInfoList(matchIDs, region, puuid) {
         kills,
         deaths,
         assists,
+        totalMinionsKilled,
         visionScore,
         summoner1Id,
         summoner2Id,

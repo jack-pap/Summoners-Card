@@ -9,7 +9,7 @@ function ErrorPage({ errorMessage }) {
   return (
     <>
       <div id="homeBody">
-        <h2>Error: {error?.statusText || error?.message || errorMessage}</h2>
+        <h1>Error: {( error?.status + " " + error?.statusText) || error?.message || errorMessage}</h1>
       </div>
     </>
   );

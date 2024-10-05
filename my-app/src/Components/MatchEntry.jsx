@@ -41,12 +41,11 @@ const MatchEntry = memo(function MatchEntry({
           {playerInfo.kills} / {playerInfo.deaths} / {playerInfo.assists}
         </div>
         <div className="kdaContainer">
-          KDA: <div id="kda">{getKDA(playerInfo)}</div>
+          <div id="kda">{getKDA(playerInfo)}</div> KDA
         </div>
-        <div>
-          Kill participation: {getKillParticipation(matchData, playerInfo.win)}%
-        </div>
-        <div>Vision score: {playerInfo.visionScore}</div>
+        <div>{getKillParticipation(matchData, playerInfo.win)}% Kill Participation</div>
+        <div>{playerInfo.visionScore} Vision Score</div>
+        <div>{playerInfo.totalMinionsKilled} CS</div>
       </div>
       <div className="itemImages"></div>
       <div className="otherPlayers"></div>
@@ -91,7 +90,7 @@ function getMatchTimeAgo(gameDate) {
   } else if (hours > 0) {
     return hours === 1 ? "An hour ago" : `${hours} hours ago`;
   } else if (minutes > 0) {
-    return `${minutes} minutes ago`;
+    return minutes === 1 ? "A minute ago" :`${minutes} minutes ago`;
   }
 }
 

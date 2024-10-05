@@ -92,6 +92,7 @@ const Dashboard = memo(function Dashboard() {
   const [summonerChampionWinrateInfo, setSummonerChampionWinrateInfo] =
     useState(null);
   const [championsInfo, setChampions] = useState(null);
+  const [graphData, setgraphData] = useState(null);
 
   if (!serverOptions.find((option) => option.label === server)) {
     return <ErrorPage errorMessage={`Invalid server "${server}"`} />;
@@ -143,6 +144,8 @@ const Dashboard = memo(function Dashboard() {
         setSummonerChampionWinrateInfo(result.masteryInfo);
         setChampions(result.champions);
         setIsLoading(false);
+
+        getGraphDates(result.matchInfoList, setgraphData);
       } catch (error) {
         console.error("Error fetching data:", error);
         navigate("/", {
@@ -320,22 +323,21 @@ const Dashboard = memo(function Dashboard() {
               <LineChart
                 xAxis={[
                   {
-                    data: getGraphDates(summonerMatchInfo).map(
-                      (item) => item.date
-                    ),
+                    data: graphData.map((item) => item.date),
                     scaleType: "band",
                   },
                 ]}
                 series={[
                   {
-                    data: getGraphDates(summonerMatchInfo).map(
-                      (item) => item.value
-                    ),
+                    data: graphData.map((item) => item.value),
                     color: "rgb(197, 134, 0)",
                     label: "Win/Loss Ratio",
                     valueFormatter: (v, { dataIndex }) => {
-                      const { date, label } = getGraphDates(summonerMatchInfo)[dataIndex];
-                      return label;
+                      if (dataIndex >= 0 && dataIndex < graphData.length) {
+                        const { date, label } = graphData[dataIndex];
+                        return label;
+                      }
+                      return "";
                     },
                   },
                 ]}
@@ -389,7 +391,7 @@ const Dashboard = memo(function Dashboard() {
                   "& .MuiChartsLegend-root text": {
                     // Text on axis labels
                     fill: "rgb(101, 100, 94) !important",
-                  }
+                  },
                 }}
               />
             </div>
@@ -1392,31 +1394,32 @@ function updateProgressBar(elementId, value, text) {
   else progressbarElement.style.strokeDashoffset = 298.451 * (1 - value / 100);
 }
 
-  function getGraphDates(summonerMatchInfo) {
-    const dateMap = new Map();
-    const reversedMatchInfo = [...summonerMatchInfo].reverse();
+function getGraphDates(summonerMatchInfo, setgraphData) {
+  const dateMap = new Map();
+  const reversedMatchInfo = [...summonerMatchInfo].reverse();
 
-    for (const matchInfo of reversedMatchInfo) {
-      if (matchInfo[0].gameDuration < 300) continue;
-      const formattedDate = matchInfo[0].gameDateSQLFormat.split(" ")[0];
-      const gamePoint = matchInfo[1].win ? 1 : -1;
-      const dateData = dateMap.get(formattedDate);
+  for (const matchInfo of reversedMatchInfo) {
+    if (matchInfo[0].gameDuration < 300) continue;
+    const formattedDate = matchInfo[0].gameDateSQLFormat.split(" ")[0];
+    const gamePoint = matchInfo[1].win ? 1 : -1;
+    const dateData = dateMap.get(formattedDate);
 
-      const wins =
-        gamePoint > 0 ? (dateData?.[0] ?? 0) + gamePoint : dateData?.[0] ?? 0;
+    const wins =
+      gamePoint > 0 ? (dateData?.[0] ?? 0) + gamePoint : dateData?.[0] ?? 0;
 
-      const losses =
-        gamePoint < 0 ? (dateData?.[1] ?? 0) + gamePoint : dateData?.[1] ?? 0;
-      const total = wins + losses;
-      dateMap.set(formattedDate, [wins, losses, total, `W:${wins} L:${losses}`]);
-    }
-
-    const dates = Array.from(dateMap, ([date, [wins, losses, value, label]]) => ({
-      date,
-      value,
-      label
-    }));
-    return dates;
+    const losses =
+      gamePoint < 0 ? (dateData?.[1] ?? 0) + gamePoint : dateData?.[1] ?? 0;
+    const total = wins + losses;
+    dateMap.set(formattedDate, [wins, losses, total, `W:${wins} L:${losses}`]);
   }
+
+  const dates = Array.from(dateMap, ([date, [wins, losses, value, label]]) => ({
+    date,
+    value,
+    label,
+  }));
+
+  setgraphData(dates);
+}
 
 export default Dashboard;
