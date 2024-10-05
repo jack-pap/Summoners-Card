@@ -325,7 +325,7 @@ async function getAllChampions() {
 //   for (const [id, name] of championsInfo.entries()) {
 //     if (name == "None" || name == "Hwei" || name == "Aurora" || name == "Wukong" || name == "Renata Glasc" || name == "Lee Sin" || name == "Nunu & Willump") {
 //       continue;
-//     } 
+//     }
 //     const championName = name.replace(/[\s\W]/g, "");
 
 //     const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
@@ -578,10 +578,9 @@ function getSummonerWinrates(rankedInfo, matchInfoList) {
 
 function getRemakesNumber(matchInfoList, rankedInfo) {
   var remakeNumber = 0;
-  for (const matchInfo of matchInfoList.slice(
-    0,
-    rankedInfo[0].rankedWins + rankedInfo[0].rankedLosses
-  )) {
+  const totalRankedGames =
+    rankedInfo[0].rankedGames ?? 0 + rankedInfo[1].rankedGames ?? 0;
+  for (const matchInfo of matchInfoList.slice(0, totalRankedGames)) {
     if (matchInfo[0].gameDuration < 300) remakeNumber++;
   }
   return remakeNumber;
@@ -600,16 +599,15 @@ function getChampionWinrate(masteryInfo, matchInfoList, rankedInfo) {
     rankedInfo[0].rankedGames ?? 0 + rankedInfo[1].rankedGames ?? 0;
 
   for (const matchInfo of matchInfoList.slice(0, allRankedGames)) {
+    if (matchInfo[0].gameDuration < 300) continue;
     const queueId = matchInfo[0].gameQueueID; // What type of game was played
     for (const mode of Object.values(GAME_MODES)) {
-      if (queueId == mode) {
-        var champInfo = masteryInfo.get(matchInfo[1].championId); // What champion was played
-        if (champInfo.winrateMapping.get(queueId)) {
-          champInfo.winrateMapping.get(queueId)[0] += 1; // Increment game count on existing queue
-          if (matchInfo[1].win == true)
-            champInfo.winrateMapping.get(queueId)[1] += 1; // If they won increment wins
-        }
-      }
+      if (queueId != mode) continue;
+      var champInfo = masteryInfo.get(matchInfo[1].championId); // What champion was played
+      if (!champInfo.winrateMapping.get(queueId)) continue;
+      champInfo.winrateMapping.get(queueId)[0] += 1; // Increment game count on existing queue
+      if (matchInfo[1].win == true)
+        champInfo.winrateMapping.get(queueId)[1] += 1; // If they won increment wins
     }
   }
   for (const champInfo of masteryInfo.values()) {
@@ -618,7 +616,7 @@ function getChampionWinrate(masteryInfo, matchInfoList, rankedInfo) {
       const wins = winrateData[1];
       var winrate = winrateData[2];
 
-      if (gamesPlayed > 0) winrate = Math.ceil((wins / gamesPlayed) * 100); // W/R percentage rounded up to nearest second decimal
+      if (gamesPlayed > 0) winrate = Math.floor((wins / gamesPlayed) * 100); // W/R percentage rounded up to nearest second decimal
 
       champInfo.winrateMapping.set(queueId, [gamesPlayed, wins, winrate]); // Update the winrate value in the map
     }
@@ -641,7 +639,7 @@ export async function getMatchList(
   matchAmountStart,
   matchAmount
 ) {
-  if (await matchListUpdated(region, puuid)) {
+  if (await matchListUpdated(region, puuid, null)) {
     const DBMatchList = await apiGETDatabaseCall(
       "match",
       `getMatches?puuid=${puuid}`
@@ -677,13 +675,14 @@ export async function getExtendedMatchList(region, puuid, lastGameDate) {
   return DBExtendedMatchList.map((obj) => Object.values(obj)[0]);
 }
 
-export async function matchListUpdated(region, puuid) {
+export async function matchListUpdated(region, puuid, stateMatch) {
   const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${0}&count=${1}&type=ranked&api_key=${API_KEY}`;
   const data = await apiProxyNoCacheCall(matchListApiURL);
   const DBMatch = await apiGETDatabaseCall(
     "match",
     `getMatchSpecific?matchID=${data[0]}&puuid=${puuid}`
   );
+  if (stateMatch) return stateMatch == DBMatch[0].matchID;
   return DBMatch.length > 0;
 }
 
@@ -839,7 +838,7 @@ async function findMoreMatches(region, puuid) {
  */
 async function getRankedInfo(server, id) {
   const rankedApiURL = `https://${server}.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`;
-  const data = await apiProxyCall(rankedApiURL);
+  const data = await apiProxyNoCacheCall(rankedApiURL);
   var rankedSoloInfo = null;
   var rankedFlexInfo = null;
   for (let i = 0; i < data.length; i++) {
@@ -873,7 +872,7 @@ function formatDateSQL(timestamp) {
   const date = new Date(timestamp);
 
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   const hours = String(date.getHours()).padStart(2, "0");
   const minutes = String(date.getMinutes()).padStart(2, "0");

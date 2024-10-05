@@ -57,7 +57,7 @@ a {
   color: #f0e6d2;
   width: 342px;
   text-shadow: 1.5px 1px 0px #785a28;
-  font-size: 1.4em;
+  font-size: 17pt;
   letter-spacing: 0.02em;
   transition: background-color 0.28s, text-shadow ease 0.28s;
 }
@@ -84,7 +84,7 @@ header {
   align-items: center;
   justify-content: center;
   z-index: 5;
-  backdrop-filter: blur(25px);
+  backdrop-filter: blur(20px);
 }
 
 
@@ -846,7 +846,7 @@ img {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  max-width: 205px;
+  width: 206px;
   align-items: center;
   gap: 7px;
 }

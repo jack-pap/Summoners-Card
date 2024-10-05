@@ -104,7 +104,14 @@ const Dashboard = memo(function Dashboard() {
         setIsLoading(true);
 
         let newGameName, result;
-        if (state == null || !(await matchListUpdated(region, state.puuid))) {
+        if (
+          state == null ||
+          !(await matchListUpdated(
+            region,
+            state.puuid,
+            state.summonerMatchInfo[0][0].gameID
+          ))
+        ) {
           newGameName = summonerName.split("-")[0].trim();
           result = await getSummonerStats(
             summonerName.split("-")[1],
@@ -325,7 +332,11 @@ const Dashboard = memo(function Dashboard() {
                       (item) => item.value
                     ),
                     color: "rgb(197, 134, 0)",
-                    label: "Win/Loss Counter",
+                    label: "Win/Loss Ratio",
+                    valueFormatter: (v, { dataIndex }) => {
+                      const { date, label } = getGraphDates(summonerMatchInfo)[dataIndex];
+                      return label;
+                    },
                   },
                 ]}
                 width={450}
@@ -336,7 +347,7 @@ const Dashboard = memo(function Dashboard() {
                     sx: {
                       "& .css-12667wq-MuiChartsTooltip-container": {
                         backgroundColor: "#1b1f24 !important",
-                        border: "1px solid #C89B3C !important"
+                        border: "1px solid #C89B3C !important",
                       },
                       "& .css-s3y5yc-MuiChartsTooltip-cell": {
                         color: "#C89B3C !important",
@@ -1381,25 +1392,31 @@ function updateProgressBar(elementId, value, text) {
   else progressbarElement.style.strokeDashoffset = 298.451 * (1 - value / 100);
 }
 
-function getGraphDates(summonerMatchInfo) {
-  const dates = [];
-  var winCounter = 0;
-  var currentDate = "";
-  for (const matchDate of summonerMatchInfo.reverse()) {
-    const formattedDate = matchDate[0].gameDateSQLFormat.split(" ")[0];
-    if (matchDate[1].win) winCounter++;
-    else winCounter--;
-    if (formattedDate != currentDate) {
-      const dataPoint = {
-        date: formattedDate,
-        value: winCounter,
-      };
-      dates.push(dataPoint);
-      currentDate = formattedDate;
-    }
-  }
+  function getGraphDates(summonerMatchInfo) {
+    const dateMap = new Map();
+    const reversedMatchInfo = [...summonerMatchInfo].reverse();
 
-  return dates;
-}
+    for (const matchInfo of reversedMatchInfo) {
+      if (matchInfo[0].gameDuration < 300) continue;
+      const formattedDate = matchInfo[0].gameDateSQLFormat.split(" ")[0];
+      const gamePoint = matchInfo[1].win ? 1 : -1;
+      const dateData = dateMap.get(formattedDate);
+
+      const wins =
+        gamePoint > 0 ? (dateData?.[0] ?? 0) + gamePoint : dateData?.[0] ?? 0;
+
+      const losses =
+        gamePoint < 0 ? (dateData?.[1] ?? 0) + gamePoint : dateData?.[1] ?? 0;
+      const total = wins + losses;
+      dateMap.set(formattedDate, [wins, losses, total, `W:${wins} L:${losses}`]);
+    }
+
+    const dates = Array.from(dateMap, ([date, [wins, losses, value, label]]) => ({
+      date,
+      value,
+      label
+    }));
+    return dates;
+  }
 
 export default Dashboard;
