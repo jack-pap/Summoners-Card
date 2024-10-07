@@ -13,11 +13,11 @@ router.get('/allSummoners', summonerRoutes.summonersAll)
 // Add route for GET request to retrieve specific summoner
 router.get('/getSummoner', summonerRoutes.summonerSpecific)
 
+// Add route for GET request to retrieve specific summoner info
+router.get('/getSummonerInfo', summonerRoutes.summonerSpecificInfo)
+
 // Add route for POST request to create new summoner
 router.post('/createSummoner', summonerRoutes.summonerCreate)
-
-// Add route for PUT request to update existing summoner
-// router.post('/updateSummoner', summonerRoutes.summonerUpdate)
 
 // Add route for PUT request to delete specific summoner
 router.put('/deleteSummoner', summonerRoutes.summonerDelete)

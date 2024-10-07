@@ -487,7 +487,7 @@ const Dashboard = memo(function Dashboard() {
               fullWidth
             >
               makeChampionWinrate
-              <Button
+              {/* <Button
                 onClick={() => {
                   makeChampionWinrate(
                     summonerChampionWinrateInfo,
@@ -497,7 +497,7 @@ const Dashboard = memo(function Dashboard() {
                 }}
               >
                 Normal
-              </Button>
+              </Button> */}
               <Button
                 onClick={() => {
                   makeChampionWinrate(
@@ -951,9 +951,9 @@ function makeMostSkilledBadge(championsInfo, summonerChampionWinrateInfo) {
 function makeMostPlayedBadge(summonerChampionWinrateInfo, championsInfo) {
   var [bestChampName, bestChampGames] = [null, 0];
   for (const [id, value] of summonerChampionWinrateInfo.entries()) {
-    const normalGames = value.winrateMapping.get(490)[0];
-    const soloGames = value.winrateMapping.get(420)[0];
-    const flexGames = value.winrateMapping.get(440)[0];
+    const normalGames = value.normalGames;
+    const soloGames = value.rankedSoloGames;
+    const flexGames = value.rankedFlexGames;
     const sum = normalGames + soloGames + flexGames;
     if (sum > bestChampGames) {
       bestChampName = championsInfo.get(id);

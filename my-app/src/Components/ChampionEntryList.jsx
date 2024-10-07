@@ -5,39 +5,54 @@ import {
   apiImageCall,
 } from "../../server/controller/apiService.js";
 
+const GAME_MODES = {
+  NORMAL: 490,
+  NORMAL_DRAFT: 400,
+  RANKED_SOLO: 420,
+  RANKED_FLEX: 440,
+}; // Object that stores queue Ids for different game modes
+
 const ChampionEntryList = memo(
   ({ summonerChampionWinrateInfo, championsInfo, queueId }) => {
     const [mostPlayedChampions, setMostPlayedChampions] = useState([]);
 
     useEffect(() => {
       const processChampions = async () => {
+        var gameType;
+        if (queueId === GAME_MODES.RANKED_SOLO) {
+          gameType = "rankedSolo";
+        } else if (queueId === GAME_MODES.RANKED_FLEX) {
+          gameType = "rankedFlex";
+        } else {
+          return;
+        }
+
         const champions = Array.from(summonerChampionWinrateInfo.entries())
           .map(([champId, champData]) => ({
             champId,
-            gamesPlayed: champData.winrateMapping.get(queueId)[0],
-            winrate: champData.winrateMapping.get(queueId)[1],
+            gamesPlayed: champData[`${gameType}Games`],
+            winrate: champData[`${gameType}Winrate`],
           }))
           .sort((a, b) => {
             if (b.gamesPlayed !== a.gamesPlayed) {
               return b.gamesPlayed - a.gamesPlayed; // Sort by games played in descending order
             } else {
-              return b.winrate - a.winrate; // If games played are equal sort by winrate 
+              return b.winrate - a.winrate; // If games played are equal sort by winrate
             }
           })
-          .slice(0, 7);
+          .slice(0, 7); // Get only 7 champions to display
 
         const processedChampions = await Promise.all(
           champions.map(async ({ champId }) => {
             const champData = summonerChampionWinrateInfo.get(champId);
-            const winrateMapping = champData.winrateMapping.get(queueId);
             const championInfo = championsInfo.get(champId);
             const championImage = await getChampionImage(champId);
 
             return {
               champId,
               championName: championInfo,
-              gamesPlayed: winrateMapping[0],
-              winrate: winrateMapping[2],
+              gamesPlayed: champData[`${gameType}Games`],
+              winrate: champData[`${gameType}Winrate`],
               championImage,
             };
           })

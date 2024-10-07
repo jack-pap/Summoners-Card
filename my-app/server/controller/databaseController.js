@@ -60,30 +60,44 @@ exports.summonerSpecific = async (req, res) => {
   knex
     .select('*')
     .from('summonerInfo')
-    .where('puuid', req.body.puuid)
+    .where('RiotID', req.query.RiotID )
     .then(userData => {
       res.json(userData)
     })
     .catch(error => {
-      res.json({ message: `There was an error retrieving summoner: ${error}` })
+      res.json({ message: `There was an error retrieving summoner ${req.query.RiotID}: ${error}` })
+    })
+}
+
+exports.summonerSpecificInfo = async (req, res) => {
+  knex
+    .select('summonerInfo')
+    .from('summonerInfo')
+    .where('puuid', req.query.puuid)
+    .then(userData => {
+      res.json(userData)
+    })
+    .catch(error => {
+      res.json({ message: `There was an error retrieving summoner info: ${error}` })
     })
 }
 
   exports.summonerCreate = async (req, res) => {
     knex
       .insert({ 
+        'RiotID': req.body.RiotID,
         'puuid': req.body.puuid,
-        'summonerWinrate': req.body.summonerWinrate,
+        'summonerInfo': req.body.summonerInfo,
         'lastUpdatedDate': req.body.lastUpdatedDate
       })
       .into('summonerInfo')
       .onConflict('puuid')
-      .merge(['puuid', 'summonerWinrate', 'lastUpdatedDate'])
+      .merge(['RiotID', 'puuid', 'summonerInfo', 'lastUpdatedDate'])
       .then(() => {
-        res.json({ message: `Summoner \'${req.body.puuid}\' entry created/updated.` })
+        res.json({ message: `Summoner \'${req.body.RiotID}\' entry created/updated.` })
       })
       .catch(err => {
-        res.json({ message: `There was an error creating/updating summoner ${req.body.puuid} entry: ${err}` })
+        res.json({ message: `There was an error creating/updating summoner ${req.body.RiotID} entry: ${err}` })
       })
   }
 

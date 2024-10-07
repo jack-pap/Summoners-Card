@@ -369,53 +369,53 @@ async function getInput(
   const server = serverValue;
   const region = regionValue;
 
-  // Checks for valid input and initiates API calls for data
-  if (summonerName.match(/\s*#[^\s]*\S+$/)) {
-    try {
-      document.getElementById("homeBody").style.animation =
-        "fade-out 0.3s forwards";
-      document.getElementById("homeBody").style.pointerEvents = "none";
-      setIsLoading(true);
-
-      const {
-        puuid,
-        summonerInfo,
-        rankedInfo,
-        matchInfoList,
-        summonerWinrate,
-        masteryInfo,
-        champions,
-      } = await getSummonerStats(tagLine, gameName, server, region); // Returns all relevant info for the player, games played etc.
-
-      navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, {
-        state: {
-          serverLabel,
-          puuid: puuid,
-          gameName: gameName,
-          tagLine: tagLine,
-          summonerInfo: summonerInfo,
-          summonerRankedInfo: rankedInfo,
-          summonerMatchInfo: matchInfoList,
-          summonerWinrateInfo: summonerWinrate,
-          summonerChampionWinrateInfo: masteryInfo,
-          championsInfo: champions,
-        },
-      });
-    } catch (error) {
-      // Stops spinner and reverts back to homepage while showing an error
-      console.log(error);
-      document.getElementById("homeBody").style.animation = "fade-in 0.5s";
-      document.getElementById("homeBody").style.pointerEvents = "all";
-      setIsLoading(false);
-      document.querySelector(
-        ".MuiAlert-message"
-      ).textContent = `Trouble finding summoner ${gameName}`;
-      setOpen(true);
-      return;
-    }
-  } else {
+  // Checks for valid summoner name input
+  if (!summonerName.match(/\s*#[^\s]*\S+$/)) {
     document.querySelector(".MuiAlert-message").textContent =
       "Please ensure that the summoner name has no whitespace or special symbols";
+    setOpen(true);
+    return;
+  }
+
+  try {
+    document.getElementById("homeBody").style.animation =
+      "fade-out 0.3s forwards";
+    document.getElementById("homeBody").style.pointerEvents = "none";
+    setIsLoading(true);
+
+    const {
+      puuid,
+      summonerInfo,
+      rankedInfo,
+      matchInfoList,
+      summonerWinrate,
+      masteryInfo,
+      champions,
+    } = await getSummonerStats(tagLine, gameName, server, region); // Returns all relevant info for the player, games played etc.
+
+    navigate(`/player/${serverLabel}/${summonerName.replace("#", "-")}`, {
+      state: {
+        serverLabel,
+        puuid: puuid,
+        gameName: gameName,
+        tagLine: tagLine,
+        summonerInfo: summonerInfo,
+        summonerRankedInfo: rankedInfo,
+        summonerMatchInfo: matchInfoList,
+        summonerWinrateInfo: summonerWinrate,
+        summonerChampionWinrateInfo: masteryInfo,
+        championsInfo: champions,
+      },
+    });
+  } catch (error) {
+    // Stops spinner and reverts back to homepage while showing an error
+    console.log(error);
+    document.getElementById("homeBody").style.animation = "fade-in 0.5s";
+    document.getElementById("homeBody").style.pointerEvents = "all";
+    setIsLoading(false);
+    document.querySelector(
+      ".MuiAlert-message"
+    ).textContent = `Trouble finding summoner ${gameName}`;
     setOpen(true);
     return;
   }
@@ -432,22 +432,57 @@ async function getInput(
  * @returns {JSON}
  */
 export async function getSummonerStats(tagLine, gameName, server, region) {
-  try {
-    const puuid = await getPUUID(tagLine, gameName); // puuid identifier for summoner
-    const summonerInfo = await getSummonerInfo(server, puuid); // Array that includes summoner ID, summoner level and profile picture
-    const masteryInfo = await getMasteryInfo(server, puuid); // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
-    const matchList = await getMatchList(region, puuid, 0, 30); // Array constisting of match IDs
-    const matchInfoList = await matchInfoListDriver(region, matchList, puuid); // Returns array that contains match information for all matches in a list
-    const rankedInfo = await getRankedInfo(server, summonerInfo[0]); // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
-    const summonerWinrate = getSummonerWinrates(rankedInfo, matchInfoList); // Returns JSON object for all game mode winrates
-    await getChampionWinrate(masteryInfo, matchInfoList, rankedInfo); // Calculates for every champion their respective game mode winrates
-    const champions = await getAllChampions();
+  var puuid; // puuid identifier for summoner
+  var summonerInfo; // Array that includes summoner ID, summoner level and profile picture
+  var rankedInfo; // Array consisting of ranked info arrays that include queueType, tier, rank, points, wins, losses
+  var masteryInfo; // Array consisting of champion arrays that includes champion ID, level of mastery, and mastery points
+  var matchList; // Array constisting of match IDs
+  var matchInfoList; // Returns array that contains match information for all matches in a list
+  var summonerWinrate; // Returns JSON object for all game mode winrates
+  const champions = await getAllChampions(); // Returns mapping for champions between their respective ids and names
 
-    apiPOSTDatabaseCall("summoner", "createSummoner", {
-      puuid: puuid,
-      summonerWinrate: summonerWinrate,
-      lastUpdatedDate: formatDateSQL(Date.now()),
-    });
+  try {
+    const DBSummoner = await apiGETDatabaseCall(
+      "summoner",
+      `getSummoner?RiotID=${gameName}-${tagLine}`
+    );
+
+    // DBSummoner.length > 0 &&
+    // (await matchListUpdated(region, DBSummoner[0].puuid, null))
+    if (false) {
+      const parsedSummonerInfo = JSON.parse(DBSummoner[0].summonerInfo);
+
+      puuid = DBSummoner[0].puuid;
+      summonerInfo = parsedSummonerInfo.summonerInfo;
+      rankedInfo = parsedSummonerInfo.rankedInfo;
+      masteryInfo = parsedSummonerInfo.masteryInfo;
+      matchList = await getMatchList(region, puuid, 0, 30);
+      matchInfoList = await matchInfoListDriver(region, matchList, puuid);
+      summonerWinrate = parsedSummonerInfo.summonerWinrate;
+    } else {
+      puuid = await getPUUID(tagLine, gameName);
+      summonerInfo = await getSummonerInfo(server, puuid);
+      rankedInfo = await getRankedInfo(server, summonerInfo[0]);
+      masteryInfo = await getMasteryInfo(server, puuid);
+      matchList = await getMatchList(region, puuid, 0, 30);
+      matchInfoList = await matchInfoListDriver(region, matchList, puuid);
+      summonerWinrate = getSummonerWinrates(rankedInfo, matchInfoList);
+
+      apiPOSTDatabaseCall("summoner", "createSummoner", {
+        RiotID: `${gameName}-${tagLine}`,
+        puuid: puuid,
+        summonerInfo: {
+          summonerInfo: summonerInfo,
+          rankedInfo: rankedInfo,
+          summonerWinrate: summonerWinrate,
+          masteryInfo: masteryInfo,
+        },
+        lastUpdatedDate: formatDateSQL(Date.now()),
+      });
+    }
+
+    await getChampionWinrate(masteryInfo, matchInfoList, rankedInfo); // Calculates for every champion their respective game mode winrates
+
     return {
       puuid,
       tagLine,
@@ -542,11 +577,15 @@ async function getMasteryInfo(server, puuid) {
     var champStats = {
       championPoints: champion.championPoints,
       championLevel: champion.championLevel,
-      winrateMapping: new Map([
-        [GAME_MODES.NORMAL, [0, 0, 0]],
-        [GAME_MODES.RANKED_SOLO, [0, 0, 0]],
-        [GAME_MODES.RANKED_FLEX, [0, 0, 0]],
-      ]), // Mapping between game modes and their winrates data -> [games played, wins, winrate]
+      normalGames: 0,
+      normalWins: 0,
+      normalWinrate: 0,
+      rankedSoloGames: 0,
+      rankedSoloWins: 0,
+      rankedSoloWinrate: 0,
+      rankedFlexGames: 0,
+      rankedFlexWins: 0,
+      rankedFlexWinrate: 0,
     };
     championStatsMapping.set(champion.championId, champStats);
   }
@@ -600,25 +639,36 @@ function getChampionWinrate(masteryInfo, matchInfoList, rankedInfo) {
 
   for (const matchInfo of matchInfoList.slice(0, allRankedGames)) {
     if (matchInfo[0].gameDuration < 300) continue;
+
     const queueId = matchInfo[0].gameQueueID; // What type of game was played
-    for (const mode of Object.values(GAME_MODES)) {
-      if (queueId != mode) continue;
-      var champInfo = masteryInfo.get(matchInfo[1].championId); // What champion was played
-      if (!champInfo.winrateMapping.get(queueId)) continue;
-      champInfo.winrateMapping.get(queueId)[0] += 1; // Increment game count on existing queue
-      if (matchInfo[1].win == true)
-        champInfo.winrateMapping.get(queueId)[1] += 1; // If they won increment wins
+    if (!Object.values(GAME_MODES).includes(queueId)) continue;
+
+    var gameType; // Set gametype JSON fields to alter
+    if (queueId === GAME_MODES.RANKED_SOLO) {
+      gameType = "rankedSolo";
+    } else if (queueId === GAME_MODES.RANKED_FLEX) {
+      gameType = "rankedFlex";
+    } else {
+      continue;
     }
+
+    var champInfo = masteryInfo.get(matchInfo[1].championId); // What champion was played
+
+    champInfo[`${gameType}Games`] += 1; // Increment game count on existing queue
+    if (matchInfo[1].win === true) champInfo[`${gameType}Wins`] += 1; // If they won increment win
   }
+
   for (const champInfo of masteryInfo.values()) {
-    for (const [queueId, winrateData] of champInfo.winrateMapping.entries()) {
-      const gamesPlayed = winrateData[0];
-      const wins = winrateData[1];
-      var winrate = winrateData[2];
+    // Calculate winrates for ranked solo and ranked flex
+    for (const gameType of ["rankedSolo", "rankedFlex"]) {
+      const gamesPlayed = champInfo[`${gameType}Games`];
+      const wins = champInfo[`${gameType}Wins`];
+      let winrate = champInfo[`${gameType}Winrate`];
 
-      if (gamesPlayed > 0) winrate = Math.floor((wins / gamesPlayed) * 100); // W/R percentage rounded up to nearest second decimal
-
-      champInfo.winrateMapping.set(queueId, [gamesPlayed, wins, winrate]); // Update the winrate value in the map
+      if (gamesPlayed > 0) {
+        winrate = Math.floor((wins / gamesPlayed) * 100); // W/R percentage rounded up to nearest second decimal
+        champInfo[`${gameType}Winrate`] = winrate; // Update the winrate value in the JSON
+      }
     }
   }
 }
