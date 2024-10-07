@@ -447,15 +447,16 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
       `getSummoner?RiotID=${gameName}-${tagLine}`
     );
 
-    // DBSummoner.length > 0 &&
-    // (await matchListUpdated(region, DBSummoner[0].puuid, null))
-    if (false) {
+    if (
+      DBSummoner.length > 0 &&
+      (await matchListUpdated(region, DBSummoner[0].puuid, null))
+    ) {
       const parsedSummonerInfo = JSON.parse(DBSummoner[0].summonerInfo);
 
       puuid = DBSummoner[0].puuid;
       summonerInfo = parsedSummonerInfo.summonerInfo;
       rankedInfo = parsedSummonerInfo.rankedInfo;
-      masteryInfo = parsedSummonerInfo.masteryInfo;
+      masteryInfo = new Map(parsedSummonerInfo.masteryInfo);
       matchList = await getMatchList(region, puuid, 0, 30);
       matchInfoList = await matchInfoListDriver(region, matchList, puuid);
       summonerWinrate = parsedSummonerInfo.summonerWinrate;
@@ -475,7 +476,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
           summonerInfo: summonerInfo,
           rankedInfo: rankedInfo,
           summonerWinrate: summonerWinrate,
-          masteryInfo: masteryInfo,
+          masteryInfo: Array.from(masteryInfo.entries()),
         },
         lastUpdatedDate: formatDateSQL(Date.now()),
       });
