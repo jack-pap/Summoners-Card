@@ -279,10 +279,10 @@ function App() {
 }
 
 /**
- * API call to Riot  Data Dragon
- * for retrieving latest patch version number
+ * API call to Riot Data Dragon
+ * for retrieving the latest patch version number
  *
- * @returns {Promise}
+ * @returns {Promise<JSON>}
  */
 async function loadVersion() {
   const apiURL = "https://ddragon.leagueoflegends.com/api/versions.json";
@@ -350,10 +350,16 @@ async function getAllChampions() {
 // }
 
 /**
- * Gathers input from field, executes Riot API call
- * based on input to gather user account data
+ * Gathers input from field, retrieves data
+ * from the DB or executes Riot API calls
+ * to gather user account data for the input name
  *
  * @param {string} serverValue
+ * @param {string} serverLabel
+ * @param {string} regionValue
+ * @param {NavigateFunction} navigate
+ * @param {React.Dispatch<React.SetStateAction<boolean>>} setIsLoading
+ * @param {React.Dispatch<React.SetStateAction<boolean>>} setOpen
  */
 async function getInput(
   serverValue,
@@ -406,7 +412,7 @@ async function getInput(
         summonerChampionWinrateInfo: masteryInfo,
         championsInfo: champions,
       },
-    });
+    }); // Navigates to dashboard place with all the data
   } catch (error) {
     // Stops spinner and reverts back to homepage while showing an error
     console.log(error);
@@ -422,7 +428,10 @@ async function getInput(
 }
 
 /**
- * Driver method that initiates all API calls
+ * Driver method that retrieves all summoner data
+ * based on database if no new information added
+ * or by API calls to fill in missing data
+ *
  *
  * @param {string} tagLine
  * @param {string} gameName
@@ -500,34 +509,8 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
 }
 
 /**
- * API call to Riot for data
- *
- * @param {string} apiURL
- * @returns {Promise}
- */
-export function makeApiCall(apiURL) {
-  // Return a Promise to allow the use of async/await
-  return new Promise((resolve, reject) => {
-    fetch(apiURL)
-      .then((response) => {
-        if (!response.ok) {
-          throw new ErrorPage(`Network response was not ok ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        resolve(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-}
-
-/**
  * API call to retrieve PUUID identifier
- * based on username
+ * based on gameName and tagLine
  *
  * @param {string} tagLine
  * @param {string} gameName
@@ -553,7 +536,6 @@ async function getSummonerInfo(server, puuid) {
   return [data.id, data.summonerLevel, data.profileIconId];
 }
 
-//TODO change structure so it dynamically adds queues instead of manually from constants and use JSON objects instead of arrays
 /**
  * API call to retrieve arrays of summoner mastery info on all champions played
  * (champion ID, champion mastery level, champion mastery points)
@@ -561,14 +543,8 @@ async function getSummonerInfo(server, puuid) {
  *
  * @param {string} server
  * @param {string} puuid
- * @returns {Object<number, Object[]>} A map of objects representing champion mastery information.
- * Each object includes:
- *   - championId {number} - The ID of the champion.
- *   - championPoints {number} - The champion mastery points.
- *   - championLevel {number} - The champion mastery level.
- *   - normalWinrate {Map} - Map with key 490 for normal game win rate (e.g., Map([NORMAL_GAME_MODE, [0, 0]])).
- *   - rankedSoloWinrate {Map} - Map with key 420 for ranked solo game win rate (e.g., Map([RANKED_SOLO_GAME_MODE, [0, 0]])).
- *   - rankedFlexWinrate {Map} - Map with key 440 for ranked flex game win rate (e.g., Map([RANKED_FLEX_GAME_MODE, [0, 0]])).
+ * @returns {Object<number, JSON>} A mapping between champion ids and a JSON object
+ * that holds champion data
  */
 async function getMasteryInfo(server, puuid) {
   const masteryApiURL = `https://${server}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}?api_key=${API_KEY}`;
@@ -594,8 +570,15 @@ async function getMasteryInfo(server, puuid) {
 }
 
 //TODO GET NORMAL WINRATES
+/**
+ * Calculates summoner winrate for ranked solo/duo and flex queue
+ * modes based on ranked info and remade matches found
+ *
+ * @param {JSON} rankedInfo
+ * @param {string[][]} matchInfoList
+ */
 function getSummonerWinrates(rankedInfo, matchInfoList) {
-  const remakes = getRemakesNumber(matchInfoList, rankedInfo);
+  const remakes = getRemakesNumber(rankedInfo, matchInfoList);
   const winrates = {
     normalWinrate: 1, //TODO FIX THIS TO GET NORMAL WINRATE
     rankedFlexWinrate:
@@ -616,7 +599,16 @@ function getSummonerWinrates(rankedInfo, matchInfoList) {
   return winrates;
 }
 
-function getRemakesNumber(matchInfoList, rankedInfo) {
+/**
+ * Scans through all matches to determine if
+ * a games was under 5 minutes to be classified
+ * as a remake
+ *
+ * @param {JSON} rankedInfo
+ * @param {string[][]} matchInfoList
+ * @returns {number}
+ */
+function getRemakesNumber(rankedInfo, matchInfoList) {
   var remakeNumber = 0;
   const totalRankedGames =
     rankedInfo[0].rankedGames ?? 0 + rankedInfo[1].rankedGames ?? 0;
@@ -627,11 +619,12 @@ function getRemakesNumber(matchInfoList, rankedInfo) {
 }
 
 /**
- * Method that iterates through matches
+ * Method that iterates through matches stored
  * and calculates champion winrate values
+ * while ignoring remade games and non ranked games
  *
  * @param {Map} masteryInfo
- * @param {string[]} matchInfoList
+ * @param {string[][]} matchInfoList
  * @param {JSON} rankedInfo
  */
 function getChampionWinrate(masteryInfo, matchInfoList, rankedInfo) {
@@ -675,14 +668,16 @@ function getChampionWinrate(masteryInfo, matchInfoList, rankedInfo) {
 }
 
 /**
- * API call to retrieve an array of
+ * Retrieves an array of
  * summoner match IDs based on puuid
+ * from the DB if its updated or through
+ * API call
  *
  * @param {string} region
  * @param {string} puuid
  * @param {number} matchAmountStart
  * @param {number} matchAmount
- * @returns {Promise<Array<Object>>}
+ * @returns {Array<Object>|Promise<Array<Object>>}
  */
 export async function getMatchList(
   region,
@@ -707,6 +702,16 @@ export async function getMatchList(
   }
 }
 
+/**
+ * Returns a matchList with matches from the last point extended in
+ * the dashboard to extend the current list of games viewed. The matchList
+ * is fetched through the DB if available or through an API call
+ *
+ * @param {string} region
+ * @param {string} puuid
+ * @param {string} lastGameDate
+ * @returns {Array<Object>|Promise<Array<Object>>}
+ */
 export async function getExtendedMatchList(region, puuid, lastGameDate) {
   const APIFormatDate = new Date(lastGameDate).getTime() / 1000;
   const DBExtendedMatchList = await apiGETDatabaseCall(
@@ -726,6 +731,16 @@ export async function getExtendedMatchList(region, puuid, lastGameDate) {
   return DBExtendedMatchList.map((obj) => Object.values(obj)[0]);
 }
 
+/**
+ * Cross references the most recent match a summoner
+ * played through an API call and checks if it is in
+ * the database or if the right one is stored in state
+ *
+ * @param {string} region
+ * @param {string} puuid
+ * @param {string} stateMatch
+ * @returns {boolean}
+ */
 export async function matchListUpdated(region, puuid, stateMatch) {
   const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${0}&count=${1}&type=ranked&api_key=${API_KEY}`;
   const data = await apiProxyNoCacheCall(matchListApiURL);
@@ -738,8 +753,12 @@ export async function matchListUpdated(region, puuid, stateMatch) {
 }
 
 /**
- * API call to retrieve all match information from a matchID
+ * Driver method that etrieves all match
+ * information from a matchID through
+ * an API call or the DB it repeats
+ * the process if no matches were found
  *
+ * @param {string} region
  * @param {string[]} matchIDs
  * @param {string} puuid
  * @returns {string[][]}
@@ -757,6 +776,18 @@ export async function matchInfoListDriver(region, matchIDs, puuid) {
   return matchInfoList;
 }
 
+/**
+ * Retrieves and formats match information for every
+ * matchID in the list through DB calls or API calls
+ * depending on availability and returns an array of
+ * arrays that contain the JSON objects with the information
+ * about the match data, the summoner and all the participants
+ *
+ * @param {string[]} matchIDs
+ * @param {string} region
+ * @param {string} puuid
+ * @returns {string[][]}
+ */
 async function getMatchInfoList(matchIDs, region, puuid) {
   var matchInfoList = [];
   for (const matchID of matchIDs) {
@@ -831,7 +862,7 @@ async function getMatchInfoList(matchIDs, region, puuid) {
       participantsList.push(pickedPlayerInfo);
       if (playerInfo.puuid == puuid) ownPlayerInfo = pickedPlayerInfo;
     }
-    //change to JSON object
+
     matchInfoList.push([contents, ownPlayerInfo, participantsList]);
 
     apiPOSTDatabaseCall("match", "createMatch", {
@@ -848,6 +879,14 @@ async function getMatchInfoList(matchIDs, region, puuid) {
   return matchInfoList;
 }
 
+/**
+ * API call to retrieve and format match
+ * information data for a specific matchID
+ *
+ * @param {string} region
+ * @param {string} matchID
+ * @returns {Promise<JSON>}
+ */
 async function matchInfoAPICall(region, matchID) {
   const matchInfoApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
   const data = await apiProxyCall(matchInfoApiURL);
@@ -870,8 +909,6 @@ async function matchInfoAPICall(region, matchID) {
  *
  * @param {string} region
  * @param {string} puuid
- * @param {string[]} matchIDs
- * @param {string[][]} matchInfoList
  * @returns {Promise<Array<Object>,Object>}
  */
 async function findMoreMatches(region, puuid) {
