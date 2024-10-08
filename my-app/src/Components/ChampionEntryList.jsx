@@ -12,6 +12,10 @@ const GAME_MODES = {
   RANKED_FLEX: 440,
 }; // Object that stores queue Ids for different game modes
 
+/**
+ * @module ChampionEntryList
+ */
+
 const ChampionEntryList = memo(
   ({ summonerChampionWinrateInfo, championsInfo, queueId }) => {
     const [mostPlayedChampions, setMostPlayedChampions] = useState([]);
@@ -104,6 +108,14 @@ const ChampionEntry = ({
   </div>
 );
 
+/**
+ * Retrieves champion image through API call to
+ * server to send the static image or to a third party API
+ * to retrieve the image 
+ * 
+ * @param {number} championId 
+ * @returns {Promise}
+ */
 async function getChampionImage(championId) {
   let championImage = await apiImageCall(
     `http://localhost:3001/assets/Champion_Icons/${championId}.png`
@@ -122,72 +134,6 @@ async function getChampionImage(championId) {
   }
 
   return championImage;
-}
-
-function makeComponents(winrateMappingObject, championName, champId) {
-  const champComponent = document.createElement("div");
-  const gamesPlayed = winrateMappingObject[0];
-  const winrate = winrateMappingObject[2];
-
-  champComponent.setAttribute("class", "champEntry");
-  champComponent.innerHTML = `
-      <div id="champContainer">
-      <div class="champImage"></div>
-      <div class="champName">${championName}</div>
-  
-      </div>
-      <div class="champWinrate"></div>
-      <div class="gamesPlayed">${gamesPlayed} \nPlayed</div>
-      `;
-
-  const progressBarComponent = (
-    <ProgressBar
-      completed={winrate === 0 ? 1 : winrate}
-      width="140px"
-      height="17px"
-      bgColor="#C89B3C"
-      baseBgColor="#383838"
-      animateOnRender={true}
-      borderRadius="3px"
-      customLabel={winrate === 0 ? "0%" : undefined}
-      labelAlignment={winrate === 0 ? "left" : "right"}
-    />
-  );
-
-  const assetPromise = getChampionAssets(
-    champId,
-    ".champImage",
-    champComponent
-  );
-
-  return {
-    components: { champComponent, progressBarComponent },
-    promise: assetPromise,
-  };
-}
-
-async function getChampionAssets(championId, insideClass, parentComponent) {
-  var championImage = await apiImageCall(
-    `http://localhost:3001/assets/Champion_Icons/${championId}.png`
-  );
-
-  if (!championImage) {
-    const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
-    const championData = await apiProxyCall(championDataURL);
-    const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
-    const champImageURL = championData.squarePortraitPath;
-    const extractedPath = champImageURL
-      .replace("/lol-game-data/assets/", "")
-      .toLowerCase();
-    const finalURL = baseImageURL + extractedPath;
-    championImage = await apiImageCall(finalURL);
-  }
-
-  const img = document.createElement("img");
-  img.src = championImage;
-
-  const championImageComponent = parentComponent.querySelector(insideClass);
-  championImageComponent.appendChild(img);
 }
 
 export default ChampionEntryList;

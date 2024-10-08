@@ -661,7 +661,6 @@ async function getProfileBackground(
  * Function that displays champion winrate stats
  * for a specific game queue based on champion mastery info
  *
- * @method makeChampionWinrate
  * @param {Object<number, Object>} summonerChampionWinrateInfo
  * @param {Object<number, string>} championsInfo
  * @param {number} queueId
@@ -685,12 +684,30 @@ async function makeChampionWinrate(
   root.render(matchComponent);
 }
 
+/**
+ * Driver method to enable spinner in match history
+ * block and to then make match history entry components
+ * to render in page
+ *
+ * @param {string[][]} summonerMatchInfo
+ * @param {React.Dispatch<React.SetStateAction<boolean>>} setIsTempLoading
+ */
 async function makeMatchHistory(summonerMatchInfo, setIsTempLoading) {
   setIsTempLoading(true);
   await makeMatchEntries(summonerMatchInfo, 15);
   setIsTempLoading(false);
 }
 
+/**
+ * Extends match history by fetching the next 10
+ * match entries that come after the last match rendered on the page
+ *
+ * @param {string[]} summonerMatchInfo
+ * @param {string} region
+ * @param {string} puuid
+ * @param {React.Dispatch<React.SetStateAction<null>>} setSummonerMatchInfo
+ * @param {React.Dispatch<React.SetStateAction<null>>} setIsTempLoading
+ */
 async function extendMatchHistory(
   summonerMatchInfo,
   region,
@@ -717,6 +734,14 @@ async function extendMatchHistory(
   setIsTempLoading(false);
 }
 
+/**
+ * Goes through the list of match info stored
+ * and create components with all the relevant
+ * match information displayed
+ *
+ * @param {string[][]} summonerMatchInfo
+ * @param {number} minLimit
+ */
 async function makeMatchEntries(summonerMatchInfo, minLimit) {
   const container = document.getElementById("matchList");
   const components = [];
@@ -754,6 +779,15 @@ async function makeMatchEntries(summonerMatchInfo, minLimit) {
   });
 }
 
+/**
+ * Driver method that sends API calls to fetch
+ * all image assets related to the match and
+ * the participants
+ *
+ * @param {string[][]} summonerMatchInfo
+ * @param {number} counter
+ * @param {HTMLDivElement} component
+ */
 async function getAllAssets(summonerMatchInfo, counter, component) {
   await getSummonerSpellAssets(
     summonerMatchInfo[counter][1].summoner1Id,
@@ -1014,7 +1048,7 @@ function makeStreakBadge(summonerMatchInfo) {
 
 /**
  * API call to retrieve the profile icon image
- * and then display it on profile
+ * and then display it on a profile component
  *
  * @param {string[]} summonerInfo
  */
@@ -1040,6 +1074,12 @@ async function makeProfileIcon(summonerInfo) {
   container.appendChild(component);
 }
 
+/**
+ * Driver method to retrieve ranked emblem image assets
+ * and append them to profile components
+ *
+ * @param {string[]} summonerRankedInfo
+ */
 async function makeRankedEmblems(summonerRankedInfo) {
   if (summonerRankedInfo[0] !== "Unranked")
     await makeRankedEmblem(summonerRankedInfo[0], "rankedFlex");
@@ -1047,6 +1087,14 @@ async function makeRankedEmblems(summonerRankedInfo) {
     await makeRankedEmblem(summonerRankedInfo[1], "rankedSolo");
 }
 
+/**
+ * Fetches ranked emblem image asset through API call to
+ * server to send the static image or to a third party API
+ * to retrieve the image and append it to a component
+ *
+ * @param {JSON} summonerRankedInfo
+ * @param {string} containerName
+ */
 async function makeRankedEmblem(summonerRankedInfo, containerName) {
   var rankedIconImage = await apiImageCall(
     `http://localhost:3001/assets/Ranked_Emblems/emblem-${summonerRankedInfo.rankedTier}.png`
@@ -1067,6 +1115,15 @@ async function makeRankedEmblem(summonerRankedInfo, containerName) {
   container.appendChild(component);
 }
 
+/**
+ * Retrieves champion image assets through API call to
+ * server to send the static image or to a third party API
+ * to retrieve the image and append it to a component
+ *
+ * @param {number} championId
+ * @param {string} insideClass
+ * @param {HTMLDivElement} parentComponent
+ */
 async function getChampionAssets(championId, insideClass, parentComponent) {
   var championImage = await apiImageCall(
     `http://localhost:3001/assets/Champion_Icons/${championId}.png`
@@ -1394,6 +1451,13 @@ function updateProgressBar(elementId, value, text) {
   else progressbarElement.style.strokeDashoffset = 298.451 * (1 - value / 100);
 }
 
+/**
+ * Formats match info list into an array of value points
+ * with labels to display on the LineChart component
+ *
+ * @param {string[][]} summonerMatchInfo
+ * @param {React.Dispatch<React.SetStateAction<null>>} setgraphData
+ */
 function getGraphDates(summonerMatchInfo, setgraphData) {
   const dateMap = new Map();
   const reversedMatchInfo = [...summonerMatchInfo].reverse();

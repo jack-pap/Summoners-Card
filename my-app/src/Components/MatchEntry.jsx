@@ -1,5 +1,9 @@
 import { memo } from "react";
 
+/**
+ * @module MatchEntry
+ */
+
 const MatchEntry = memo(function MatchEntry({
   summonerMatchInfo,
   counter,
@@ -43,7 +47,9 @@ const MatchEntry = memo(function MatchEntry({
         <div className="kdaContainer">
           <div id="kda">{getKDA(playerInfo)}</div> KDA
         </div>
-        <div>{getKillParticipation(matchData, playerInfo.win)}% Kill Participation</div>
+        <div>
+          {getKillParticipation(matchData, playerInfo.win)}% Kill Participation
+        </div>
         <div>{playerInfo.visionScore} Vision Score</div>
         <div>{playerInfo.totalMinionsKilled} CS</div>
       </div>
@@ -53,16 +59,40 @@ const MatchEntry = memo(function MatchEntry({
   );
 });
 
+/**
+ * Based on game duration and end game result
+ * returns container component name
+ *
+ * @param {JSON} playerInfo
+ * @param {boolean} gameInfo
+ * @returns {string}
+ */
 function getMatchStatusName(playerInfo, gameInfo) {
   if (gameInfo.gameDuration < 300) return "matchEntryRemake";
   return playerInfo.win ? "matchEntryWin" : "matchEntryDefeat";
 }
 
+/**
+ * Based on game duration and end game result
+ * returns win component name
+ *
+ * @param {JSON} playerInfo
+ * @param {boolean} gameInfo
+ * @returns {string}
+ */
 function getMatchStatus(playerInfo, gameInfo) {
   if (gameInfo.gameDuration < 300) return "Remake";
   return playerInfo.win ? "Victory" : "Defeat";
 }
 
+/**
+ * Measures how much a player contributed to the
+ * overall kill score of the team
+ *
+ * @param {Object[]} matchInfo
+ * @param {boolean} winStatus
+ * @returns {number}
+ */
 function getKillParticipation(matchInfo, winStatus) {
   var totalKills = 0;
   var killParticipation = 0;
@@ -78,6 +108,13 @@ function getKillParticipation(matchInfo, winStatus) {
   return Math.round(killParticipation * 100);
 }
 
+/**
+ * Calculates how match time ago a match was played
+ * based on current UTC time
+ *
+ * @param {string} gameDate
+ * @returns {string}
+ */
 function getMatchTimeAgo(gameDate) {
   const milliseconds = Date.now() - new Date(gameDate);
   const seconds = Math.floor(milliseconds / 1000);
@@ -90,10 +127,17 @@ function getMatchTimeAgo(gameDate) {
   } else if (hours > 0) {
     return hours === 1 ? "An hour ago" : `${hours} hours ago`;
   } else if (minutes > 0) {
-    return minutes === 1 ? "A minute ago" :`${minutes} minutes ago`;
+    return minutes === 1 ? "A minute ago" : `${minutes} minutes ago`;
   }
 }
 
+/**
+ * Calculated the kills, deaths, assists ratio
+ * based on played performance in the match
+ *
+ * @param {JSON} playerInfo
+ * @returns {string}
+ */
 function getKDA(playerInfo) {
   var KDAstring = "";
   if (playerInfo.deaths == 0) {
