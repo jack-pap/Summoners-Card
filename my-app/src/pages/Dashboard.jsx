@@ -15,8 +15,8 @@ import {
   apiPOSTDatabaseCall,
   apiPUTDatabaseCall,
 } from "../../server/controller/apiService.js";
-import MatchEntry from "../Components/MatchEntry";
-import ChampionEntryList from "../Components/ChampionEntryList";
+import MatchEntry from "../components/MatchEntry";
+import ChampionEntryList from "../components/ChampionEntryList";
 import ErrorPage from "./ErrorPage.jsx";
 import { useState, useEffect, createElement } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
