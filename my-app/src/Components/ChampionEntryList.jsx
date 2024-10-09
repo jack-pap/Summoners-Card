@@ -10,7 +10,7 @@ const GAME_MODES = {
   NORMAL_DRAFT: 400,
   RANKED_SOLO: 420,
   RANKED_FLEX: 440,
-}; // Object that stores queue Ids for different game modes
+}; // Object that stores queue IDs for different game modes
 
 /**
  * @module ChampionEntryList

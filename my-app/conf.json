@@ -37,7 +37,7 @@
         "removeQuotes": "none",
         "scripts": [],
         "menu":{
-            "Github repo":{
+            "Github Repository":{
                 "href":"https://github.com/jack-pap/Summoners-Card",
                 "target":"_blank",
                 "class":"menu-item",
