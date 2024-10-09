@@ -138,7 +138,7 @@ function getMatchTimeAgo(gameDate) {
  * @param {JSON} playerInfo
  * @returns {string}
  */
-function getKDA(playerInfo) {
+export function getKDA(playerInfo) {
   var KDAstring = "";
   if (playerInfo.deaths == 0) {
     KDAstring = playerInfo.kills === 0 ? "0.00:1" : "Perfect";
