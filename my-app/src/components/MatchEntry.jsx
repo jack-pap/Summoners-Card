@@ -67,7 +67,7 @@ const MatchEntry = memo(function MatchEntry({
  * @param {boolean} gameInfo
  * @returns {string}
  */
-function getMatchStatusName(playerInfo, gameInfo) {
+export function getMatchStatusName(playerInfo, gameInfo) {
   if (gameInfo.gameDuration < 300) return "matchEntryRemake";
   return playerInfo.win ? "matchEntryWin" : "matchEntryDefeat";
 }
@@ -80,20 +80,21 @@ function getMatchStatusName(playerInfo, gameInfo) {
  * @param {boolean} gameInfo
  * @returns {string}
  */
-function getMatchStatus(playerInfo, gameInfo) {
+export function getMatchStatus(playerInfo, gameInfo) {
   if (gameInfo.gameDuration < 300) return "Remake";
   return playerInfo.win ? "Victory" : "Defeat";
 }
 
 /**
  * Measures how much a player contributed to the
- * overall kill score of the team
+ * overall kill score of the team, the winstatus ensures
+ * the participants are on the same team as the summoner
  *
  * @param {Object[]} matchInfo
  * @param {boolean} winStatus
  * @returns {number}
  */
-function getKillParticipation(matchInfo, winStatus) {
+export function getKillParticipation(matchInfo, winStatus) {
   var totalKills = 0;
   var killParticipation = 0;
 
@@ -115,7 +116,7 @@ function getKillParticipation(matchInfo, winStatus) {
  * @param {string} gameDate
  * @returns {string}
  */
-function getMatchTimeAgo(gameDate) {
+export function getMatchTimeAgo(gameDate) {
   const milliseconds = Date.now() - new Date(gameDate);
   const seconds = Math.floor(milliseconds / 1000);
   const minutes = Math.floor(seconds / 60);
@@ -126,7 +127,7 @@ function getMatchTimeAgo(gameDate) {
     return days === 1 ? "A day ago" : `${days} days ago`;
   } else if (hours > 0) {
     return hours === 1 ? "An hour ago" : `${hours} hours ago`;
-  } else if (minutes > 0) {
+  } else if (minutes >= 0) {
     return minutes === 1 ? "A minute ago" : `${minutes} minutes ago`;
   }
 }
