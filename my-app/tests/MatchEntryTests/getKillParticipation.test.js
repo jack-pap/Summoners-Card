@@ -1,4 +1,4 @@
-const matchEntry = require("../src/components/MatchEntry.jsx");
+const matchEntry = require("../../src/components/MatchEntry.jsx");
 
 // export function getKillParticipation(matchInfo, winStatus) {
 //     var totalKills = 0;
@@ -237,18 +237,20 @@ const matchInfoOnlyParticipation = [
   ],
 ];
 
-test("Normal participation match", () => {
-  expect(matchEntry.getKillParticipation(matchInfoNormal, true)).toBe(23);
-});
+describe("getKillParticipation function tests", () => {
+  test("Normal participation match", () => {
+    expect(matchEntry.getKillParticipation(matchInfoNormal, true)).toBe(23);
+  });
 
-test("No participation match", () => {
-  expect(matchEntry.getKillParticipation(matchInfoNoParticipation, true)).toBe(
-    0
-  );
-});
+  test("No participation match", () => {
+    expect(
+      matchEntry.getKillParticipation(matchInfoNoParticipation, true)
+    ).toBe(0);
+  });
 
-test("Only one participation match", () => {
-  expect(
-    matchEntry.getKillParticipation(matchInfoOnlyParticipation, true)
-  ).toBe(100);
+  test("Only one participation match", () => {
+    expect(
+      matchEntry.getKillParticipation(matchInfoOnlyParticipation, true)
+    ).toBe(100);
+  });
 });

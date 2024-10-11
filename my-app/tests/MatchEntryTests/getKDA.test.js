@@ -1,4 +1,4 @@
-const matchEntry = require("../src/components/MatchEntry.jsx");
+const matchEntry = require("../../src/components/MatchEntry.jsx");
 
 // function getKDA(playerInfo) {
 //     var KDAstring = "";
@@ -13,7 +13,8 @@ const matchEntry = require("../src/components/MatchEntry.jsx");
 
 //     return KDAstring;
 //   }
-describe("KDA function tests", () => {
+
+describe("getKDA function tests", () => {
   test("Zero stats", () => {
     expect(matchEntry.getKDA({ kills: 0, deaths: 0, assists: 0 })).toBe(
       "0.00:1"

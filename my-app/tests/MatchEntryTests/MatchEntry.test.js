@@ -1,16 +1,13 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import '@testing-library/jest-dom';
-import MatchEntry from "../src/components/MatchEntry.jsx"; // Update the path accordingly
+import "@testing-library/jest-dom";
+import MatchEntry from "../../src/components/MatchEntry.jsx";
 
-// Mock functions
-
-// Mock the MatchEntry component to use the memoized version
-jest.mock("../src/components/MatchEntry.jsx", () => ({
+jest.mock("../../src/components/MatchEntry.jsx", () => ({
   __esModule: true,
   default: function MatchEntry({ summonerMatchInfo, counter, gameQueues }) {
-    const getMatchStatusName = jest.fn().mockReturnValue("win");
-    const getMatchStatus = jest.fn().mockReturnValue("Win");
+    const getMatchStatusName = jest.fn().mockReturnValue("matchEntryWin");
+    const getMatchStatus = jest.fn().mockReturnValue("Victory");
     const getMatchTimeAgo = jest.fn().mockReturnValue("1 day ago");
     const getKDA = jest.fn().mockReturnValue("2.5");
     const getKillParticipation = jest.fn().mockReturnValue(50);
@@ -51,7 +48,7 @@ jest.mock("../src/components/MatchEntry.jsx", () => ({
             {playerInfo.kills} / {playerInfo.deaths} / {playerInfo.assists}
           </div>
           <div className="kdaContainer">
-            <div id="kda">{getKDA(playerInfo)}</div> KDA
+            <div id="kda">{getKDA(playerInfo)} KDA </div>
           </div>
           <div>
             {getKillParticipation(matchData, playerInfo.win)}% Kill
@@ -67,7 +64,7 @@ jest.mock("../src/components/MatchEntry.jsx", () => ({
   },
 }));
 
-describe("MatchEntry", () => {
+describe("MatchEntry component render test", () => {
   const summonerMatchInfo = [
     [
       { gameQueueID: 420, gameDate: new Date(), gameDuration: 1800 },
@@ -85,7 +82,7 @@ describe("MatchEntry", () => {
 
   const gameQueues = new Map([[420, "Ranked Solo/Duo"]]);
 
-  test("renders match entry correctly", () => {
+  test("Renders match entry components correctly", () => {
     render(
       <MatchEntry
         summonerMatchInfo={summonerMatchInfo}
@@ -94,14 +91,14 @@ describe("MatchEntry", () => {
       />
     );
 
-    expect(screen.getByText('Win')).toBeInTheDocument();    
-    expect(screen.getByText('Ranked Solo/Duo')).toBeInTheDocument();
-    // expect(screen.getByText('1 day ago')).toBeInTheDocument();
-    // expect(screen.getByText('30min 0s')).toBeInTheDocument();
-    // expect(screen.getByText('5 / 3 / 7')).toBeInTheDocument();
-    // expect(screen.getByText('2.5 KDA')).toBeInTheDocument();
-    // expect(screen.getByText('50% Kill Participation')).toBeInTheDocument();
-    // expect(screen.getByText('50 Vision Score')).toBeInTheDocument();
-    // expect(screen.getByText('200 CS')).toBeInTheDocument();
+    expect(screen.getByText("Victory")).toBeInTheDocument();
+    expect(screen.getByText("Ranked Solo/Duo")).toBeInTheDocument();
+    expect(screen.getByText("1 day ago")).toBeInTheDocument();
+    expect(screen.getByText("30min 0s")).toBeInTheDocument();
+    expect(screen.getByText("5 / 3 / 7")).toBeInTheDocument();
+    expect(screen.getByText("2.5 KDA")).toBeInTheDocument();
+    expect(screen.getByText("50% Kill Participation")).toBeInTheDocument();
+    expect(screen.getByText("50 Vision Score")).toBeInTheDocument();
+    expect(screen.getByText("200 CS")).toBeInTheDocument();
   });
 });

@@ -1,9 +1,9 @@
 import React, { useEffect, useState, memo } from "react";
-import ProgressBar from "@ramonak/react-progress-bar";
 import {
   apiProxyCall,
   apiImageCall,
 } from "../../server/controller/apiService.js";
+import ChampionEntry from "./ChampionEntry.jsx";
 
 const GAME_MODES = {
   NORMAL: 490,
@@ -78,45 +78,15 @@ const ChampionEntryList = memo(
   }
 );
 
-const ChampionEntry = ({
-  championName,
-  gamesPlayed,
-  winrate,
-  championImage,
-}) => (
-  <div className="champEntry">
-    <div id="champContainer">
-      <div className="champImage">
-        <img src={championImage} alt={championName} />
-      </div>
-      <div className="champName">{championName}</div>
-    </div>
-    <div className="champWinrate">
-      <ProgressBar
-        completed={winrate === 0 ? 1 : winrate}
-        width="125px"
-        height="17px"
-        bgColor="#C89B3C"
-        baseBgColor="#383838"
-        animateOnRender={true}
-        borderRadius="3px"
-        customLabel={winrate === 0 ? "0%" : undefined}
-        labelAlignment={"left"}
-      />
-    </div>
-    <div className="gamesPlayed">{gamesPlayed} Played</div>
-  </div>
-);
-
 /**
  * Retrieves champion image through API call to
  * server to send the static image or to a third party API
- * to retrieve the image 
- * 
- * @param {number} championId 
+ * to retrieve the image
+ *
+ * @param {number} championId
  * @returns {Promise}
  */
-async function getChampionImage(championId) {
+export async function getChampionImage(championId) {
   let championImage = await apiImageCall(
     `http://localhost:3001/assets/Champion_Icons/${championId}.png`
   );
