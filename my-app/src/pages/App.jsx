@@ -767,7 +767,7 @@ export async function matchInfoListDriver(region, matchIDs, puuid) {
   if (matchInfoList.length < matchIDs.length) {
     const moreMatchesObject = await findMoreMatches(region, puuid);
     if (moreMatchesObject) {
-      matchInfoList = matchInfoList.concat(moreMatchesObject);
+      matchInfoList = [...new Set(matchInfoList.concat(moreMatchesObject))];
     }
   }
 
