@@ -786,7 +786,7 @@ export async function matchInfoListDriver(region, matchIDs, puuid) {
  * @param {string} puuid
  * @returns {string[][]}
  */
-async function getMatchInfoList(matchIDs, region, puuid) {
+export async function getMatchInfoList(matchIDs, region, puuid) {
   var matchInfoList = [];
   for (const matchID of matchIDs) {
     const DBMatchInfo = await apiGETDatabaseCall(
@@ -885,7 +885,7 @@ async function getMatchInfoList(matchIDs, region, puuid) {
  * @param {string} matchID
  * @returns {Promise<JSON>}
  */
-async function matchInfoAPICall(region, matchID) {
+export async function matchInfoAPICall(region, matchID) {
   const matchInfoApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
   const data = await apiProxyCall(matchInfoApiURL);
   const contents = {
@@ -909,7 +909,7 @@ async function matchInfoAPICall(region, matchID) {
  * @param {string} puuid
  * @returns {Promise<Array<Object>,Object>}
  */
-async function findMoreMatches(region, puuid) {
+export async function findMoreMatches(region, puuid) {
   const newMatchIDS = await getMatchList(region, puuid, 0, 20);
   const newMatchInfoList = await getMatchInfoList(newMatchIDS, region, puuid);
   return newMatchInfoList.length == 0 ? null : newMatchInfoList.matchInfoList;
@@ -924,7 +924,7 @@ async function findMoreMatches(region, puuid) {
  * @param {string} id
  * @returns {JSON}
  */
-async function getRankedInfo(server, id) {
+export async function getRankedInfo(server, id) {
   const rankedApiURL = `https://${server}.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`;
   const data = await apiProxyNoCacheCall(rankedApiURL);
   var rankedSoloInfo = null;
@@ -956,7 +956,7 @@ async function getRankedInfo(server, id) {
  * @param {number} timestamp
  * @returns {string}
  */
-function formatDateSQL(timestamp) {
+export function formatDateSQL(timestamp) {
   const date = new Date(timestamp);
 
   const year = date.getFullYear();
