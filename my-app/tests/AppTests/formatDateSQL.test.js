@@ -13,10 +13,10 @@ const AppModule = require("../../src/pages/App.jsx");
 //   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 // }
 
-const fixedDate = new Date("2024-01-01T00:00:00Z");
+const fixedDate = new Date("2024-01-01T00:00:00");
 
 describe("getMatchTimeAgo function tests", () => {
   test("Returns formatted date correctly", () => {
-    expect(AppModule.formatDateSQL(fixedDate)).toBe("2024-01-01 02:00:00");
+    expect(AppModule.formatDateSQL(fixedDate)).toBe("2024-01-01 00:00:00");
   });
 });
