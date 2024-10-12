@@ -13,7 +13,7 @@ const AppModule = require("../../src/pages/App.jsx");
 //   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 // }
 
-const fixedDate = new Date("2024-01-01T00:00:00");
+const fixedDate = new Date("2024-01-01T00:00:00Z");
 
 describe("getMatchTimeAgo function tests", () => {
   test("Returns formatted date correctly", () => {

@@ -45,7 +45,7 @@ describe("matchInfoAPICall function tests", () => {
     expect(result).toEqual({
       contents: {
         gameDate: new Date(1633072800000),
-        gameDateSQLFormat: "2021-10-01 10:20:00",
+        gameDateSQLFormat: "2021-10-01 07:20:00",
         gameDuration: 1800,
         gameID: "PtSa$ap1!2xj0-",
         gameQueueID: 420,

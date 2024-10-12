@@ -177,7 +177,7 @@ describe("getMatchInfoList function tests", () => {
         [
             {
                 "gameDate": new Date(1633072800000),
-                "gameDateSQLFormat": "2021-10-01 10:20:00",
+                "gameDateSQLFormat": "2021-10-01 07:20:00",
                 "gameDuration": 1800,
                 "gameID": "A",
                 "gameQueueID": 420
