@@ -1,28 +1,5 @@
 const apiService = require("../../server/controller/apiService.js");
 
-// export function apiProxyNoCacheCall(apiURL) {
-//     const proxyURL = `http://localhost:3001/proxyNoCache?url=${encodeURIComponent(
-//       apiURL
-//     )}`;
-//     return new Promise((resolve, reject) => {
-//       fetch(proxyURL)
-//         .then((response) => {
-//           if (!response.ok) {
-//             throw new Error(`Network response was not ok ${response.status}`);
-//           }
-//           return response.json();
-//         })
-//         .then((data) => {
-//           resolve(data);
-//           console.log(data);
-//         })
-//         .catch((error) => {
-//           reject(error);
-//           console.log(data);
-//         });
-//     });
-//   }
-
 global.fetch = jest.fn();
 
 describe("apiProxyNoCacheCall function tests", () => {

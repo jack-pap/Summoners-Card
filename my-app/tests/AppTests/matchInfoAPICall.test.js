@@ -1,21 +1,6 @@
 const { apiProxyCall } = require("../../server/controller/apiService.js");
 const AppModule = require("../../src/pages/App.jsx");
 
-// export async function matchInfoAPICall(region, matchID) {
-//     const matchInfoApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
-//     const data = await apiProxyCall(matchInfoApiURL);
-//     const contents = {
-//       gameID: matchID,
-//       gameDate: new Date(data.info.gameEndTimestamp),
-//       gameDateSQLFormat: formatDateSQL(data.info.gameEndTimestamp),
-//       gameDuration: data.info.gameDuration,
-//       gameQueueID: data.info.queueId,
-//     };
-//     const participants = data.info.participants;
-
-//     return { contents, participants };
-//   }
-
 jest.mock("../../server/controller/apiService.js", () => ({
   apiProxyCall: jest.fn(),
 }));

@@ -1,25 +1,5 @@
 const apiService = require("../../server/controller/apiService.js");
 
-// export function apiImageCall(imageURL) {
-//     return new Promise((resolve, reject) => {
-//       fetch(imageURL)
-//         .then((response) => {
-//           if (!response.ok) {
-//             throw new Error(`Image data failed to request: ${response.status}`);
-//           }
-//           return response.blob();
-//         })
-//         .then((blob) => {
-//           const url = URL.createObjectURL(blob);
-//           resolve(url);
-//         })
-//         .catch((error) => {
-//           reject(error);
-//           console.log(error);
-//         });
-//     });
-//   }
-
 global.fetch = jest.fn();
 
 describe("apiImageCall function tests", () => {

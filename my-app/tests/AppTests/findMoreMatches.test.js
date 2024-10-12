@@ -1,11 +1,5 @@
 const AppModule = require("../../src/pages/App.jsx");
 
-// export async function findMoreMatches(region, puuid) {
-//     const newMatchIDS = await getMatchList(region, puuid, 0, 20);
-//     const newMatchInfoList = await getMatchInfoList(newMatchIDS, region, puuid);
-//     return newMatchInfoList.length == 0 ? null : newMatchInfoList.matchInfoList;
-//   }
-
 describe("findMoreMatches function tests", () => {
   test("Returns matches", async () => {
     const region = "europe";

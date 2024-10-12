@@ -1,21 +1,5 @@
 const matchEntry = require("../../src/components/MatchEntry.jsx");
 
-// function getMatchTimeAgo(gameDate) {
-//     const milliseconds = Date.now() - new Date(gameDate);
-//     const seconds = Math.floor(milliseconds / 1000);
-//     const minutes = Math.floor(seconds / 60);
-//     const hours = Math.floor(minutes / 60);
-//     const days = Math.floor(hours / 24);
-
-//     if (days > 0) {
-//       return days === 1 ? "A day ago" : `${days} days ago`;
-//     } else if (hours > 0) {
-//       return hours === 1 ? "An hour ago" : `${hours} hours ago`;
-//     } else if (minutes >= 0) {
-//       return minutes === 1 ? "A minute ago" : `${minutes} minutes ago`;
-//     }
-//   }
-
 const yearAgo = new Date(new Date() - 1000 * 60 * 60 * 24 * 365);
 const dayAgo = new Date(new Date() - 1000 * 60 * 60 * 24);
 const hoursAgo = new Date(new Date() - 1000 * 60 * 60 * 5);

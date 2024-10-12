@@ -4,17 +4,6 @@ const {
   apiProxyNoCacheCall,
 } = require("../../server/controller/apiService.js");
 
-// export async function matchListUpdated(region, puuid, stateMatch) {
-//     const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${0}&count=${1}&type=ranked&api_key=${API_KEY}`;
-//     const data = await apiProxyNoCacheCall(matchListApiURL);
-//     const DBMatch = await apiGETDatabaseCall(
-//       "match",
-//       `getMatchSpecific?matchID=${data[0]}&puuid=${puuid}`
-//     );
-//     if (stateMatch && DBMatch[0]) return stateMatch == DBMatch[0].matchID;
-//     return DBMatch.length > 0;
-//   }
-
 jest.mock("../../server/controller/apiService.js", () => ({
   apiGETDatabaseCall: jest.fn(),
   apiProxyNoCacheCall: jest.fn(),

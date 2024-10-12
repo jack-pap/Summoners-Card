@@ -1,25 +1,5 @@
 
 const apiService = require("../../server/controller/apiService.js");
-// export function apiGETDatabaseCall(path, queryRoute) {
-//     const queryRouteURL = `http://localhost:3001/${path}/${queryRoute}`;
-
-//     return new Promise((resolve, reject) => {
-//       fetch(queryRouteURL)
-//         .then((response) => {
-//           if (!response.ok) {
-//             throw new Error(`Network response was not ok ${response.status}`);
-//           }
-//           return response.json();
-//         })
-//         .then((data) => {
-//           resolve(data);
-//         })
-//         .catch((error) => {
-//           reject(error);
-//           console.log(error);
-//         });
-//     });
-//   }
 
 global.fetch = jest.fn();
 

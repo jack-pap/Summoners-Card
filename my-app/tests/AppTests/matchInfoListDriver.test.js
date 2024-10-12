@@ -1,18 +1,5 @@
 const AppModule = require("../../src/pages/App.jsx");
 
-// export async function matchInfoListDriver(region, matchIDs, puuid) {
-//     var matchInfoList = await getMatchInfoList(matchIDs, region, puuid);
-
-//     if (matchInfoList.length < matchIDs.length) {
-//       const moreMatchesObject = await findMoreMatches(region, puuid);
-//       if (moreMatchesObject) {
-//         matchInfoList = [...new Set(matchInfoList.concat(moreMatchesObject))];
-//       }
-//     }
-
-//     return matchInfoList;
-//   }
-
 describe("matchInfoListDriver function tests", () => {
   test("Calls match info list normally", async () => {
     const region = "europe";

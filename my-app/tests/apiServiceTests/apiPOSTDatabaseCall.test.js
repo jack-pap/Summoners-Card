@@ -1,34 +1,5 @@
 const apiService = require("../../server/controller/apiService.js");
 
-// export function apiPOSTDatabaseCall(path, queryRoute, summonerJSONObject) {
-//     const queryRouteURL = `http://localhost:3001/${path}/${queryRoute}`;
-
-//     return new Promise((resolve, reject) => {
-//       fetch(queryRouteURL, {
-//         method: "post",
-//         headers: {
-//           Accept: "application/json",
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify(summonerJSONObject),
-//       })
-//         .then((response) => {
-//           if (!response.ok) {
-//             throw new Error(`Network response was not ok ${response.status}`);
-//           }
-//           return response.json();
-//         })
-//         .then((data) => {
-//           resolve(data);
-//           console.log(data);
-//         })
-//         .catch((error) => {
-//           reject(error);
-//           console.log(error);
-//         });
-//     });
-//   }
-
 global.fetch = jest.fn();
 
 describe("apiPOSTDatabaseCall function tests", () => {

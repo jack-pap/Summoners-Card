@@ -2,31 +2,6 @@ import * as apiService from "../../server/controller/apiService.js";
 
 const AppModule = require("../../src/pages/App.jsx");
 
-// export async function getRankedInfo(server, id) {
-//     const rankedApiURL = `https://${server}.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`;
-//     const data = await apiProxyNoCacheCall(rankedApiURL);
-//     var rankedSoloInfo = null;
-//     var rankedFlexInfo = null;
-//     for (let i = 0; i < data.length; i++) {
-//       const currentRankedInfo = {
-//         queueType: data[i].queueType, // Solo/duo or Flex queue (RANKED_SOLO_5x5, RANKED_FLEX_SR)
-//         rankedTier: data[i].tier, // Iron - Challenger
-//         rankedDivision: data[i].rank, // Roman numerical value IV - I
-//         rankedPoints: data[i].leaguePoints, // Points out of 100 in current rank
-//         rankedGames: data[i].wins + data[i].losses, // Total number of games played this season
-//         rankedWins: data[i].wins, // Wins in current ranked season
-//         rankedLosses: data[i].losses, // Losses in current ranked season
-//       };
-
-//       if (currentRankedInfo.queueType === "RANKED_SOLO_5x5") {
-//         rankedSoloInfo = currentRankedInfo;
-//       } else if (currentRankedInfo.queueType === "RANKED_FLEX_SR") {
-//         rankedFlexInfo = currentRankedInfo;
-//       }
-//     }
-//     return [rankedFlexInfo || "Unranked", rankedSoloInfo || "Unranked"];
-//   }
-
 jest.mock("../../server/controller/apiService.js");
 
 describe("getRankedInfo function tests", () => {

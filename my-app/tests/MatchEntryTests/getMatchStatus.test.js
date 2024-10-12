@@ -1,10 +1,5 @@
 const matchEntry = require("../../src/components/MatchEntry.jsx");
 
-// function getMatchStatus(playerInfo, gameInfo) {
-//     if (gameInfo.gameDuration < 300) return "Remake";
-//     return playerInfo.win ? "Victory" : "Defeat";
-//   }
-
 describe("getMatchStatus function tests", () => {
   test("Remake with win", () => {
     expect(

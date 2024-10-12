@@ -1,20 +1,5 @@
 const matchEntry = require("../../src/components/MatchEntry.jsx");
 
-// export function getKillParticipation(matchInfo, winStatus) {
-//     var totalKills = 0;
-//     var killParticipation = 0;
-
-//     for (const participantInfo of matchInfo[2]) {
-//       if (participantInfo.win == winStatus) totalKills += participantInfo.kills;
-//     }
-
-//     if ((matchInfo[1].kills + matchInfo[1].assists) / totalKills)
-//       killParticipation =
-//         (matchInfo[1].kills + matchInfo[1].assists) / totalKills;
-
-//     return Math.round(killParticipation * 100);
-//   }
-
 // Total kills: 35
 // Kill participation: 8
 const matchInfoNormal = [
