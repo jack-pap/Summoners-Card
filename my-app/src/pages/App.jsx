@@ -7,10 +7,8 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   apiProxyCall,
   apiProxyNoCacheCall,
-  apiImageCall,
   apiGETDatabaseCall,
   apiPOSTDatabaseCall,
-  apiPUTDatabaseCall,
 } from "../../server/controller/apiService.js";
 import GridLoader from "react-spinners/GridLoader";
 import Box from "@mui/material/Box";

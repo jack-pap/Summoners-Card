@@ -5,7 +5,7 @@
 /**
  * API call to Riot for data by calling the proxy route
  * server and passing the apiURL endpoint
- * 
+ *
  * @param {string} apiURL
  * @returns {Promise}
  */
@@ -27,7 +27,7 @@ export function apiProxyCall(apiURL) {
       })
       .catch((error) => {
         reject(error);
-        console.log(data);
+        console.log(error);
       });
   });
 }
@@ -38,9 +38,9 @@ export function apiProxyCall(apiURL) {
 
 /**
  * API call to Riot for data by calling the proxy route
- * server that doesnt cache the request and passing the 
- * apiURL endpoint 
- *  
+ * server that doesnt cache the request and passing the
+ * apiURL endpoint
+ *
  * @param {string} apiURL
  * @returns {Promise}
  */
@@ -62,7 +62,7 @@ export function apiProxyNoCacheCall(apiURL) {
       })
       .catch((error) => {
         reject(error);
-        console.log(data);
+        console.log(error);
       });
   });
 }
@@ -87,8 +87,8 @@ export function apiImageCall(imageURL) {
         resolve(url);
       })
       .catch((error) => {
-        console.error(error);
-        resolve(null);
+        reject(error);
+        console.log(error);
       });
   });
 }
@@ -96,7 +96,7 @@ export function apiImageCall(imageURL) {
 /**
  * API POST call to server to create
  * new database entry
- * 
+ *
  * @param {string} path
  * @param {string} queryRoute
  * @param {JSON} summonerJSONObject
@@ -109,10 +109,10 @@ export function apiPOSTDatabaseCall(path, queryRoute, summonerJSONObject) {
     fetch(queryRouteURL, {
       method: "post",
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(summonerJSONObject)
+      body: JSON.stringify(summonerJSONObject),
     })
       .then((response) => {
         if (!response.ok) {
@@ -121,12 +121,12 @@ export function apiPOSTDatabaseCall(path, queryRoute, summonerJSONObject) {
         return response.json();
       })
       .then((data) => {
-        resolve(data);   
+        resolve(data);
         console.log(data);
       })
       .catch((error) => {
         reject(error);
-        console.log(data);
+        console.log(error);
       });
   });
 }
@@ -134,7 +134,7 @@ export function apiPOSTDatabaseCall(path, queryRoute, summonerJSONObject) {
 /**
  * API GET call to server to request data from
  * the database
- * 
+ *
  * @param {string} path
  * @param {string} queryRoute
  * @returns {Promise}
@@ -155,44 +155,7 @@ export function apiGETDatabaseCall(path, queryRoute) {
       })
       .catch((error) => {
         reject(error);
-        console.log(data);
-      });
-  });
-}
-
-/**
- * API PUT call to server to modify data from
- * the database
- * 
- * @param {string} path
- * @param {string} queryRoute
- * @param {JSON} summonerJSONObject
- * @returns {Promise}
- */
-export function apiPUTDatabaseCall(path, queryRoute) {
-  const queryRouteURL = `http://localhost:3001/${path}/${queryRoute}`;
-
-  return new Promise((resolve, reject) => {
-    fetch(queryRouteURL, {
-      method: "PUT",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        resolve(data);
-        console.log(data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        throw error;
+        console.log(error);
       });
   });
 }

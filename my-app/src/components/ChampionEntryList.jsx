@@ -16,7 +16,7 @@ const GAME_MODES = {
  * @module ChampionEntryList
  */
 
-const ChampionEntryList = memo(
+export const ChampionEntryList = memo(
   ({ summonerChampionWinrateInfo, championsInfo, queueId }) => {
     const [mostPlayedChampions, setMostPlayedChampions] = useState([]);
 

@@ -11,9 +11,6 @@ import App, {
 import {
   apiProxyCall,
   apiImageCall,
-  apiGETDatabaseCall,
-  apiPOSTDatabaseCall,
-  apiPUTDatabaseCall,
 } from "../../server/controller/apiService.js";
 import MatchEntry from "../components/MatchEntry";
 import ChampionEntryList from "../components/ChampionEntryList";
