@@ -2,7 +2,7 @@ import React, { useEffect, useState, memo } from "react";
 import {
   apiProxyCall,
   apiImageCall,
-} from "../../server/controller/apiService.js";
+} from "../../api/controller/apiService.js";
 import ChampionEntry from "./ChampionEntry.jsx";
 
 const GAME_MODES = {

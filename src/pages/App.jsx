@@ -9,7 +9,7 @@ import {
   apiProxyNoCacheCall,
   apiGETDatabaseCall,
   apiPOSTDatabaseCall,
-} from "../../server/controller/apiService.js";
+} from "../../api/controller/apiService.js";
 import GridLoader from "react-spinners/GridLoader";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";

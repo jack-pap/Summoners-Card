@@ -11,7 +11,7 @@ import App, {
 import {
   apiProxyCall,
   apiImageCall,
-} from "../../server/controller/apiService.js";
+} from "../../api/controller/apiService.js";
 import MatchEntry from "../components/MatchEntry";
 import ChampionEntryList from "../components/ChampionEntryList";
 import ErrorPage from "./ErrorPage.jsx";
