@@ -1,1 +1,20 @@
-{ "version": 2, "rewrites": [{ "source": "/my-app", "destination": "/server" }] }
+{
+    "version": 2,
+    "git": {
+        "deploymentEnabled": {
+            "gh-pages": false
+        }
+    },
+    "builds": [
+        {
+            "src": "./server/server.js",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "./my-app",
+            "dest": "/server"
+        }
+    ]
+}
