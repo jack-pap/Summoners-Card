@@ -5,11 +5,6 @@
             "dest": "/",
             "status": 200
         }
-    ],
-    "rewrites": [
-        {
-            "source": "/(.*)",
-            "destination": "/"
-        }
     ]
+
 }
