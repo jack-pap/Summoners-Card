@@ -22,7 +22,7 @@ describe("getChampionImage function tests", () => {
 
     expect(result).toBe(mockImage);
     expect(apiImageCall).toHaveBeenCalledWith(
-      `http://localhost:3001/assets/Champion_Icons/${championId}.png`
+      `http://summoners-card.vercel.app/assets/Champion_Icons/${championId}.png`
     );
   });
 
@@ -41,7 +41,7 @@ describe("getChampionImage function tests", () => {
 
     expect(result).toBe(mockImage);
     expect(apiImageCall).toHaveBeenCalledWith(
-      `http://localhost:3001/assets/Champion_Icons/${championId}.png`
+      `http://summoners-card.vercel.app/assets/Champion_Icons/${championId}.png`
     );
     expect(apiImageCall).toHaveBeenCalledWith(
       `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${championId}.png`

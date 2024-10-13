@@ -1,8 +1,5 @@
 import React, { useEffect, useState, memo } from "react";
-import {
-  apiProxyCall,
-  apiImageCall,
-} from "../../api/controller/apiService.js";
+import { apiProxyCall, apiImageCall } from "../../api/controller/apiService.js";
 import ChampionEntry from "./ChampionEntry.jsx";
 
 const GAME_MODES = {
@@ -88,7 +85,7 @@ export const ChampionEntryList = memo(
  */
 export async function getChampionImage(championId) {
   let championImage = await apiImageCall(
-    `http://localhost:3001/assets/Champion_Icons/${championId}.png`
+    `http://summoners-card.vercel.app/assets/Champion_Icons/${championId}.png`
   );
 
   if (!championImage) {
