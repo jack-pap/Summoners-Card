@@ -282,7 +282,7 @@ function App() {
  *
  * @returns {Promise<JSON>}
  */
-async function loadVersion() {
+export async function loadVersion() {
   const apiURL = "https://ddragon.leagueoflegends.com/api/versions.json";
 
   return new Promise((resolve, reject) => {
@@ -309,7 +309,7 @@ async function loadVersion() {
  *
  * @returns {Map<number, string>}
  */
-async function getAllChampions() {
+export async function getAllChampions() {
   const championApiURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-summary.json`;
   const data = await apiProxyCall(championApiURL);
   var championMapping = new Map();
@@ -359,7 +359,7 @@ async function getAllChampions() {
  * @param {React.Dispatch<React.SetStateAction<boolean>>} setIsLoading
  * @param {React.Dispatch<React.SetStateAction<boolean>>} setOpen
  */
-async function getInput(
+export async function getInput(
   serverValue,
   serverLabel,
   regionValue,
@@ -514,7 +514,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
  * @param {string} gameName
  * @returns {string}
  */
-async function getPUUID(tagLine, gameName) {
+export async function getPUUID(tagLine, gameName) {
   const puuidApiURL = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}?api_key=${API_KEY}`;
   const data = await apiProxyCall(puuidApiURL);
   return data.puuid;
@@ -528,7 +528,7 @@ async function getPUUID(tagLine, gameName) {
  * @param {string} puuid
  * @returns {string[]}
  */
-async function getSummonerInfo(server, puuid) {
+export async function getSummonerInfo(server, puuid) {
   const summonerInfoApiURL = `https://${server}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}?api_key=${API_KEY}`;
   const data = await apiProxyCall(summonerInfoApiURL);
   return [data.id, data.summonerLevel, data.profileIconId];
@@ -544,7 +544,7 @@ async function getSummonerInfo(server, puuid) {
  * @returns {Object<number, JSON>} A mapping between champion ids and a JSON object
  * that holds champion data
  */
-async function getMasteryInfo(server, puuid) {
+export async function getMasteryInfo(server, puuid) {
   const masteryApiURL = `https://${server}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}?api_key=${API_KEY}`;
   const data = await apiProxyCall(masteryApiURL);
   var championStatsMapping = new Map(); // Mapping of championId to JSON stats
@@ -575,7 +575,7 @@ async function getMasteryInfo(server, puuid) {
  * @param {JSON} rankedInfo
  * @param {string[][]} matchInfoList
  */
-function getSummonerWinrates(rankedInfo, matchInfoList) {
+export function getSummonerWinrates(rankedInfo, matchInfoList) {
   const remakes = getRemakesNumber(rankedInfo, matchInfoList);
   const winrates = {
     normalWinrate: 1, //TODO FIX THIS TO GET NORMAL WINRATE
@@ -606,7 +606,7 @@ function getSummonerWinrates(rankedInfo, matchInfoList) {
  * @param {string[][]} matchInfoList
  * @returns {number}
  */
-function getRemakesNumber(rankedInfo, matchInfoList) {
+export function getRemakesNumber(rankedInfo, matchInfoList) {
   var remakeNumber = 0;
   const totalRankedGames =
     rankedInfo[0].rankedGames ?? 0 + rankedInfo[1].rankedGames ?? 0;
@@ -625,7 +625,7 @@ function getRemakesNumber(rankedInfo, matchInfoList) {
  * @param {string[][]} matchInfoList
  * @param {JSON} rankedInfo
  */
-function getChampionWinrate(masteryInfo, matchInfoList, rankedInfo) {
+export function getChampionWinrate(masteryInfo, matchInfoList, rankedInfo) {
   const allRankedGames =
     rankedInfo[0].rankedGames ?? 0 + rankedInfo[1].rankedGames ?? 0;
 
