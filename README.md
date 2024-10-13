@@ -28,20 +28,19 @@
 ```js
 VITE_API_KEY= Riot API key
 SQL_PASSWORD= MySQL database server password
+AWS_ENDPOINT= Amazon endpoint for RDS 
 ```
 >Ensure these variables are within a .env file inside the root directory (my-app)
 ## Installing
 
 ```bash
 > git clone https://github.com/jack-pap/Summoners-Card.git
-> cd my-app
 > npm install 
 ```
 
 ## Running
 
 ```bash
-> cd my-app
 > npm start 
 > npm run dev 
 ```
