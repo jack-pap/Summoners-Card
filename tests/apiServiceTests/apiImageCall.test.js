@@ -1,4 +1,4 @@
-const apiService = require("../../server/controller/apiService.js");
+const apiService = require("../../api/controller/apiService.js");
 
 global.fetch = jest.fn();
 

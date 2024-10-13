@@ -5,7 +5,7 @@ import {
   ChampionEntryList,
   getChampionImage,
 } from "../../src/components/ChampionEntryList.jsx";
-import * as apiService from "../../server/controller/apiService.js";
+import * as apiService from "../../api/controller/apiService.js";
 
 jest.mock("../../src/components/ChampionEntry.jsx", () => ({
   __esModule: true,
@@ -14,7 +14,7 @@ jest.mock("../../src/components/ChampionEntry.jsx", () => ({
   )),
 }));
 
-jest.mock("../../server/controller/apiService.js", () => ({
+jest.mock("../../api/controller/apiService.js", () => ({
   apiImageCall: jest.fn(),
   apiProxyCall: jest.fn(),
 }));
@@ -36,15 +36,18 @@ describe("ChampionEntryList render tests", () => {
           },
         ],
         [
-            999,
-            {
-              rankedSoloWins: 10,
-              rankedSoloGames: 20,
-              rankedSoloWinrate: 50,
-            },
-          ],
+          999,
+          {
+            rankedSoloWins: 10,
+            rankedSoloGames: 20,
+            rankedSoloWinrate: 50,
+          },
+        ],
       ]),
-      championsInfo: new Map([[201, "Braum"], [999, "Muarb"]]),
+      championsInfo: new Map([
+        [201, "Braum"],
+        [999, "Muarb"],
+      ]),
       queueId: 420,
     };
 

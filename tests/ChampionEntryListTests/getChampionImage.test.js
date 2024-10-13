@@ -1,11 +1,8 @@
-import {
-  apiImageCall,
-  apiProxyCall,
-} from "../../server/controller/apiService.js";
+import { apiImageCall, apiProxyCall } from "../../api/controller/apiService.js";
 
 const championEntryList = require("../../src/components/ChampionEntryList.jsx");
 
-jest.mock("../../server/controller/apiService.js");
+jest.mock("../../api/controller/apiService.js");
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
@@ -32,8 +29,7 @@ describe("getChampionImage function tests", () => {
   test("API call to community dragon for the champion image", async () => {
     const championId = "201";
     const mockChampionData = {
-      squarePortraitPath:
-        "/lol-game-data/assets/v1/champion-icons/201.png",
+      squarePortraitPath: "/lol-game-data/assets/v1/champion-icons/201.png",
     };
     const mockImage = "mockImageDataBlob201";
 
@@ -48,7 +44,7 @@ describe("getChampionImage function tests", () => {
       `http://localhost:3001/assets/Champion_Icons/${championId}.png`
     );
     expect(apiImageCall).toHaveBeenCalledWith(
-        `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${championId}.png`
-      );
+      `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${championId}.png`
+    );
   });
 });

@@ -1,4 +1,4 @@
-const apiService = require("../../server/controller/apiService.js");
+const apiService = require("../../api/controller/apiService.js");
 
 global.fetch = jest.fn();
 
@@ -31,8 +31,8 @@ describe("apiProxyCall function tests", () => {
     const URL = "Google.com";
 
     await expect(apiService.apiProxyCall(URL)).rejects.toThrow(
-        "Network response was not ok 500"
-      );
+      "Network response was not ok 500"
+    );
     expect(fetch).toHaveBeenCalledWith(
       `http://localhost:3001/proxy?url=${encodeURIComponent(URL)}`
     );

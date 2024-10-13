@@ -1,5 +1,4 @@
-
-const apiService = require("../../server/controller/apiService.js");
+const apiService = require("../../api/controller/apiService.js");
 
 global.fetch = jest.fn();
 
@@ -17,10 +16,7 @@ describe("apiGETDatabaseCall function tests", () => {
     const path = "summoner";
     const queryRoute = "get";
 
-    const result = await apiService.apiGETDatabaseCall(
-      path,
-      queryRoute,
-    );
+    const result = await apiService.apiGETDatabaseCall(path, queryRoute);
 
     expect(result).toStrictEqual({ testData: "testData" });
     expect(fetch).toHaveBeenCalledWith(

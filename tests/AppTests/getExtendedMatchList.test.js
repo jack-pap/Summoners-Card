@@ -2,9 +2,9 @@ const AppModule = require("../../src/pages/App.jsx");
 const {
   apiGETDatabaseCall,
   apiProxyCall,
-} = require("../../server/controller/apiService.js");
+} = require("../../api/controller/apiService.js");
 
-jest.mock("../../server/controller/apiService.js", () => ({
+jest.mock("../../api/controller/apiService.js", () => ({
   apiGETDatabaseCall: jest.fn(),
   apiProxyCall: jest.fn(),
 }));

@@ -1,6 +1,6 @@
 const express = require('express')
 
-const summonerRoutes = require('./../controller/databaseController.js')
+const summonerRoutes = require('./controller/databaseController.js')
 
 const router = express.Router()
 

@@ -4,7 +4,7 @@
     "version": "0.1.0",
     "proxy": "http://localhost:3001",
     "scripts": {
-        "start": "node server/server.js",
+        "start": "node api/index.js",
         "dev": "vite",
         "build": "vite build",
         "docs": "jsdoc -c log.config.json",

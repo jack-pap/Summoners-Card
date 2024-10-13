@@ -1,7 +1,7 @@
 const AppModule = require("../../src/pages/App.jsx");
-const { apiProxyCall } = require("../../server/controller/apiService.js");
+const { apiProxyCall } = require("../../api/controller/apiService.js");
 
-jest.mock("../../server/controller/apiService.js", () => ({
+jest.mock("../../api/controller/apiService.js", () => ({
   apiProxyCall: jest.fn(),
 }));
 

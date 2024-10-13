@@ -1,8 +1,8 @@
-import * as apiService from "../../server/controller/apiService.js";
+import * as apiService from "../../api/controller/apiService.js";
 
 const AppModule = require("../../src/pages/App.jsx");
 
-jest.mock("../../server/controller/apiService.js");
+jest.mock("../../api/controller/apiService.js");
 
 describe("getRankedInfo function tests", () => {
   test("Returns ranked solo only", async () => {

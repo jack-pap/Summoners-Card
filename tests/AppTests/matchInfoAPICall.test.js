@@ -1,7 +1,7 @@
-const { apiProxyCall } = require("../../server/controller/apiService.js");
+const { apiProxyCall } = require("../../api/controller/apiService.js");
 const AppModule = require("../../src/pages/App.jsx");
 
-jest.mock("../../server/controller/apiService.js", () => ({
+jest.mock("../../api/controller/apiService.js", () => ({
   apiProxyCall: jest.fn(),
 }));
 
@@ -15,9 +15,9 @@ describe("matchInfoAPICall function tests", () => {
 
     apiProxyCall.mockResolvedValue({
       info: {
-        gameEndTimestamp: new Date(1633072800000), 
+        gameEndTimestamp: new Date(1633072800000),
         gameDuration: 1800,
-        queueId: 420, 
+        queueId: 420,
         participants: [
           { puuid: "player1", win: true, championId: 1 },
           { puuid: "player2", win: false, championId: 2 },
