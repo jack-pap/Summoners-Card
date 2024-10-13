@@ -633,7 +633,7 @@ async function getProfileBackground(
   const container = document.getElementById("profileBg");
 
   var championImage = await apiImageCall(
-    `http://summoners-card.vercel.app/assets/Champion_Backgrounds/${championName}_splash_centered_0.jpg`
+    `https://summoners-card.vercel.app/assets/Champion_Backgrounds/${championName}_splash_centered_0.jpg`
   );
 
   if (!championImage) {
@@ -1091,7 +1091,7 @@ async function makeRankedEmblems(summonerRankedInfo) {
  */
 async function makeRankedEmblem(summonerRankedInfo, containerName) {
   var rankedIconImage = await apiImageCall(
-    `http://summoners-card.vercel.app/assets/Ranked_Emblems/emblem-${summonerRankedInfo.rankedTier}.png`
+    `https://summoners-card.vercel.app/assets/Ranked_Emblems/emblem-${summonerRankedInfo.rankedTier}.png`
   );
   const container = document.getElementById(containerName);
   const component = document.createElement("div");
@@ -1120,7 +1120,7 @@ async function makeRankedEmblem(summonerRankedInfo, containerName) {
  */
 async function getChampionAssets(championId, insideClass, parentComponent) {
   var championImage = await apiImageCall(
-    `http://summoners-card.vercel.app/assets/Champion_Icons/${championId}.png`
+    `https://summoners-card.vercel.app/assets/Champion_Icons/${championId}.png`
   );
 
   if (!championImage) {
@@ -1193,7 +1193,7 @@ async function getSummonerSpellImage(
   const parts = spellObject.iconPath.split("/");
   const spellName = parts[parts.length - 1];
   var summonerSpellImage = await apiImageCall(
-    `http://summoners-card.vercel.app/assets/Summoner_Spells/${spellName}`
+    `https://summoners-card.vercel.app/assets/Summoner_Spells/${spellName}`
   );
 
   if (!summonerSpellImage) {
@@ -1251,7 +1251,7 @@ async function getRuneImage(runeID, component, divClass, isSecondary) {
   const parts = runeObject.iconPath.split("/");
   const runeName = parts[parts.length - 1];
   var summonerRuneImage = await apiImageCall(
-    `http://summoners-card.vercel.app/assets/Summoner_Runes/${runeName}`
+    `https://summoners-card.vercel.app/assets/Summoner_Runes/${runeName}`
   );
 
   if (!summonerRuneImage) {
@@ -1332,7 +1332,7 @@ async function getSummonerItemImage(summonerItemData, itemID, baseImageURL) {
   const parts = itemObject.iconPath.split("/");
   const imageName = parts[parts.length - 1];
   var summonerItemImage = await apiImageCall(
-    `http://summoners-card.vercel.app/assets/Summoner_Items/${imageName}`
+    `https://summoners-card.vercel.app/assets/Summoner_Items/${imageName}`
   );
 
   if (!summonerItemImage) {

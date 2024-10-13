@@ -18,7 +18,7 @@ describe("apiProxyCall function tests", () => {
 
     expect(result).toStrictEqual({ testData: "123" });
     expect(fetch).toHaveBeenCalledWith(
-      `http://summoners-card.vercel.app/proxy?url=${encodeURIComponent(URL)}`
+      `https://summoners-card.vercel.app/proxy?url=${encodeURIComponent(URL)}`
     );
   });
 
@@ -34,7 +34,7 @@ describe("apiProxyCall function tests", () => {
       "Network response was not ok 500"
     );
     expect(fetch).toHaveBeenCalledWith(
-      `http://summoners-card.vercel.app/proxy?url=${encodeURIComponent(URL)}`
+      `https://summoners-card.vercel.app/proxy?url=${encodeURIComponent(URL)}`
     );
   });
 });
