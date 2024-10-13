@@ -15,5 +15,9 @@
       "source": "/(.*)",
       "destination": "/api"
     }
-  ]
+  ],
+  "env": {
+    "DATABASE_URL": "@DATABASE_URL",
+    "API_KEY": "@API_KEY"
+  }
 }
