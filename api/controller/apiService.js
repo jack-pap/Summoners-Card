@@ -80,7 +80,7 @@ export function apiImageCall(imageURL) {
         if (!response.ok) {
           throw new Error(`Image data failed to request: ${response.status}`);
         }
-        return null;
+        return response.blob();
       })
       .then((blob) => {
         const url = URL.createObjectURL(blob);
