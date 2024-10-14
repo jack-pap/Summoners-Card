@@ -631,19 +631,19 @@ async function getProfileBackground(
   const [championId] = summonerChampionWinrateInfo.keys();
   const championName = championsInfo.get(championId).replace(/[\s\W]/g, "");
   const container = document.getElementById("profileBg");
-
+  var championImage;
   // var championImage = await apiImageCall(
   //   `https://summoners-card.vercel.app/assets/Champion_Backgrounds/${championName}_splash_centered_0.jpg`
   // );
 
   //if (!championImage) {
-    const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
-    const champImageURL = `/lol-game-data/assets/ASSETS/Characters/${championName}/Skins/Base/Images/${championName}_splash_centered_0.jpg`;
-    const extractedPath = champImageURL
-      .replace("/lol-game-data/assets/", "")
-      .toLowerCase();
-    const finalURL = baseImageURL + extractedPath;
-    championImage = await apiImageCall(finalURL);
+  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+  const champImageURL = `/lol-game-data/assets/ASSETS/Characters/${championName}/Skins/Base/Images/${championName}_splash_centered_0.jpg`;
+  const extractedPath = champImageURL
+    .replace("/lol-game-data/assets/", "")
+    .toLowerCase();
+  const finalURL = baseImageURL + extractedPath;
+  championImage = await apiImageCall(finalURL);
   //}
 
   const img = document.createElement("img");
@@ -1090,16 +1090,18 @@ async function makeRankedEmblems(summonerRankedInfo) {
  * @param {string} containerName
  */
 async function makeRankedEmblem(summonerRankedInfo, containerName) {
-  // var rankedIconImage = await apiImageCall(
+  var rankedIconImage;
+  // rankedIconImage = await apiImageCall(
   //   `https://summoners-card.vercel.app/assets/Ranked_Emblems/emblem-${summonerRankedInfo.rankedTier}.png`
   // );
+
   const container = document.getElementById(containerName);
   const component = document.createElement("div");
   component.setAttribute("class", "rankedEmblem");
 
   //if (!rankedIconImage) {
-    const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/ranked-emblem/emblem-${summonerRankedInfo.rankedTier.toLowerCase()}.png`;
-    rankedIconImage = await apiImageCall(imgURL);
+  const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/ranked-emblem/emblem-${summonerRankedInfo.rankedTier.toLowerCase()}.png`;
+  rankedIconImage = await apiImageCall(imgURL);
   //}
 
   const img = document.createElement("img");
@@ -1119,20 +1121,21 @@ async function makeRankedEmblem(summonerRankedInfo, containerName) {
  * @param {HTMLDivElement} parentComponent
  */
 async function getChampionAssets(championId, insideClass, parentComponent) {
-  // var championImage = await apiImageCall(
+  var championImage;
+  // championImage = await apiImageCall(
   //   `https://summoners-card.vercel.app/assets/Champion_Icons/${championId}.png`
   // );
 
   //if (!championImage) {
-    const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
-    const championData = await apiProxyCall(championDataURL);
-    const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
-    const champImageURL = championData.squarePortraitPath;
-    const extractedPath = champImageURL
-      .replace("/lol-game-data/assets/", "")
-      .toLowerCase();
-    const finalURL = baseImageURL + extractedPath;
-    championImage = await apiImageCall(finalURL);
+  const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
+  const championData = await apiProxyCall(championDataURL);
+  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+  const champImageURL = championData.squarePortraitPath;
+  const extractedPath = champImageURL
+    .replace("/lol-game-data/assets/", "")
+    .toLowerCase();
+  const finalURL = baseImageURL + extractedPath;
+  championImage = await apiImageCall(finalURL);
   //}
 
   const img = document.createElement("img");
@@ -1192,17 +1195,18 @@ async function getSummonerSpellImage(
   const spellObject = summonerSpellsData.find((spell) => spell.id === spellID);
   const parts = spellObject.iconPath.split("/");
   const spellName = parts[parts.length - 1];
-  // var summonerSpellImage = await apiImageCall(
+  var summonerSpellImage;
+  // summonerSpellImage = await apiImageCall(
   //   `https://summoners-card.vercel.app/assets/Summoner_Spells/${spellName}`
   // );
 
   //if (!summonerSpellImage) {
-    const summonerSpellImageURL = spellObject.iconPath;
-    const extractedPath = summonerSpellImageURL
-      .replace("/lol-game-data/assets/", "")
-      .toLowerCase();
-    const finalURL = baseImageURL + extractedPath;
-    summonerSpellImage = await apiImageCall(finalURL);
+  const summonerSpellImageURL = spellObject.iconPath;
+  const extractedPath = summonerSpellImageURL
+    .replace("/lol-game-data/assets/", "")
+    .toLowerCase();
+  const finalURL = baseImageURL + extractedPath;
+  summonerSpellImage = await apiImageCall(finalURL);
   //}
 
   const img = document.createElement("img");
@@ -1250,20 +1254,21 @@ async function getRuneImage(runeID, component, divClass, isSecondary) {
 
   const parts = runeObject.iconPath.split("/");
   const runeName = parts[parts.length - 1];
-  // var summonerRuneImage = await apiImageCall(
+  var summonerRuneImage;
+  // summonerRuneImage = await apiImageCall(
   //   `https://summoners-card.vercel.app/assets/Summoner_Runes/${runeName}`
   // );
 
   // if (!summonerRuneImage) {
-    const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
-    const runeImageURL = runeObject.iconPath;
+  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+  const runeImageURL = runeObject.iconPath;
 
-    const extractedPath = runeImageURL
-      .replace("/lol-game-data/assets/", "")
-      .toLowerCase();
-    const finalURL = baseImageURL + extractedPath;
+  const extractedPath = runeImageURL
+    .replace("/lol-game-data/assets/", "")
+    .toLowerCase();
+  const finalURL = baseImageURL + extractedPath;
 
-    summonerRuneImage = await apiImageCall(finalURL);
+  summonerRuneImage = await apiImageCall(finalURL);
   //}
 
   const img = document.createElement("img");
@@ -1331,18 +1336,19 @@ async function getSummonerItemImage(summonerItemData, itemID, baseImageURL) {
   const itemObject = summonerItemData.find((item) => item.id === itemID);
   const parts = itemObject.iconPath.split("/");
   const imageName = parts[parts.length - 1];
-  // var summonerItemImage = await apiImageCall(
+  var summonerItemImage;
+  // summonerItemImage = await apiImageCall(
   //   `https://summoners-card.vercel.app/assets/Summoner_Items/${imageName}`
   // );
 
   // if (!summonerItemImage) {
-    const summonerItemImageURL = itemObject.iconPath;
+  const summonerItemImageURL = itemObject.iconPath;
 
-    const extractedPath = summonerItemImageURL
-      .replace("/lol-game-data/assets/", "")
-      .toLowerCase();
-    const finalURL = baseImageURL + extractedPath;
-    summonerItemImage = await apiImageCall(finalURL);
+  const extractedPath = summonerItemImageURL
+    .replace("/lol-game-data/assets/", "")
+    .toLowerCase();
+  const finalURL = baseImageURL + extractedPath;
+  summonerItemImage = await apiImageCall(finalURL);
   //}
   const img = document.createElement("img");
   img.src = summonerItemImage;
