@@ -17,7 +17,7 @@
     }
   ],
   "env": {
-    "DATABASE_URL": "@DATABASE_URL",
-    "API_KEY": "@API_KEY"
+    "AWS_ENDPOINT": "@AWS_ENDPOINT",
+    "API_KEY": "@VITE_API_KEY"
   }
 }
