@@ -1,6 +1,6 @@
 
 <p align="center">
-   <img alt="logo" src="./my-app/docs/logo.png">
+   <img alt="logo" src="./docs/logo.png">
 </p>
  
 <p align="center">
