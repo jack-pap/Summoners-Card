@@ -14,6 +14,10 @@
     {
       "source": "/(.*)",
       "destination": "/api"
+    },
+    {
+      "source": "/assets/(.*)",
+      "destination": "/assets/$1"
     }
   ]
 }
