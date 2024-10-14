@@ -22,7 +22,7 @@ describe("getChampionImage function tests", () => {
 
     expect(result).toBe(mockImage);
     expect(apiImageCall).toHaveBeenCalledWith(
-      `https://summoners-card.onrender.com/assets/Champion_Icons/${championId}.png`
+      `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${championId}.png`
     );
   });
 
