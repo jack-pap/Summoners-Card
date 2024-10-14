@@ -13,7 +13,7 @@ export default defineConfig({
   root: ".",
   server: {
     proxy: {
-      "/assets": "https://summoners-card.vercel.app",
+      "/assets": "https://summoners-card.onrender.com",
     },
   },
   esbuild: {

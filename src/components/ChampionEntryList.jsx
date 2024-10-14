@@ -86,19 +86,19 @@ export const ChampionEntryList = memo(
 export async function getChampionImage(championId) {
   var championImage;
   // championImage = await apiImageCall(
-  //   `https://summoners-card.vercel.app/assets/Champion_Icons/${championId}.png`
+  //   `https://summoners-card.onrender.com/assets/Champion_Icons/${championId}.png`
   // );
 
   // if (!championImage) {
-    const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
-    const championData = await apiProxyCall(championDataURL);
-    const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
-    const champImageURL = championData.squarePortraitPath;
-    const extractedPath = champImageURL
-      .replace("/lol-game-data/assets/", "")
-      .toLowerCase();
-    const finalURL = baseImageURL + extractedPath;
-    championImage = await apiImageCall(finalURL);
+  const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
+  const championData = await apiProxyCall(championDataURL);
+  const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
+  const champImageURL = championData.squarePortraitPath;
+  const extractedPath = champImageURL
+    .replace("/lol-game-data/assets/", "")
+    .toLowerCase();
+  const finalURL = baseImageURL + extractedPath;
+  championImage = await apiImageCall(finalURL);
   //}
 
   return championImage;

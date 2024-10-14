@@ -20,7 +20,7 @@ describe("apiGETDatabaseCall function tests", () => {
 
     expect(result).toStrictEqual({ testData: "testData" });
     expect(fetch).toHaveBeenCalledWith(
-      `https://summoners-card.vercel.app/${path}/${queryRoute}`
+      `https://summoners-card.onrender.com/${path}/${queryRoute}`
     );
   });
 
@@ -38,7 +38,7 @@ describe("apiGETDatabaseCall function tests", () => {
     ).rejects.toThrow("Network response was not ok 500");
 
     expect(fetch).toHaveBeenCalledWith(
-      `https://summoners-card.vercel.app/${path}/${queryRoute}`
+      `https://summoners-card.onrender.com/${path}/${queryRoute}`
     );
   });
 });

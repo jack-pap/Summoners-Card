@@ -2,7 +2,7 @@
     "name": "SummonersCard",
     "private": true,
     "version": "0.1.0",
-    "proxy": "https://summoners-card.vercel.app",
+    "proxy": "https://summoners-card.onrender.com",
     "scripts": {
         "start": "node api/index.js",
         "dev": "vite",
