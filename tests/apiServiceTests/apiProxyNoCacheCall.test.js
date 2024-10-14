@@ -18,9 +18,7 @@ describe("apiProxyNoCacheCall function tests", () => {
 
     expect(result).toStrictEqual({ testData: "123" });
     expect(fetch).toHaveBeenCalledWith(
-      `https://summoners-card.vercel.app/proxyNoCache?url=${encodeURIComponent(
-        URL
-      )}`
+      `http://localhost:3001/proxyNoCache?url=${encodeURIComponent(URL)}`
     );
   });
 
@@ -36,9 +34,7 @@ describe("apiProxyNoCacheCall function tests", () => {
       "Network response was not ok 500"
     );
     expect(fetch).toHaveBeenCalledWith(
-      `https://summoners-card.vercel.app/proxyNoCache?url=${encodeURIComponent(
-        URL
-      )}`
+      `http://localhost:3001/proxyNoCache?url=${encodeURIComponent(URL)}`
     );
   });
 });

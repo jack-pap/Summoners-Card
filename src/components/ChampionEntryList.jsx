@@ -85,7 +85,7 @@ export const ChampionEntryList = memo(
  */
 export async function getChampionImage(championId) {
   let championImage = await apiImageCall(
-    `https://summoners-card.vercel.app/assets/Champion_Icons/${championId}.png`
+    `http://localhost:3001/assets/Champion_Icons/${championId}.png`
   );
 
   if (!championImage) {

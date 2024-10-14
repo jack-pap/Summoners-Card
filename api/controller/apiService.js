@@ -10,7 +10,7 @@
  * @returns {Promise}
  */
 export function apiProxyCall(apiURL) {
-  const proxyURL = `https://summoners-card.vercel.app/proxy?url=${encodeURIComponent(
+  const proxyURL = `http://localhost:3001/proxy?url=${encodeURIComponent(
     apiURL
   )}`;
   return new Promise((resolve, reject) => {
@@ -45,7 +45,7 @@ export function apiProxyCall(apiURL) {
  * @returns {Promise}
  */
 export function apiProxyNoCacheCall(apiURL) {
-  const proxyURL = `https://summoners-card.vercel.app/proxyNoCache?url=${encodeURIComponent(
+  const proxyURL = `http://localhost:3001/proxyNoCache?url=${encodeURIComponent(
     apiURL
   )}`;
   return new Promise((resolve, reject) => {
@@ -103,7 +103,7 @@ export function apiImageCall(imageURL) {
  * @returns {Promise}
  */
 export function apiPOSTDatabaseCall(path, queryRoute, summonerJSONObject) {
-  const queryRouteURL = `https://summoners-card.vercel.app/${path}/${queryRoute}`;
+  const queryRouteURL = `http://localhost:3001/${path}/${queryRoute}`;
 
   return new Promise((resolve, reject) => {
     fetch(queryRouteURL, {
@@ -140,7 +140,7 @@ export function apiPOSTDatabaseCall(path, queryRoute, summonerJSONObject) {
  * @returns {Promise}
  */
 export function apiGETDatabaseCall(path, queryRoute) {
-  const queryRouteURL = `https://summoners-card.vercel.app/${path}/${queryRoute}`;
+  const queryRouteURL = `http://localhost:3001/${path}/${queryRoute}`;
 
   return new Promise((resolve, reject) => {
     fetch(queryRouteURL)
