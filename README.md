@@ -21,7 +21,7 @@
 ## Requirements 
 
 - Node 
-- MySQL
+- MySQL server
 - Riot.txt file
 
 ## Environment Variables
