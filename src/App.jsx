@@ -1,24 +1,24 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import "../App.css";
+import "./App.css";
+import "./index.css";
 import Select from "react-select";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import {
-  apiProxyCall,
-  apiProxyNoCacheCall,
-  apiGETDatabaseCall,
-  apiPOSTDatabaseCall,
-} from "../../api/controller/apiService.js";
+// import {
+//   apiProxyCall,
+//   apiProxyNoCacheCall,
+//   apiGETDatabaseCall,
+//   apiPOSTDatabaseCall,
+// } from "../../api/controller/apiService.js";
 import GridLoader from "react-spinners/GridLoader";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
-import ErrorPage from "../components/ErrorPage";
+// import ErrorPage from "./ErrorPage";
 
-const API_KEY = import.meta.env.VITE_API_KEY;
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 const serverOptions = [
   { value: "EUW1", label: "EUW", region: "europe" },
@@ -118,10 +118,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(false); // Spinner state for when data is loading
   const [open, setOpen] = useState(false);
 
-  const location = useLocation();
-  const errorName = location.state?.errorName ?? null;
-  const navigate = useNavigate();
-
   const handleChange = (server) => {
     setSelectedServer(server);
     console.log(`Option selected:`, server);
@@ -138,18 +134,19 @@ function App() {
       .catch((error) => {
         console.error("Error loading version:", error);
       });
-    if (errorName) {
-      document.querySelector(
-        ".MuiAlert-message"
-      ).textContent = `Trouble finding summoner ${errorName}`;
-      setOpen(true);
-      window.history.replaceState({}, "");
-      return;
-    }
+    // if (errorName) {
+    //   document.querySelector(
+    //     ".MuiAlert-message"
+    //   ).textContent = `Trouble finding summoner ${errorName}`;
+    //   setOpen(true);
+    //   window.history.replaceState({}, "");
+    //   return;
+    // }
   }, []);
 
   return (
     <>
+    
       <div id="homeBody">
         <h1>
           SUMMONERS <br /> CARD
@@ -262,6 +259,7 @@ function App() {
           </Collapse>
         </Box>
       </div>
+  
       <GridLoader
         color={"#9b792f"}
         loading={isLoading}
@@ -318,34 +316,6 @@ export async function getAllChampions() {
   }
   return championMapping;
 }
-
-// async function getBackgrounds(championsInfo) {
-//   for (const [id, name] of championsInfo.entries()) {
-//     if (name == "None" || name == "Hwei" || name == "Aurora" || name == "Wukong" || name == "Renata Glasc" || name == "Lee Sin" || name == "Nunu & Willump") {
-//       continue;
-//     }
-//     const championName = name.replace(/[\s\W]/g, "");
-
-//     const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
-//     const champImageURL = `/lol-game-data/assets/ASSETS/Characters/${championName}/Skins/Base/Images/${championName}_splash_centered_0.jpg`;
-//     const extractedPath = champImageURL
-//       .replace("/lol-game-data/assets/", "")
-//       .toLowerCase();
-//     const finalURL = baseImageURL + extractedPath;
-//     const championImage = await apiImageCall(finalURL);
-
-//     const a = document.createElement("a");
-//     a.style.display = "none";
-//     a.href = championImage;
-//     a.download = `${championName}_splash_centered_0.jpg`; // Specify the filename
-//     document.body.appendChild(a);
-//     a.click();
-
-//     // Clean up
-//     window.URL.revokeObjectURL(championImage);
-//     document.body.removeChild(a);
-//   }
-// }
 
 /**
  * Gathers input from field, retrieves data

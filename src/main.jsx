@@ -4,8 +4,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 import App from "./pages/App.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
-import ErrorPage from "./pages/ErrorPage.jsx";
+import Dashboard from "./components/Dashboard.jsx";
+import ErrorPage from "./components/ErrorPage.jsx";
 import "./index.css";
 import "./App.css";
 

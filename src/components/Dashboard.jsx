@@ -7,10 +7,10 @@ import App, {
   getExtendedMatchList,
   matchInfoListDriver,
   matchListUpdated,
-} from "./App.jsx";
+} from "../pages/App.jsx";
 import { apiProxyCall, apiImageCall } from "../../api/controller/apiService.js";
-import MatchEntry from "../components/MatchEntry";
-import ChampionEntryList from "../components/ChampionEntryList";
+import MatchEntry from "./MatchEntry";
+import ChampionEntryList from "./ChampionEntryList";
 import ErrorPage from "./ErrorPage.jsx";
 import { useState, useEffect, createElement } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
