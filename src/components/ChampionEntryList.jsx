@@ -1,5 +1,5 @@
 import React, { useEffect, useState, memo } from "react";
-import { apiProxyCall, apiImageCall } from "../../api/controller/apiService.js";
+// import { apiProxyCall, apiImageCall } from "../../api/controller/apiService.js";
 import ChampionEntry from "./ChampionEntry.jsx";
 
 const GAME_MODES = {

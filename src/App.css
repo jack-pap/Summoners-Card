@@ -362,7 +362,7 @@ select:focus {
 
 #summonerContainer {
   display: flex;
-  align-items: end;
+  align-items: flex-end;;
   text-align: center;
   justify-content: center;
   margin-top: 25px;
