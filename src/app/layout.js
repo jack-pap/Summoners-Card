@@ -22,8 +22,10 @@ export default function RootLayout({ children }) {
       <body>
         <DataProvider>
           {" "}
-          <div id="root">{children}</div>
-          <Footer />
+          <div id="root">
+            {children}
+            <Footer />
+          </div>
         </DataProvider>
       </body>
     </html>

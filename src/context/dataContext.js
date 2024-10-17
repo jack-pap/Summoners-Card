@@ -4,17 +4,7 @@ import { createContext, useContext, useState } from "react";
 const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
-  const [data, setData] = useState({
-    puuid: "",
-    gameName: "",
-    tagLine: "",
-    summonerInfo: "",
-    rankedInfo: "",
-    matchInfoList: "",
-    summonerWinrate: "",
-    masteryInfo: "",
-    champions: "",
-  });
+  const [data, setData] = useState(null);
 
   return (
     <DataContext.Provider value={{ data, setData }}>

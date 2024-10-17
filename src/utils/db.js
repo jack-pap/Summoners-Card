@@ -9,6 +9,9 @@ const db = knex({
     user: "admin",
     password: process.env.SQL_PASSWORD,
     database: "summonerscard",
+    waitForConnections: true,
+    connectionLimit: 10, 
+    queueLimit: 0, 
   },
 });
 

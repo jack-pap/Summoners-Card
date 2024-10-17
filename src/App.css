@@ -362,7 +362,7 @@ select:focus {
 
 #summonerContainer {
   display: flex;
-  align-items: flex-end;;
+  align-items: flex-end;
   text-align: center;
   justify-content: center;
   margin-top: 25px;
@@ -857,8 +857,8 @@ img {
 }
 
 .emptyItem {
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   background-color: #252525;
   border-radius: 5px;
 }

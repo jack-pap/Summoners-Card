@@ -9,8 +9,6 @@ import Select from "react-select";
 import { useState, useEffect } from "react";
 import {
   apiCall,
-  apiProxyCall,
-  apiProxyNoCacheCall,
   apiGETDatabaseCall,
   apiPOSTDatabaseCall,
 } from "./utils/apiService.js";

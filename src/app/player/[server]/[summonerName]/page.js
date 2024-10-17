@@ -16,11 +16,11 @@ import App, {
   matchListUpdated,
 } from "../../../../App.jsx";
 import { useData } from "../../../../context/dataContext";
-import { apiProxyCall, apiImageCall } from "../../../../utils/apiService.js";
+import { apiCall, apiImageCall } from "../../../../utils/apiService.js";
 import MatchEntry from "../../../../components/MatchEntry";
 import ChampionEntryList from "../../../../components/ChampionEntryList";
 import ErrorPage from "../../../../components/ErrorPage.jsx";
-import { useState, useEffect, createElement } from "react";
+import { useEffect, useRef, useState } from "react";
 import GridLoader from "react-spinners/GridLoader";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -30,6 +30,7 @@ import { LineChart } from "@mui/x-charts";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import CircularProgress from "@mui/material/CircularProgress";
 import "react-circular-progressbar/dist/styles.css";
+import Header from "@/src/components/Header";
 
 const serverOptions = [
   { value: "EUW1", label: "EUW", region: "europe" },
@@ -71,6 +72,7 @@ var ownUsername;
 
 function Dashboard() {
   const router = useRouter();
+  const hasFetched = useRef(false);
   const { data } = useData();
   const { server, summonerName } = useParams();
   const region = serverOptions.find(
@@ -82,6 +84,7 @@ function Dashboard() {
 
   const [isVisible, setIsVisible] = useState(false);
 
+  const [summonerData, setSummonerData] = useState(null);
   const [gameName, setGameName] = useState("");
   const [tagLine, setTagLine] = useState("");
   const [puuid, setPuuid] = useState(null);
@@ -100,19 +103,16 @@ function Dashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (hasFetched.current) return;
+      hasFetched.current = true;
+
       try {
         gameQueues = await getGameQueues();
         setIsLoading(true);
 
         let newGameName, result;
-        // if (
-        //   !(await matchListUpdated(
-        //     region,
-        //     puuid,
-        //     summonerMatchInfo[0][0].gameID
-        //   )))
-        if (data == null) {
-          newGameName = summonerName.split("-")[0].trim();
+        if (!summonerData) {
+          newGameName = decodeURIComponent(summonerName.split("-")[0].trim());
           result = await getSummonerStats(
             summonerName.split("-")[1],
             newGameName,
@@ -120,18 +120,21 @@ function Dashboard() {
             region
           );
         } else {
-          newGameName = data.gameName;
+          const resultData = summonerData;
+          newGameName = resultData.gameName;
           result = {
-            puuid: data.puuid,
-            tagLine: data.tagLine,
-            summonerInfo: data.summonerInfo,
-            rankedInfo: data.rankedInfo,
-            matchInfoList: data.matchInfoList,
-            summonerWinrate: data.summonerWinrate,
-            masteryInfo: data.masteryInfo,
-            champions: data.champions,
+            puuid: resultData.puuid,
+            tagLine: resultData.tagLine,
+            summonerInfo: resultData.summonerInfo,
+            rankedInfo: resultData.rankedInfo,
+            matchInfoList: resultData.matchInfoList,
+            summonerWinrate: resultData.summonerWinrate,
+            masteryInfo: resultData.masteryInfo,
+            champions: resultData.champions,
           };
         }
+
+        setSummonerData(result);
 
         setGameName(newGameName);
         setTagLine(result.tagLine);
@@ -148,11 +151,6 @@ function Dashboard() {
       } catch (error) {
         console.error("Error fetching data:", error);
         router.push("/");
-        // navigate("/", {
-        //   state: {
-        //     errorName: summonerName,
-        //   },
-        // });
       }
     };
 
@@ -163,6 +161,7 @@ function Dashboard() {
         setIsVisible(false);
       }
     };
+
     fetchData();
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -171,15 +170,7 @@ function Dashboard() {
   }, [summonerName, server]);
 
   useEffect(() => {
-    if (
-      !isLoading &&
-      summonerInfo &&
-      summonerRankedInfo &&
-      summonerMatchInfo &&
-      summonerWinrateInfo &&
-      summonerChampionWinrateInfo &&
-      championsInfo
-    ) {
+    if (!isLoading) {
       makeSummonerProfile(
         summonerInfo,
         summonerRankedInfo,
@@ -194,11 +185,11 @@ function Dashboard() {
         "fade-in 1s forwards";
     }
   }, [
-    isLoading,
     summonerInfo,
     summonerRankedInfo,
     summonerWinrateInfo,
     summonerChampionWinrateInfo,
+    isLoading,
   ]);
 
   ownUsername = gameName;
@@ -218,11 +209,265 @@ function Dashboard() {
   }
   return (
     <>
-      <div id="homeBody">
-        <div id="summonerContainer">
-          <div id="winrateBlockContainer">
-            <div id="winrateBlock">
+      <div className="dashboard">
+        <Header />
+        <div id="homeBody">
+          <div id="summonerContainer">
+            <div id="winrateBlockContainer">
+              <div id="winrateBlock">
+                <ButtonGroup
+                  variant="outlined"
+                  sx={{
+                    ".MuiButtonGroup-grouped": {
+                      "&:hover": {
+                        color: "#C89B3C",
+                        backgroundColor: "#262c33",
+                        borderColor: "#C89B3C",
+                      },
+                      color: "#A09B8C",
+                      backgroundColor: "262c33",
+                      borderColor: "#C89B3C",
+                    },
+                  }}
+                  size="Large"
+                  aria-label="Basic button group"
+                  fullWidth
+                >
+                  {/* <Button
+                  onClick={() => {
+                    loadWinrate(
+                      summonerRankedInfo[1],
+                      summonerWinrateInfo.normalWinrate
+                    );
+                  }}
+                >
+                  Normal
+                </Button> */}
+                  <Button
+                    onClick={() => {
+                      loadWinrate(
+                        summonerRankedInfo[1],
+                        summonerWinrateInfo.rankedSoloWinrate
+                      );
+                    }}
+                  >
+                    Solo/Duo
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      loadWinrate(
+                        summonerRankedInfo[0],
+                        summonerWinrateInfo.rankedFlexWinrate
+                      );
+                    }}
+                  >
+                    Flex
+                  </Button>
+                </ButtonGroup>
+                <div className="winrateContainer">
+                  <div id="games">
+                    <CircularProgressbar
+                      strokeWidth={5}
+                      value={
+                        summonerRankedInfo[1].rankedGames != undefined
+                          ? summonerRankedInfo[1].rankedGames
+                          : 0
+                      }
+                      maxValue={1}
+                      text={
+                        summonerRankedInfo[1].rankedGames != undefined
+                          ? summonerRankedInfo[1].rankedGames
+                          : "0"
+                      }
+                      styles={buildStyles({
+                        strokeLinecap: "butt",
+                        strokeDashoffset:
+                          summonerRankedInfo[1].rankedGames > 0 ? 0 : 298.451,
+                        textSize: "18px",
+                        pathTransitionDuration: 0.4,
+                        pathColor: `rgb(197 134 0)`,
+                        textColor: "#E3E4E4",
+                        trailColor: "#65645E",
+                      })}
+                    />
+                    Games Played
+                  </div>
+                  <div id="winrate">
+                    <CircularProgressbar
+                      strokeWidth={5}
+                      value={
+                        !isNaN(summonerWinrateInfo.rankedSoloWinrate)
+                          ? summonerWinrateInfo.rankedSoloWinrate
+                          : 0
+                      }
+                      text={
+                        !isNaN(summonerWinrateInfo.rankedSoloWinrate)
+                          ? `${summonerWinrateInfo.rankedSoloWinrate}%`
+                          : `0%`
+                      }
+                      styles={buildStyles({
+                        strokeLinecap: "butt",
+                        textSize: "18px",
+                        pathTransitionDuration: 0.4,
+                        pathColor: `rgb(197 134 0)`,
+                        textColor: "#E3E4E4",
+                        trailColor: "#65645E",
+                      })}
+                    />
+                    Winrate
+                  </div>
+                </div>
+              </div>
+              <div className="winrateGraph">
+                <LineChart
+                  xAxis={[
+                    {
+                      data: graphData.map((item) => item.date),
+                      scaleType: "band",
+                    },
+                  ]}
+                  series={[
+                    {
+                      data: graphData.map((item) => item.value),
+                      color: "rgb(197, 134, 0)",
+                      label: "Win/Loss Ratio",
+                      valueFormatter: (v, { dataIndex }) => {
+                        if (dataIndex >= 0 && dataIndex < graphData.length) {
+                          const { date, label } = graphData[dataIndex];
+                          return label;
+                        }
+                        return "";
+                      },
+                    },
+                  ]}
+                  width={450}
+                  height={320}
+                  grid={{ vertical: true, horizontal: true }}
+                  slotProps={{
+                    popper: {
+                      sx: {
+                        "& .css-12667wq-MuiChartsTooltip-container": {
+                          backgroundColor: "#1b1f24 !important",
+                          border: "1px solid #C89B3C !important",
+                        },
+                        "& .css-s3y5yc-MuiChartsTooltip-cell": {
+                          color: "#C89B3C !important",
+                        },
+                        "& .css-gxsr2b-MuiChartsTooltip-mark": {
+                          border: "0px !important",
+                        },
+                        "& .css-2hvfka-MuiChartsTooltip-table tbody tr td": {
+                          borderTop: "1px solid #383838 !important",
+                        },
+                      },
+                    },
+                  }}
+                  sx={{
+                    "& .MuiMarkElement-root": {
+                      // Marks in the grid
+                      fill: "rgb(27, 31, 36) !important",
+                    },
+                    "& .MuiChartsAxisHighlight-root": {
+                      // Inside of the mark color
+                      stroke: "rgb(101, 100, 94) !important",
+                    },
+                    "& .MuiChartsAxis-line": {
+                      // Axis lines color
+                      stroke: "rgb(101, 100, 94) !important",
+                    },
+                    "& .MuiChartsGrid-line": {
+                      // Grid lines color
+                      stroke: "rgb(48, 48, 48) !important",
+                    },
+                    "& .MuiChartsAxis-tick": {
+                      // Little line next to the marks
+                      stroke: "rgb(101, 100, 94) !important",
+                    },
+                    "& .MuiChartsAxis-tickLabel": {
+                      // Text on axis labels
+                      fill: "rgb(101, 100, 94) !important",
+                    },
+                    "& .MuiChartsLegend-root text": {
+                      // Text on axis labels
+                      fill: "rgb(101, 100, 94) !important",
+                    },
+                  }}
+                />
+              </div>
+            </div>
+            <div id="summonerBlock">
+              <div className="profileGroup">
+                <div id="profileBg"> </div>
+                <div id="profileIconGroupContainer"></div>
+                <div id="name">
+                  <div id="gameName"> {gameName} </div>
+                  <div id="tagLine"> #{tagLine} </div>
+                  <div
+                    id="iconContainer"
+                    onClick={() => {
+                      copyToClipBoard(gameName, tagLine);
+                    }}
+                    onMouseEnter={resetCopyButton}
+                  >
+                    <span id="copyToClipboardIconText" className="tooltip-text">
+                      Copy to clipboard
+                    </span>
+                    <svg
+                      id="copyToClipboardIcon"
+                      clipRule="evenodd"
+                      fillRule="evenodd"
+                      strokeLinejoin="round"
+                      strokeMiterlimit="2"
+                      viewBox="0 -1 21 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="m6 18h-3c-.48 0-1-.379-1-1v-14c0-.481.38-1 1-1h14c.621 0 1 .522 1 1v3h3c.621 0 1 .522 
+                    1 1v14c0 .621-.522 1-1 1h-14c-.48
+                    0-1-.379-1-1zm1.5-10.5v13h13v-13zm9-1.5v-2.5h-13v13h2.5v-9.5c0-.481.38-1 1-1z"
+                        fillRule="nonzero"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div className="summonerChips"></div>
+              </div>
+              {(summonerRankedInfo[0] !== "Unranked" ||
+                summonerRankedInfo[1] !== "Unranked") && (
+                <div id="lineDivider"></div>
+              )}
+              <div className="rankedInfo">
+                {summonerRankedInfo[1] !== "Unranked" && (
+                  <div id="rankedSolo">
+                    <div className="rankedRank">
+                      <div>{`${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision} --`}</div>
+                      <div>{`${summonerRankedInfo[1].rankedPoints} LP`}</div>
+                    </div>
+                    <div className="rankedTitle">Ranked Solo/Duo</div>
+                    <div className="rankedWinrate">
+                      <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}</div>
+                      <div>{`(${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L)`}</div>
+                    </div>
+                  </div>
+                )}
+                {summonerRankedInfo[0] !== "Unranked" && (
+                  <div id="rankedFlex">
+                    <div className="rankedRank">
+                      <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision} --`}</div>
+                      <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
+                    </div>
+                    <div className="rankedTitle">Ranked Flex</div>
+                    <div className="rankedWinrate">
+                      <div>{`${summonerWinrateInfo.rankedFlexWinrate}% Winrate`}</div>
+                      <div>{`(${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L)`}</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div id="championBlock">
               <ButtonGroup
+                id="championButtonGroup"
                 variant="outlined"
                 sx={{
                   ".MuiButtonGroup-grouped": {
@@ -240,21 +485,24 @@ function Dashboard() {
                 aria-label="Basic button group"
                 fullWidth
               >
+                makeChampionWinrate
                 {/* <Button
-                  onClick={() => {
-                    loadWinrate(
-                      summonerRankedInfo[1],
-                      summonerWinrateInfo.normalWinrate
-                    );
-                  }}
-                >
-                  Normal
-                </Button> */}
+                onClick={() => {
+                  makeChampionWinrate(
+                    summonerChampionWinrateInfo,
+                    championsInfo,
+                    490
+                  );
+                }}
+              >
+                Normal
+              </Button> */}
                 <Button
                   onClick={() => {
-                    loadWinrate(
-                      summonerRankedInfo[1],
-                      summonerWinrateInfo.rankedSoloWinrate
+                    makeChampionWinrate(
+                      summonerChampionWinrateInfo,
+                      championsInfo,
+                      420
                     );
                   }}
                 >
@@ -262,219 +510,33 @@ function Dashboard() {
                 </Button>
                 <Button
                   onClick={() => {
-                    loadWinrate(
-                      summonerRankedInfo[0],
-                      summonerWinrateInfo.rankedFlexWinrate
+                    makeChampionWinrate(
+                      summonerChampionWinrateInfo,
+                      championsInfo,
+                      440
                     );
                   }}
                 >
                   Flex
                 </Button>
               </ButtonGroup>
-              <div className="winrateContainer">
-                <div id="games">
-                  <CircularProgressbar
-                    strokeWidth={5}
-                    value={
-                      summonerRankedInfo[1].rankedGames != undefined
-                        ? summonerRankedInfo[1].rankedGames
-                        : 0
-                    }
-                    maxValue={1}
-                    text={
-                      summonerRankedInfo[1].rankedGames != undefined
-                        ? summonerRankedInfo[1].rankedGames
-                        : "0"
-                    }
-                    styles={buildStyles({
-                      strokeLinecap: "butt",
-                      strokeDashoffset:
-                        summonerRankedInfo[1].rankedGames > 0 ? 0 : 298.451,
-                      textSize: "18px",
-                      pathTransitionDuration: 0.4,
-                      pathColor: `rgb(197 134 0)`,
-                      textColor: "#E3E4E4",
-                      trailColor: "#65645E",
-                    })}
-                  />
-                  Games Played
-                </div>
-                <div id="winrate">
-                  <CircularProgressbar
-                    strokeWidth={5}
-                    value={
-                      !isNaN(summonerWinrateInfo.rankedSoloWinrate)
-                        ? summonerWinrateInfo.rankedSoloWinrate
-                        : 0
-                    }
-                    text={
-                      !isNaN(summonerWinrateInfo.rankedSoloWinrate)
-                        ? `${summonerWinrateInfo.rankedSoloWinrate}%`
-                        : `0%`
-                    }
-                    styles={buildStyles({
-                      strokeLinecap: "butt",
-                      textSize: "18px",
-                      pathTransitionDuration: 0.4,
-                      pathColor: `rgb(197 134 0)`,
-                      textColor: "#E3E4E4",
-                      trailColor: "#65645E",
-                    })}
-                  />
-                  Winrate
-                </div>
+              <div id="statNames">
+                <div>Name</div>
+                <div>Winrate</div>
+                <div>Games</div>
               </div>
-            </div>
-            <div className="winrateGraph">
-              <LineChart
-                xAxis={[
-                  {
-                    data: graphData.map((item) => item.date),
-                    scaleType: "band",
-                  },
-                ]}
-                series={[
-                  {
-                    data: graphData.map((item) => item.value),
-                    color: "rgb(197, 134, 0)",
-                    label: "Win/Loss Ratio",
-                    valueFormatter: (v, { dataIndex }) => {
-                      if (dataIndex >= 0 && dataIndex < graphData.length) {
-                        const { date, label } = graphData[dataIndex];
-                        return label;
-                      }
-                      return "";
-                    },
-                  },
-                ]}
-                width={450}
-                height={320}
-                grid={{ vertical: true, horizontal: true }}
-                slotProps={{
-                  popper: {
-                    sx: {
-                      "& .css-12667wq-MuiChartsTooltip-container": {
-                        backgroundColor: "#1b1f24 !important",
-                        border: "1px solid #C89B3C !important",
-                      },
-                      "& .css-s3y5yc-MuiChartsTooltip-cell": {
-                        color: "#C89B3C !important",
-                      },
-                      "& .css-gxsr2b-MuiChartsTooltip-mark": {
-                        border: "0px !important",
-                      },
-                      "& .css-2hvfka-MuiChartsTooltip-table tbody tr td": {
-                        borderTop: "1px solid #383838 !important",
-                      },
-                    },
-                  },
-                }}
-                sx={{
-                  "& .MuiMarkElement-root": {
-                    // Marks in the grid
-                    fill: "rgb(27, 31, 36) !important",
-                  },
-                  "& .MuiChartsAxisHighlight-root": {
-                    // Inside of the mark color
-                    stroke: "rgb(101, 100, 94) !important",
-                  },
-                  "& .MuiChartsAxis-line": {
-                    // Axis lines color
-                    stroke: "rgb(101, 100, 94) !important",
-                  },
-                  "& .MuiChartsGrid-line": {
-                    // Grid lines color
-                    stroke: "rgb(48, 48, 48) !important",
-                  },
-                  "& .MuiChartsAxis-tick": {
-                    // Little line next to the marks
-                    stroke: "rgb(101, 100, 94) !important",
-                  },
-                  "& .MuiChartsAxis-tickLabel": {
-                    // Text on axis labels
-                    fill: "rgb(101, 100, 94) !important",
-                  },
-                  "& .MuiChartsLegend-root text": {
-                    // Text on axis labels
-                    fill: "rgb(101, 100, 94) !important",
-                  },
-                }}
-              />
+              <ChampionEntryList
+                summonerChampionWinrateInfo={summonerChampionWinrateInfo}
+                championsInfo={championsInfo}
+                queueId={420}
+              ></ChampionEntryList>
             </div>
           </div>
-          <div id="summonerBlock">
-            <div className="profileGroup">
-              <div id="profileBg"> </div>
-              <div id="profileIconGroupContainer"></div>
-              <div id="name">
-                <div id="gameName"> {gameName} </div>
-                <div id="tagLine"> #{tagLine} </div>
-                <div
-                  id="iconContainer"
-                  onClick={() => {
-                    copyToClipBoard(gameName, tagLine);
-                  }}
-                  onMouseEnter={resetCopyButton}
-                >
-                  <span id="copyToClipboardIconText" className="tooltip-text">
-                    Copy to clipboard
-                  </span>
-                  <svg
-                    id="copyToClipboardIcon"
-                    clipRule="evenodd"
-                    fillRule="evenodd"
-                    strokeLinejoin="round"
-                    strokeMiterlimit="2"
-                    viewBox="0 -1 21 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="m6 18h-3c-.48 0-1-.379-1-1v-14c0-.481.38-1 1-1h14c.621 0 1 .522 1 1v3h3c.621 0 1 .522 
-                    1 1v14c0 .621-.522 1-1 1h-14c-.48
-                    0-1-.379-1-1zm1.5-10.5v13h13v-13zm9-1.5v-2.5h-13v13h2.5v-9.5c0-.481.38-1 1-1z"
-                      fillRule="nonzero"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <div className="summonerChips"></div>
-            </div>
-            {(summonerRankedInfo[0] !== "Unranked" ||
-              summonerRankedInfo[1] !== "Unranked") && (
-              <div id="lineDivider"></div>
-            )}
-            <div className="rankedInfo">
-              {summonerRankedInfo[1] !== "Unranked" && (
-                <div id="rankedSolo">
-                  <div className="rankedRank">
-                    <div>{`${summonerRankedInfo[1].rankedTier} ${summonerRankedInfo[1].rankedDivision} --`}</div>
-                    <div>{`${summonerRankedInfo[1].rankedPoints} LP`}</div>
-                  </div>
-                  <div className="rankedTitle">Ranked Solo/Duo</div>
-                  <div className="rankedWinrate">
-                    <div>{`${summonerWinrateInfo.rankedSoloWinrate}% Winrate`}</div>
-                    <div>{`(${summonerRankedInfo[1].rankedWins}W ${summonerRankedInfo[1].rankedLosses}L)`}</div>
-                  </div>
-                </div>
-              )}
-              {summonerRankedInfo[0] !== "Unranked" && (
-                <div id="rankedFlex">
-                  <div className="rankedRank">
-                    <div>{`${summonerRankedInfo[0].rankedTier} ${summonerRankedInfo[0].rankedDivision} --`}</div>
-                    <div>{`${summonerRankedInfo[0].rankedPoints} LP`}</div>
-                  </div>
-                  <div className="rankedTitle">Ranked Flex</div>
-                  <div className="rankedWinrate">
-                    <div>{`${summonerWinrateInfo.rankedFlexWinrate}% Winrate`}</div>
-                    <div>{`(${summonerRankedInfo[0].rankedWins}W ${summonerRankedInfo[0].rankedLosses}L)`}</div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-          <div id="championBlock">
+
+          <div id="matchHistoryBlock">
+            <div id="matchHistoryHeader"> MATCH HISTORY </div>
+            <div id="matchList" />
             <ButtonGroup
-              id="championButtonGroup"
               variant="outlined"
               sx={{
                 ".MuiButtonGroup-grouped": {
@@ -490,126 +552,58 @@ function Dashboard() {
               }}
               size="Large"
               aria-label="Basic button group"
-              fullWidth
+              width="300px"
             >
-              makeChampionWinrate
-              {/* <Button
+              <LoadingButton
+                loading={isTempLoading}
+                loadingIndicator={
+                  <CircularProgress sx={{ color: "#d8a841" }} size={35} />
+                }
+                loadingPosition="center"
                 onClick={() => {
-                  makeChampionWinrate(
-                    summonerChampionWinrateInfo,
-                    championsInfo,
-                    490
+                  extendMatchHistory(
+                    summonerMatchInfo,
+                    region,
+                    puuid,
+                    setSummonerMatchInfo,
+                    setIsTempLoading
                   );
                 }}
               >
-                Normal
-              </Button> */}
-              <Button
-                onClick={() => {
-                  makeChampionWinrate(
-                    summonerChampionWinrateInfo,
-                    championsInfo,
-                    420
-                  );
-                }}
-              >
-                Solo/Duo
-              </Button>
-              <Button
-                onClick={() => {
-                  makeChampionWinrate(
-                    summonerChampionWinrateInfo,
-                    championsInfo,
-                    440
-                  );
-                }}
-              >
-                Flex
-              </Button>
+                Load More
+              </LoadingButton>
             </ButtonGroup>
-            <div id="statNames">
-              <div>Name</div>
-              <div>Winrate</div>
-              <div>Games</div>
-            </div>
-            <ChampionEntryList
-              summonerChampionWinrateInfo={summonerChampionWinrateInfo}
-              championsInfo={championsInfo}
-              queueId={420}
-            ></ChampionEntryList>
           </div>
         </div>
-
-        <div id="matchHistoryBlock">
-          <div id="matchHistoryHeader"> MATCH HISTORY </div>
-          <div id="matchList" />
-          <ButtonGroup
-            variant="outlined"
-            sx={{
-              ".MuiButtonGroup-grouped": {
-                "&:hover": {
-                  color: "#C89B3C",
-                  backgroundColor: "#262c33",
-                  borderColor: "#C89B3C",
-                },
-                color: "#A09B8C",
-                backgroundColor: "262c33",
-                borderColor: "#C89B3C",
-              },
-            }}
-            size="Large"
-            aria-label="Basic button group"
-            width="300px"
+        {isVisible ? (
+          <div
+            onClick={() =>
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              })
+            }
           >
-            <LoadingButton
-              loading={isTempLoading}
-              loadingIndicator={
-                <CircularProgress sx={{ color: "#d8a841" }} size={35} />
-              }
-              loadingPosition="center"
-              onClick={() => {
-                extendMatchHistory(
-                  summonerMatchInfo,
-                  region,
-                  puuid,
-                  setSummonerMatchInfo,
-                  setIsTempLoading
-                );
-              }}
+            <svg
+              id="scrollUpIcon"
+              clipRule="evenodd"
+              fillRule="evenodd"
+              strokeLinejoin="round"
+              strokeMiterlimit="2"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              Load More
-            </LoadingButton>
-          </ButtonGroup>
-        </div>
-      </div>
-      {isVisible ? (
-        <div
-          onClick={() =>
-            window.scrollTo({
-              top: 0,
-              behavior: "smooth",
-            })
-          }
-        >
-          <svg
-            id="scrollUpIcon"
-            clipRule="evenodd"
-            fillRule="evenodd"
-            strokeLinejoin="round"
-            strokeMiterlimit="2"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="m2.019 11.993c0 5.518 4.48 9.998 9.998 9.998 5.517 0 9.997-4.48 9.997-9.998s-4.48-9.998-9.997-9.998c-5.518 0-9.998 4.48-9.998 
+              <path
+                d="m2.019 11.993c0 5.518 4.48 9.998 9.998 9.998 5.517 0 9.997-4.48 9.997-9.998s-4.48-9.998-9.997-9.998c-5.518 0-9.998 4.48-9.998 
           9.998zm1.5 0c0-4.69 3.808-8.498 8.498-8.498s8.497 3.808 8.497 8.498-3.807 8.498-8.497 8.498-8.498-3.808-8.498-8.498zm4.715-1.528s1.505-1.502
           3.259-3.255c.147-.146.338-.219.53-.219s.384.073.53.219c1.754 1.753 3.259 3.254 3.259 3.254.145.145.217.336.216.527 0 
           .191-.074.383-.22.53-.293.293-.766.294-1.057.004l-1.978-1.978v6.694c0
           .413-.336.75-.75.75s-.75-.337-.75-.75v-6.694l-1.978 1.979c-.29.289-.762.286-1.055-.007-.147-.146-.22-.338-.221-.53-.001-.19.071-.38.215-.524z"
-            />
-          </svg>{" "}
-        </div>
-      ) : null}
+              />
+            </svg>{" "}
+          </div>
+        ) : null}
+      </div>
     </>
   );
 }
@@ -617,7 +611,7 @@ function Dashboard() {
 async function getGameQueues() {
   const gameQueueURL =
     "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/queues.json";
-  const gameQueueData = await apiProxyCall(gameQueueURL);
+  const gameQueueData = await apiCall(gameQueueURL);
   var queueMapping = new Map();
   for (var queue in gameQueueData) {
     queueMapping.set(gameQueueData[queue].id, gameQueueData[queue].name);
@@ -1140,7 +1134,7 @@ async function getChampionAssets(championId, insideClass, parentComponent) {
 
   //if (!championImage) {
   const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
-  const championData = await apiProxyCall(championDataURL);
+  const championData = await apiCall(championDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
   const champImageURL = championData.squarePortraitPath;
   const extractedPath = champImageURL
@@ -1172,7 +1166,7 @@ async function getSummonerSpellAssets(
   component
 ) {
   const summonerSpellsURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/summoner-spells.json`;
-  const summonerSpellsData = await apiProxyCall(summonerSpellsURL);
+  const summonerSpellsData = await apiCall(summonerSpellsURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
 
   const img1 = await getSummonerSpellImage(
@@ -1259,7 +1253,7 @@ async function getRuneImage(runeID, component, divClass, isSecondary) {
   const runeDataURL = isSecondary
     ? `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perkstyles.json`
     : `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perks.json`;
-  const summonerRuneData = await apiProxyCall(runeDataURL);
+  const summonerRuneData = await apiCall(runeDataURL);
   const runeObject = isSecondary
     ? summonerRuneData.styles.find((rune) => rune.id === runeID)
     : summonerRuneData.find((rune) => rune.id === runeID);
@@ -1301,7 +1295,7 @@ async function getRuneImage(runeID, component, divClass, isSecondary) {
  */
 async function getItemAssets(summonerInfo, divClass, component) {
   const itemDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/items.json`;
-  const summonerItemData = await apiProxyCall(itemDataURL);
+  const summonerItemData = await apiCall(itemDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
   var itemIds = [
     summonerInfo.item0,

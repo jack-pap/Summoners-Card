@@ -1,5 +1,5 @@
 import React, { useEffect, useState, memo } from "react";
-// import { apiProxyCall, apiImageCall } from "../../api/controller/apiService.js";
+import { apiCall, apiProxyCall, apiImageCall } from "../utils/apiService.js";
 import ChampionEntry from "./ChampionEntry.jsx";
 
 const GAME_MODES = {
@@ -91,7 +91,7 @@ export async function getChampionImage(championId) {
 
   // if (!championImage) {
   const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
-  const championData = await apiProxyCall(championDataURL);
+  const championData = await apiCall(championDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
   const champImageURL = championData.squarePortraitPath;
   const extractedPath = champImageURL
