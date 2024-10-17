@@ -15,6 +15,7 @@ import App, {
   matchInfoListDriver,
   matchListUpdated,
 } from "../../../../App.jsx";
+import { useData } from "../../../../context/dataContext";
 import { apiProxyCall, apiImageCall } from "../../../../utils/apiService.js";
 import MatchEntry from "../../../../components/MatchEntry";
 import ChampionEntryList from "../../../../components/ChampionEntryList";
@@ -70,6 +71,7 @@ var ownUsername;
 
 function Dashboard() {
   const router = useRouter();
+  const { data } = useData();
   const { server, summonerName } = useParams();
   const region = serverOptions.find(
     (option) => server === option.label
@@ -109,7 +111,7 @@ function Dashboard() {
         //     puuid,
         //     summonerMatchInfo[0][0].gameID
         //   )))
-        if (state == null) {
+        if (data == null) {
           newGameName = summonerName.split("-")[0].trim();
           result = await getSummonerStats(
             summonerName.split("-")[1],
@@ -118,16 +120,16 @@ function Dashboard() {
             region
           );
         } else {
-          newGameName = state.gameName;
+          newGameName = data.gameName;
           result = {
-            puuid: state.puuid,
-            tagLine: state.tagLine,
-            summonerInfo: state.summonerInfo,
-            rankedInfo: state.summonerRankedInfo,
-            matchInfoList: state.summonerMatchInfo,
-            summonerWinrate: state.summonerWinrateInfo,
-            masteryInfo: state.summonerChampionWinrateInfo,
-            champions: state.championsInfo,
+            puuid: data.puuid,
+            tagLine: data.tagLine,
+            summonerInfo: data.summonerInfo,
+            rankedInfo: data.rankedInfo,
+            matchInfoList: data.matchInfoList,
+            summonerWinrate: data.summonerWinrate,
+            masteryInfo: data.masteryInfo,
+            champions: data.champions,
           };
         }
 

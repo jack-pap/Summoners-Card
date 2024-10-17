@@ -16,7 +16,7 @@ export async function POST(request) {
   } catch (err) {
     return NextResponse.json(
       {
-        message: `There was an error creating match ${body.matchID} entry: ${err}`,
+        message: `There was an error creating match ${request.json().matchID} entry: ${err}`,
       },
       { status: 500 }
     );

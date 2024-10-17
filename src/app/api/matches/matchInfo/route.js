@@ -19,7 +19,7 @@ export async function GET(request, { params }) {
   } catch (error) {
     return NextResponse.json(
       {
-        message: `There was an error retrieving info for match ${req.query.matchID}: ${error}`,
+        message: `There was an error retrieving info for match ${request.query.matchID}: ${error}`,
       },
       { status: 500 }
     );

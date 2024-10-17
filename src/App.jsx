@@ -2,6 +2,7 @@
 "use client";
 import React from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useData } from "./context/dataContext";
 import "./App.css";
 import "./index.css";
 import Select from "react-select";
@@ -117,7 +118,7 @@ const spinnerStyles = {
  */
 function App() {
   const router = useRouter();
-
+  const { setData } = useData();
   const [selectedServer, setSelectedServer] = useState(serverOptions[0]); // Initialize with the default value
   const [patchVersion, setPatchVersion] = useState("    "); // Initialize patch version
   const [isLoading, setIsLoading] = useState(false); // Spinner state for when data is loading
@@ -151,6 +152,7 @@ function App() {
 
   return (
     <>
+      <div className="line" id="leftLine"></div>
       <div id="homeBody">
         <h1>
           SUMMONERS <br /> CARD
@@ -170,7 +172,8 @@ function App() {
                   selectedServer.region,
                   router,
                   setIsLoading,
-                  setOpen
+                  setOpen,
+                  setData
                 );
             }}
           />
@@ -221,7 +224,8 @@ function App() {
                 selectedServer.region,
                 router,
                 setIsLoading,
-                setOpen
+                setOpen,
+                setData
               )
             }
           >
@@ -263,7 +267,6 @@ function App() {
           </Collapse>
         </Box>
       </div>
-
       <GridLoader
         color={"#9b792f"}
         loading={isLoading}
@@ -274,6 +277,7 @@ function App() {
         aria-label="Loading Spinner"
         data-testid="loader"
       />
+      <div className="line" id="rightLine"></div>
     </>
   );
 }
@@ -339,7 +343,8 @@ export async function getInput(
   regionValue,
   router,
   setIsLoading,
-  setOpen
+  setOpen,
+  setData
 ) {
   const summonerName = document.getElementById("summonerName").value;
   const gameName = summonerName.split("#")[0].trim();
@@ -361,10 +366,6 @@ export async function getInput(
     document.getElementById("homeBody").style.pointerEvents = "none";
     setIsLoading(true);
 
-    const response = await fetch(
-      `/api/summoners/PjsXxtF2pTrn01BeP-UR_TgeRMF1u6dl1jJ6NkYtKzIVsnKYWRIXRkkYawg9vIzpxda_Z9IfDsXq7w`
-    );
-
     const {
       puuid,
       summonerInfo,
@@ -380,18 +381,18 @@ export async function getInput(
         "#",
         "-"
       )}`.toString();
-      const query = {
+      setData({
         puuid,
         gameName,
         tagLine,
-        summonerInfo: JSON.stringify(summonerInfo),
-        rankedInfo: JSON.stringify(rankedInfo),
-        matchInfoList: JSON.stringify(matchInfoList),
-        summonerWinrate: JSON.stringify(summonerWinrate),
-        masteryInfo: JSON.stringify(masteryInfo),
-        champions: JSON.stringify(champions),
-      };
-      router.push(path, query);
+        summonerInfo: summonerInfo,
+        rankedInfo: rankedInfo,
+        matchInfoList: matchInfoList,
+        summonerWinrate: summonerWinrate,
+        masteryInfo: masteryInfo,
+        champions: champions,
+      });
+      router.push(path);
     };
     handleNavigation();
   } catch (error) {
