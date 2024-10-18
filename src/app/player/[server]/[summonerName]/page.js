@@ -77,6 +77,14 @@ function Dashboard() {
   const summonerData = useSummonerStore((state) => state.summonerData);
   const setSummonerData = useSummonerStore((state) => state.setSummonerData);
   const storedData = useSummonerStore.getState().summonerData;
+  var storedTransformedData = null;
+  if (storedData) {
+    storedTransformedData = {
+      ...storedData,
+      masteryInfo: new Map(storedData.masteryInfo),
+      champions: new Map(storedData.champions),
+    };
+  }
   const { data } = useData();
   const { server, summonerName } = useParams();
   const region = serverOptions.find(
@@ -113,7 +121,7 @@ function Dashboard() {
         setIsLoading(true);
 
         let newGameName, result;
-        if (!data && !summonerData) {
+        if (!data && !storedTransformedData) {
           newGameName = decodeURIComponent(summonerName.split("-")[0].trim());
           result = await getSummonerStats(
             summonerName.split("-")[1],
@@ -122,7 +130,7 @@ function Dashboard() {
             region
           );
         } else {
-          const resultData = summonerData || data;
+          const resultData = data || storedTransformedData;
           newGameName = resultData.gameName;
           result = {
             puuid: resultData.puuid,
@@ -136,7 +144,14 @@ function Dashboard() {
           };
         }
 
-        setSummonerData(result);
+        //When storing maps in local storage they dont get stored properly
+        const transformedResult = {
+          ...result,
+          masteryInfo: Array.from(result.masteryInfo.entries()),
+          champions: Array.from(result.champions.entries()),
+        };
+
+        setSummonerData(transformedResult);
         setGameName(newGameName);
         setTagLine(result.tagLine);
         setPuuid(result.puuid);
