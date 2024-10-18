@@ -2,14 +2,9 @@
 import React from "react";
 import "../../../../App.css";
 import { memo } from "react";
-import {
-  useRouter,
-  usePathname,
-  useSearchParams,
-  useParams,
-} from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { createRoot } from "react-dom/client";
-import App, {
+import {
   getSummonerStats,
   getExtendedMatchList,
   matchInfoListDriver,
@@ -18,9 +13,9 @@ import App, {
 import { useData } from "@/src/context/dataContext";
 import { apiCall, apiImageCall } from "@/src/utils/apiService";
 import useSummonerStore from "@/src/utils/storeService";
-import MatchEntry from "../../../../components/MatchEntry";
-import ChampionEntryList from "../../../../components/ChampionEntryList";
-import ErrorPage from "../../../../components/ErrorPage.jsx";
+import MatchEntry from "@/src/components/MatchEntry";
+import ChampionEntryList from "@/src/components/ChampionEntryList";
+import ErrorPage from "@/src/components/ErrorPage.jsx";
 import { useEffect, useRef, useState } from "react";
 import GridLoader from "react-spinners/GridLoader";
 import Button from "@mui/material/Button";
