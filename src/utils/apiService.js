@@ -1,8 +1,9 @@
+import fetch from "node-fetch";
 /**
  * @module apiService
  */
 
-const BASE_URL = "https://summoners-card.vercel.app/api";
+const BASE_URL = "api";
 
 /**
  * API call to fetch data from a route end point
