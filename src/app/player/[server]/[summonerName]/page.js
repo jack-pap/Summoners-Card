@@ -126,8 +126,8 @@ function Dashboard() {
           );
         } else {
           const resultData = data || storedTransformedData;
-          newGameName = resultData.gameName;
           result = {
+            gameName: resultData.gameName,
             puuid: resultData.puuid,
             tagLine: resultData.tagLine,
             summonerInfo: resultData.summonerInfo,
@@ -147,7 +147,7 @@ function Dashboard() {
         };
 
         setSummonerData(transformedResult);
-        setGameName(newGameName);
+        setGameName(result.gameName);
         setTagLine(result.tagLine);
         setPuuid(result.puuid);
         setSummonerInfo(result.summonerInfo);
@@ -365,17 +365,20 @@ function Dashboard() {
                   slotProps={{
                     popper: {
                       sx: {
-                        "& .css-12667wq-MuiChartsTooltip-container": {
+                        "& .MuiChartsTooltip-paper": {
                           backgroundColor: "#1b1f24 !important",
                           border: "1px solid #C89B3C !important",
                         },
-                        "& .css-s3y5yc-MuiChartsTooltip-cell": {
+                        "& .MuiChartsTooltip-cell": {
                           color: "#C89B3C !important",
                         },
-                        "& .css-gxsr2b-MuiChartsTooltip-mark": {
+                        "& .MuiChartsTooltip-mark": {
                           border: "0px !important",
                         },
-                        "& .css-2hvfka-MuiChartsTooltip-table tbody tr td": {
+                        "& .MuiChartsTooltip-table thead tr td": {
+                          color: "#C89B3C !important",
+                        },
+                        "& .MuiChartsTooltip-table tbody tr td": {
                           borderTop: "1px solid #383838 !important",
                         },
                       },
