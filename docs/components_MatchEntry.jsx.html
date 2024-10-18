@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Home - Summoners Card</title>
+    <title>components/MatchEntry.jsx - Summoners Card</title>
     
     <meta name="description" content="A stats viewing fullstack web application using the Riot API" />
     
@@ -43,75 +43,174 @@
 
 <div id="main">
     
+    <h1 class="page-title">components/MatchEntry.jsx</h1>
+    
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { memo } from "react";
 
+/**
+ * @module MatchEntry
+ */
 
-    <section class="package">
-        <h3> </h3>		
+const MatchEntry = memo(function MatchEntry({
+  summonerMatchInfo,
+  counter,
+  gameQueues,
+}) {
+  const matchData = summonerMatchInfo[counter];
+  const gameInfo = matchData[0];
+  const playerInfo = matchData[1];
+
+  const containerClassName = getMatchStatusName(playerInfo, gameInfo);
+
+  return (
+    &lt;div className={containerClassName}>
+      &lt;div className="matchStatsContainer">
+        &lt;div className="matchTypeStats">
+          &lt;div id="win">{getMatchStatus(playerInfo, gameInfo)}&lt;/div>
+          &lt;div>{gameQueues.get(gameInfo.gameQueueID)}&lt;/div>
+        &lt;/div>
+        &lt;div className="matchTimeStats">
+          &lt;div>{getMatchTimeAgo(gameInfo.gameDate)}&lt;/div>
+          &lt;div>
+            {Math.trunc(gameInfo.gameDuration / 60)}min{" "}
+            {gameInfo.gameDuration % 60}s
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+      &lt;div className="championContainer">
+        &lt;div className="championImageContainer">
+          &lt;div className="championImage">&lt;/div>
+          &lt;div className="championLevel">{playerInfo.champLevel}&lt;/div>
+        &lt;/div>
+        &lt;div className="spellsAndRunesContainer">
+          &lt;div className="spellsImages">&lt;/div>
+          &lt;div className="runeImages">&lt;/div>
+        &lt;/div>
+      &lt;/div>
+      &lt;div className="playerStats">
+        &lt;div id="performanceStats">
+          {playerInfo.kills} / {playerInfo.deaths} / {playerInfo.assists}
+        &lt;/div>
+        &lt;div className="kdaContainer">
+          &lt;div id="kda">{getKDA(playerInfo)}&lt;/div> KDA
+        &lt;/div>
+        &lt;div>
+          {getKillParticipation(matchData, playerInfo.win)}% Kill Participation
+        &lt;/div>
+        &lt;div>{playerInfo.visionScore} Vision Score&lt;/div>
+        &lt;div>{playerInfo.totalMinionsKilled} CS&lt;/div>
+      &lt;/div>
+      &lt;div className="itemImages">&lt;/div>
+      &lt;div className="otherPlayers">&lt;/div>
+    &lt;/div>
+  );
+});
+
+/**
+ * Based on game duration and end game result
+ * returns container component name
+ *
+ * @param {JSON} playerInfo
+ * @param {boolean} gameInfo
+ * @returns {string}
+ */
+export function getMatchStatusName(playerInfo, gameInfo) {
+  if (gameInfo.gameDuration &lt; 300) return "matchEntryRemake";
+  return playerInfo.win ? "matchEntryWin" : "matchEntryDefeat";
+}
+
+/**
+ * Based on game duration and end game result
+ * returns win component name
+ *
+ * @param {JSON} playerInfo
+ * @param {boolean} gameInfo
+ * @returns {string}
+ */
+export function getMatchStatus(playerInfo, gameInfo) {
+  if (gameInfo.gameDuration &lt; 300) return "Remake";
+  return playerInfo.win ? "Victory" : "Defeat";
+}
+
+/**
+ * Measures how much a player contributed to the
+ * overall kill score of the team, the winstatus ensures
+ * the participants are on the same team as the summoner
+ *
+ * @param {Object[]} matchInfo
+ * @param {boolean} winStatus
+ * @returns {number}
+ */
+export function getKillParticipation(matchInfo, winStatus) {
+  var totalKills = 0;
+  var killParticipation = 0;
+
+  for (const participantInfo of matchInfo[2]) {
+    if (participantInfo.win == winStatus) totalKills += participantInfo.kills;
+  }
+
+  if ((matchInfo[1].kills + matchInfo[1].assists) / totalKills)
+    killParticipation =
+      (matchInfo[1].kills + matchInfo[1].assists) / totalKills;
+
+  return Math.round(killParticipation * 100);
+}
+
+/**
+ * Calculates how match time ago a match was played
+ * based on current UTC time
+ *
+ * @param {string} gameDate
+ * @returns {string}
+ */
+export function getMatchTimeAgo(gameDate) {
+  const milliseconds = Date.now() - new Date(gameDate);
+  const seconds = Math.floor(milliseconds / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) {
+    return days === 1 ? "A day ago" : `${days} days ago`;
+  } else if (hours > 0) {
+    return hours === 1 ? "An hour ago" : `${hours} hours ago`;
+  } else if (minutes >= 0) {
+    return minutes === 1 ? "A minute ago" : `${minutes} minutes ago`;
+  }
+}
+
+/**
+ * Calculated the kills, deaths, assists ratio
+ * based on played performance in the match
+ *
+ * @param {JSON} playerInfo
+ * @returns {string}
+ */
+export function getKDA(playerInfo) {
+  var KDAstring = "";
+  if (playerInfo.deaths == 0) {
+    KDAstring = playerInfo.kills === 0 ? "0.00:1" : "Perfect";
+  } else {
+    KDAstring = `${(
+      (playerInfo.kills + playerInfo.assists) /
+      playerInfo.deaths
+    ).toFixed(2)}:1`;
+  }
+
+  return KDAstring;
+}
+export default MatchEntry;
+</code></pre>
+        </article>
     </section>
-
-
-
-
-
-
-
-
-
-    
-
-
-
-    <section class="readme usertext">
-        <article><p align="center">
-   <img alt="logo" src="logo.png">
-</p>
-<p align="center">
-  <img src="https://img.shields.io/badge/Riot_API-%23EB0029?logo=riotgames" alt="Riot API Badge">
-  <img src="https://img.shields.io/badge/React.js-gray?logo=react&logoColor=%2361DAFB" alt="React.js Badge">
-  <img src="https://img.shields.io/badge/Knex.js-gray?logo=knexdotjs&logoColor=%23D26B38" alt="Knex.js Badge" style="display: inline-block;">
-  <img src="https://img.shields.io/badge/Node.js-gray?logo=nodedotjs&logoColor=%235FA04E" alt="Node.js Badge" style="display: inline-block;">
-  <img src="https://img.shields.io/badge/MySQL-gray?logo=mysql&logoColor=orange" alt="MySQL Badge" style="display: inline-block;">
-  <img src="https://img.shields.io/github/actions/workflow/status/jack-pap/Summoners-Card/node.js.yml?branch=main&logo=githubactions&logoColor=white" alt="GitHub Actions Workflow Status" style="display: inline-block;">
-</p>
-<p align="center">
-  A stats viewing fullstack web application using the Riot API
-</p>
-<h2>Requirements</h2>
-<ul>
-<li>Node</li>
-<li>MySQL</li>
-<li>Riot.txt file</li>
-</ul>
-<h2>Environment Variables</h2>
-<pre class="prettyprint source lang-js"><code>VITE_API_KEY= Riot API key
-SQL_PASSWORD= MySQL database server password
-</code></pre>
-<p>Ensure these variables are within a .env file inside the root directory (my-app)</p>
-<h2>Installing</h2>
-<pre class="prettyprint source lang-bash"><code>> git clone https://github.com/jack-pap/Summoners-Card.git
-> cd my-app
-> npm install 
-</code></pre>
-<h2>Running</h2>
-<pre class="prettyprint source lang-bash"><code>> cd my-app
-> npm start 
-> npm run dev 
-</code></pre>
-<h2>Methods</h2>
-<h2>Features</h2>
-<h2>Testing</h2>
-<h2>Screenshots</h2>
-<p><img src="https://github.com/user-attachments/assets/6191574a-2d2e-4fbe-955f-8b30944513d3" alt="homepage"></p>
-<p><img src="https://github.com/user-attachments/assets/b7179061-7f9d-4c86-9cbc-3423d00b4f16" alt="dashboard"></p></article>
-    </section>
-
-
 
 
 

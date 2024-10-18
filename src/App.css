@@ -118,7 +118,7 @@ footer {
   min-height: 50px;
   text-align: center;
   border-top: 1px solid #a09b8c;
-  z-index: -111;
+  z-index: 1;
 }
 
 .dashboard footer {

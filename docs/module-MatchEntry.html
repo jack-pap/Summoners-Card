@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>apiService - Summoners Card</title>
+    <title>MatchEntry - Summoners Card</title>
     
     <meta name="description" content="A stats viewing fullstack web application using the Riot API" />
     
@@ -43,7 +43,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">apiService</h1>
+    <h1 class="page-title">MatchEntry</h1>
     
 
     
@@ -92,7 +92,7 @@
 
     
 
-    <h4 class="name" id=".apiCall"><span class="type-signature type-signature-static">(static) </span>apiCall<span class="signature">(apiURL)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id=".getKDA"><span class="type-signature type-signature-static">(static) </span>getKDA<span class="signature">(playerInfo)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
@@ -102,13 +102,13 @@
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>API call to fetch data from a route end point</li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li>Calculated the kills, deaths, assists ratiobased on played performance in the match</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_apiService.js.html">utils/apiService.js</a>, <a href="utils_apiService.js.html#line14">line 14</a>
+        <a href="components_MatchEntry.jsx.html">components/MatchEntry.jsx</a>, <a href="components_MatchEntry.jsx.html#line142">line 142</a>
     </li></ul></dd>
     
 
@@ -180,13 +180,13 @@
 
         <tr>
             
-                <td class="name"><code>apiURL</code></td>
+                <td class="name"><code>playerInfo</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">JSON</span>
 
 
 
@@ -230,7 +230,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise</span>
+<span class="param-type">string</span>
 
 
 
@@ -246,7 +246,7 @@
 
     
 
-    <h4 class="name" id=".apiGETDatabaseCall"><span class="type-signature type-signature-static">(static) </span>apiGETDatabaseCall<span class="signature">(path, queryRoute)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id=".getKillParticipation"><span class="type-signature type-signature-static">(static) </span>getKillParticipation<span class="signature">(matchInfo, winStatus)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -256,13 +256,13 @@
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>API GET call to server to request data from the database</li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li>Measures how much a player contributed to theoverall kill score of the team, the winstatus ensuresthe participants are on the same team as the summoner</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_apiService.js.html">utils/apiService.js</a>, <a href="utils_apiService.js.html#line135">line 135</a>
+        <a href="components_MatchEntry.jsx.html">components/MatchEntry.jsx</a>, <a href="components_MatchEntry.jsx.html#line97">line 97</a>
     </li></ul></dd>
     
 
@@ -334,13 +334,13 @@
 
         <tr>
             
-                <td class="name"><code>path</code></td>
+                <td class="name"><code>matchInfo</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Array.&lt;Object></span>
 
 
 
@@ -358,13 +358,13 @@
 
         <tr>
             
-                <td class="name"><code>queryRoute</code></td>
+                <td class="name"><code>winStatus</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">boolean</span>
 
 
 
@@ -408,7 +408,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise</span>
+<span class="param-type">number</span>
 
 
 
@@ -424,7 +424,7 @@
 
     
 
-    <h4 class="name" id=".apiImageCall"><span class="type-signature type-signature-static">(static) </span>apiImageCall<span class="signature">(imageURL)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id=".getMatchStatus"><span class="type-signature type-signature-static">(static) </span>getMatchStatus<span class="signature">(playerInfo, gameInfo)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
@@ -434,13 +434,13 @@
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>API call to imageURL to get image data</li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li>Based on game duration and end game resultreturns win component name</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_apiService.js.html">utils/apiService.js</a>, <a href="utils_apiService.js.html#line79">line 79</a>
+        <a href="components_MatchEntry.jsx.html">components/MatchEntry.jsx</a>, <a href="components_MatchEntry.jsx.html#line83">line 83</a>
     </li></ul></dd>
     
 
@@ -512,13 +512,37 @@
 
         <tr>
             
-                <td class="name"><code>imageURL</code></td>
+                <td class="name"><code>playerInfo</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">JSON</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gameInfo</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
 
 
 
@@ -562,7 +586,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise</span>
+<span class="param-type">string</span>
 
 
 
@@ -578,7 +602,7 @@
 
     
 
-    <h4 class="name" id=".apiPOSTDatabaseCall"><span class="type-signature type-signature-static">(static) </span>apiPOSTDatabaseCall<span class="signature">(path, queryRoute, summonerJSONObject)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id=".getMatchStatusName"><span class="type-signature type-signature-static">(static) </span>getMatchStatusName<span class="signature">(playerInfo, gameInfo)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
@@ -588,13 +612,13 @@
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>API POST call to server to create new database entry</li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li>Based on game duration and end game resultreturns container component name</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_apiService.js.html">utils/apiService.js</a>, <a href="utils_apiService.js.html#line101">line 101</a>
+        <a href="components_MatchEntry.jsx.html">components/MatchEntry.jsx</a>, <a href="components_MatchEntry.jsx.html#line70">line 70</a>
     </li></ul></dd>
     
 
@@ -666,13 +690,13 @@
 
         <tr>
             
-                <td class="name"><code>path</code></td>
+                <td class="name"><code>playerInfo</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">JSON</span>
 
 
 
@@ -690,37 +714,13 @@
 
         <tr>
             
-                <td class="name"><code>queryRoute</code></td>
+                <td class="name"><code>gameInfo</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>summonerJSONObject</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
+<span class="param-type">boolean</span>
 
 
 
@@ -764,7 +764,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise</span>
+<span class="param-type">string</span>
 
 
 
@@ -780,7 +780,7 @@
 
     
 
-    <h4 class="name" id=".apiProxyCall"><span class="type-signature type-signature-static">(static) </span>apiProxyCall<span class="signature">(apiURL)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id=".getMatchTimeAgo"><span class="type-signature type-signature-static">(static) </span>getMatchTimeAgo<span class="signature">(gameDate)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
@@ -790,13 +790,13 @@
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>API call to Riot for data by calling the proxy route server and passing the apiURL endpoint</li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li>Calculates how match time ago a match was playedbased on current UTC time</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_apiService.js.html">utils/apiService.js</a>, <a href="utils_apiService.js.html#line35">line 35</a>
+        <a href="components_MatchEntry.jsx.html">components/MatchEntry.jsx</a>, <a href="components_MatchEntry.jsx.html#line119">line 119</a>
     </li></ul></dd>
     
 
@@ -868,7 +868,7 @@
 
         <tr>
             
-                <td class="name"><code>apiURL</code></td>
+                <td class="name"><code>gameDate</code></td>
             
 
             <td class="type">
@@ -918,161 +918,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id=".apiProxyNoCacheCall"><span class="type-signature type-signature-static">(static) </span>apiProxyNoCacheCall<span class="signature">(apiURL)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>API call to Riot for data by calling the proxy route server that doesn't cache the request</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_apiService.js.html">utils/apiService.js</a>, <a href="utils_apiService.js.html#line57">line 57</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>apiURL</code></td>
-            
-
-            <td class="type">
-            
-                
 <span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
 
 
 
