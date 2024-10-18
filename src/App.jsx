@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 "use client";
 import React from "react";
-import fetch from "node-fetch";
+import fetch from "isomorphic-fetch";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useData } from "./context/dataContext";
 import "./App.css";

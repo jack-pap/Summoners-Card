@@ -1,8 +1,10 @@
 const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
   experimental: {
     serverComponentsExternalPackages: ["knex"],
+    appDir: true,
   },
   webpack: (config, { isServer }) => {
     // Add alias for @
@@ -17,7 +19,11 @@ module.exports = {
         tls: false,
       };
     }
-
+    config.plugins.push(
+      new webpack.NormalModuleReplacementPlugin(/node:/, (resource) => {
+        resource.request = resource.request.replace(/^node:/, "");
+      })
+    );
     return config;
   },
 };
