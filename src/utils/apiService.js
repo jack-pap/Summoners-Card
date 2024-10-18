@@ -2,8 +2,7 @@
  * @module apiService
  */
 
-const BASE_URL = "http://localhost:3000/api";
-//response = await fetch(`/api/summoners/PjsXxtF2pTrn01BeP-UR_TgeRMF1u6dl1jJ6NkYtKzIVsnKYWRIXRkkYawg9vIzpxda_Z9IfDsXq7w`);
+const BASE_URL = "https://summoners-card.vercel.app/api";
 
 /**
  * API call to fetch data from a route end point
