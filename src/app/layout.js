@@ -4,6 +4,8 @@ import "../index.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { DataProvider } from "../context/dataContext";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata = {
   title: "Summoners Card",
@@ -23,6 +25,8 @@ export default function RootLayout({ children }) {
         <DataProvider>
           {" "}
           <div id="root">
+            <Analytics />
+            <SpeedInsights />
             {children}
             <Footer />
           </div>
