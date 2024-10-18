@@ -3,7 +3,7 @@ import fetch from "isomorphic-fetch";
  * @module apiService
  */
 
-const BASE_URL = "api";
+const BASE_URL = `${window.location.origin}/api`;
 
 /**
  * API call to fetch data from a route end point
