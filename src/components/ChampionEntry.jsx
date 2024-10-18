@@ -28,4 +28,6 @@ const ChampionEntry = memo(
   )
 );
 
+ChampionEntry.displayName = "ChampionEntry";
+
 export default ChampionEntry;

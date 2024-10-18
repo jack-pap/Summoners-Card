@@ -14,9 +14,10 @@ import App, {
   getExtendedMatchList,
   matchInfoListDriver,
   matchListUpdated,
-} from "../../../../App.jsx";
-import { useData } from "../../../../context/dataContext";
-import { apiCall, apiImageCall } from "../../../../utils/apiService.js";
+} from "@/src/App.jsx";
+import { useData } from "@/src/context/dataContext";
+import { apiCall, apiImageCall } from "@/src/utils/apiService";
+import useSummonerStore from "@/src/utils/storeService";
 import MatchEntry from "../../../../components/MatchEntry";
 import ChampionEntryList from "../../../../components/ChampionEntryList";
 import ErrorPage from "../../../../components/ErrorPage.jsx";
@@ -73,6 +74,9 @@ var ownUsername;
 function Dashboard() {
   const router = useRouter();
   const hasFetched = useRef(false);
+  const summonerData = useSummonerStore((state) => state.summonerData);
+  const setSummonerData = useSummonerStore((state) => state.setSummonerData);
+  const storedData = useSummonerStore.getState().summonerData;
   const { data } = useData();
   const { server, summonerName } = useParams();
   const region = serverOptions.find(
@@ -83,8 +87,6 @@ function Dashboard() {
   const [isTempLoading, setIsTempLoading] = useState(false);
 
   const [isVisible, setIsVisible] = useState(false);
-
-  const [summonerData, setSummonerData] = useState(null);
   const [gameName, setGameName] = useState("");
   const [tagLine, setTagLine] = useState("");
   const [puuid, setPuuid] = useState(null);
@@ -97,11 +99,11 @@ function Dashboard() {
   const [championsInfo, setChampions] = useState(null);
   const [graphData, setgraphData] = useState(null);
 
-  if (!serverOptions.find((option) => option.label === server)) {
-    return <ErrorPage errorMessage={`Invalid server "${server}"`} />;
-  }
-
   useEffect(() => {
+    if (!serverOptions.find((option) => option.label === server)) {
+      return <ErrorPage errorMessage={`Invalid server "${server}"`} />;
+    }
+
     const fetchData = async () => {
       if (hasFetched.current) return;
       hasFetched.current = true;
@@ -111,7 +113,7 @@ function Dashboard() {
         setIsLoading(true);
 
         let newGameName, result;
-        if (!summonerData) {
+        if (!data && !summonerData) {
           newGameName = decodeURIComponent(summonerName.split("-")[0].trim());
           result = await getSummonerStats(
             summonerName.split("-")[1],
@@ -120,7 +122,7 @@ function Dashboard() {
             region
           );
         } else {
-          const resultData = summonerData;
+          const resultData = summonerData || data;
           newGameName = resultData.gameName;
           result = {
             puuid: resultData.puuid,
@@ -135,7 +137,6 @@ function Dashboard() {
         }
 
         setSummonerData(result);
-
         setGameName(newGameName);
         setTagLine(result.tagLine);
         setPuuid(result.puuid);
@@ -167,7 +168,15 @@ function Dashboard() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [summonerName, server]);
+  }, [
+    data,
+    region,
+    router,
+    setSummonerData,
+    summonerData,
+    summonerName,
+    server,
+  ]);
 
   useEffect(() => {
     if (!isLoading) {

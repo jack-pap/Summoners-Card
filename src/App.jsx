@@ -18,7 +18,7 @@ import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
-// import ErrorPage from "./ErrorPage";
+import ErrorPage from "@/src/components/ErrorPage";
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
@@ -430,62 +430,58 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
   var summonerWinrate; // Returns JSON object for all game mode winrates
   const champions = await getAllChampions(); // Returns mapping for champions between their respective ids and names
 
-  try {
-    const DBSummoner = await apiGETDatabaseCall(
-      "summoners",
-      `?RiotID=${gameName}-${tagLine}`
-    );
+  const DBSummoner = await apiGETDatabaseCall(
+    "summoners",
+    `?RiotID=${gameName}-${tagLine}`
+  );
 
-    if (
-      DBSummoner.length > 0 &&
-      (await matchListUpdated(region, DBSummoner[0].puuid, null))
-    ) {
-      const parsedSummonerInfo = JSON.parse(DBSummoner[0].summonerInfo);
+  if (
+    DBSummoner.length > 0 &&
+    (await matchListUpdated(region, DBSummoner[0].puuid, null))
+  ) {
+    const parsedSummonerInfo = JSON.parse(DBSummoner[0].summonerInfo);
 
-      puuid = DBSummoner[0].puuid;
-      summonerInfo = parsedSummonerInfo.summonerInfo;
-      rankedInfo = parsedSummonerInfo.rankedInfo;
-      masteryInfo = new Map(parsedSummonerInfo.masteryInfo);
-      matchList = await getMatchList(region, puuid, 0, 30);
-      matchInfoList = await matchInfoListDriver(region, matchList, puuid);
-      summonerWinrate = parsedSummonerInfo.summonerWinrate;
-    } else {
-      puuid = await getPUUID(tagLine, gameName);
-      summonerInfo = await getSummonerInfo(server, puuid);
-      rankedInfo = await getRankedInfo(server, summonerInfo[0]);
-      masteryInfo = await getMasteryInfo(server, puuid);
-      matchList = await getMatchList(region, puuid, 0, 30);
-      matchInfoList = await matchInfoListDriver(region, matchList, puuid);
-      summonerWinrate = getSummonerWinrates(rankedInfo, matchInfoList);
+    puuid = DBSummoner[0].puuid;
+    summonerInfo = parsedSummonerInfo.summonerInfo;
+    rankedInfo = parsedSummonerInfo.rankedInfo;
+    masteryInfo = new Map(parsedSummonerInfo.masteryInfo);
+    matchList = await getMatchList(region, puuid, 0, 30);
+    matchInfoList = await matchInfoListDriver(region, matchList, puuid);
+    summonerWinrate = parsedSummonerInfo.summonerWinrate;
+  } else {
+    puuid = await getPUUID(tagLine, gameName);
+    summonerInfo = await getSummonerInfo(server, puuid);
+    rankedInfo = await getRankedInfo(server, summonerInfo[0]);
+    masteryInfo = await getMasteryInfo(server, puuid);
+    matchList = await getMatchList(region, puuid, 0, 30);
+    matchInfoList = await matchInfoListDriver(region, matchList, puuid);
+    summonerWinrate = getSummonerWinrates(rankedInfo, matchInfoList);
 
-      apiPOSTDatabaseCall("summoners", "", {
-        RiotID: `${gameName}-${tagLine}`,
-        puuid: puuid,
-        summonerInfo: {
-          summonerInfo: summonerInfo,
-          rankedInfo: rankedInfo,
-          summonerWinrate: summonerWinrate,
-          masteryInfo: Array.from(masteryInfo.entries()),
-        },
-        lastUpdatedDate: formatDateSQL(Date.now()),
-      });
-    }
-
-    await getChampionWinrate(masteryInfo, matchInfoList, rankedInfo); // Calculates for every champion their respective game mode winrates
-
-    return {
-      puuid,
-      tagLine,
-      summonerInfo,
-      rankedInfo,
-      matchInfoList,
-      summonerWinrate,
-      masteryInfo,
-      champions,
-    };
-  } catch (error) {
-    throw error;
+    apiPOSTDatabaseCall("summoners", "", {
+      RiotID: `${gameName}-${tagLine}`,
+      puuid: puuid,
+      summonerInfo: {
+        summonerInfo: summonerInfo,
+        rankedInfo: rankedInfo,
+        summonerWinrate: summonerWinrate,
+        masteryInfo: Array.from(masteryInfo.entries()),
+      },
+      lastUpdatedDate: formatDateSQL(Date.now()),
+    });
   }
+
+  await getChampionWinrate(masteryInfo, matchInfoList, rankedInfo); // Calculates for every champion their respective game mode winrates
+
+  return {
+    puuid,
+    tagLine,
+    summonerInfo,
+    rankedInfo,
+    matchInfoList,
+    summonerWinrate,
+    masteryInfo,
+    champions,
+  };
 }
 
 /**

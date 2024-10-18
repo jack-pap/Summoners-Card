@@ -104,4 +104,6 @@ export async function getChampionImage(championId) {
   return championImage;
 }
 
+ChampionEntryList.displayName = "ChampionEntryList";
+
 export default ChampionEntryList;

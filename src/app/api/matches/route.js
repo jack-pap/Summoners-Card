@@ -16,7 +16,9 @@ export async function POST(request) {
   } catch (err) {
     return NextResponse.json(
       {
-        message: `There was an error creating match ${request.json().matchID} entry: ${err}`,
+        message: `There was an error creating match ${
+          request.json().matchID
+        } entry: ${err}`,
       },
       { status: 500 }
     );
@@ -30,49 +32,69 @@ export async function GET(request) {
   const matchDate = searchParams.get("matchDate");
   const matchID = searchParams.get("matchID");
 
+  if (matchID) return getMatchSpecific(matchID, puuid);
+  if (matchDate) return getExtendedMatchIDs(matchDate, puuid);
+  return getMatchIDs(puuid);
+}
+
+async function getMatchSpecific(matchID, puuid) {
   try {
-    if (matchID) return getMatchSpecific(matchID, puuid);
-    if (matchDate) return getExtendedMatchIDs(matchDate, puuid);
-    return getMatchIDs(puuid);
+    var query = db
+      .select("*")
+      .from("matchInfo")
+      .where("matchID", matchID)
+      .andWhere("puuid", puuid);
+    const match = await query;
+    console.log(match);
+    return NextResponse.json(match);
   } catch (error) {
     return NextResponse.json(
-      { message: `There was an error retrieving summoner's matches: ${error}` },
+      {
+        message: `There was an error retrieving summoner match ${matchID}: ${error}`,
+      },
       { status: 500 }
     );
   }
 }
 
-async function getMatchSpecific(matchID, puuid) {
-  var query = db
-    .select("*")
-    .from("matchInfo")
-    .where("matchID", matchID)
-    .andWhere("puuid", puuid);
-  const match = await query;
-  console.log(match);
-  return NextResponse.json(match);
-}
-
 async function getExtendedMatchIDs(matchDate, puuid) {
-  var query = db
-    .select("matchID")
-    .from("matchInfo")
-    .limit(10)
-    .where("puuid", puuid)
-    .andWhere("matchDate", "<", matchDate)
-    .orderBy("matchDate", "desc");
-  const matchIDs = await query;
-  console.log(matchIDs);
-  return NextResponse.json(matchIDs);
+  try {
+    var query = db
+      .select("matchID")
+      .from("matchInfo")
+      .limit(10)
+      .where("puuid", puuid)
+      .andWhere("matchDate", "<", matchDate)
+      .orderBy("matchDate", "desc");
+    const matchIDs = await query;
+    console.log(matchIDs);
+    return NextResponse.json(matchIDs);
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message: `There was an error retrieving summoner ${puuid} extended matchIDs : ${error}`,
+      },
+      { status: 500 }
+    );
+  }
 }
 
 async function getMatchIDs(puuid) {
-  var query = db
-    .select("matchID")
-    .from("matchInfo")
-    .where("puuid", puuid)
-    .orderBy("matchDate", "desc");
-  const matchIDs = await query;
-  console.log(matchIDs);
-  return NextResponse.json(matchIDs);
+  try {
+    var query = db
+      .select("matchID")
+      .from("matchInfo")
+      .where("puuid", puuid)
+      .orderBy("matchDate", "desc");
+    const matchIDs = await query;
+    console.log(matchIDs);
+    return NextResponse.json(matchIDs);
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message: `There was an error retrieving summoner ${puuid} matchIDs : ${error}`,
+      },
+      { status: 500 }
+    );
+  }
 }
