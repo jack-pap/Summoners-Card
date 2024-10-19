@@ -117,7 +117,7 @@ function Dashboard() {
 
         let newGameName, result;
         newGameName = decodeURIComponent(summonerName.split("-")[0].trim());
-        if ((!data && !storedTransformedData) || storedTransformedData.gameName !== summonerName) {
+        if ((!data && !storedTransformedData) || storedTransformedData?.gameName !== summonerName) {
           result = await getSummonerStats(
             summonerName.split("-")[1],
             newGameName,
@@ -141,7 +141,7 @@ function Dashboard() {
         //When storing maps in local storage they dont get stored properly
         const transformedResult = {
           ...result,
-          gameName: newGameName,
+          gameName: summonerName,
           masteryInfo: Array.from(result.masteryInfo.entries()),
           champions: Array.from(result.champions.entries()),
         };
