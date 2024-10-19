@@ -4,6 +4,8 @@
   text-align: center;
 }
 
+
+
 a {
   text-decoration: none;
   height: 22px;
@@ -96,7 +98,7 @@ header {
   justify-content: center;
   cursor: pointer;
   transition: color 0.28s, background-color 0.45s ease-out;
-  border-bottom: 1px solid #9b792f;
+  border-bottom: 1px solid transparent;
   z-index: 5;
 }
 
@@ -366,8 +368,7 @@ select:focus {
   text-align: center;
   justify-content: center;
   margin-top: 25px;
-  min-width: 1300px;
-  width: auto;
+  width: 100%;
   gap: 20px
 }
 

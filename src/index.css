@@ -22,6 +22,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 100;
   }
@@ -31,28 +32,27 @@
   from {
     opacity: 1000;
   }
+
   to {
     opacity: 0;
   }
 }
 
 .line {
-  position: absolute;
+  position: relative;
   border-left: 1px solid #9b792f;
   margin-left: 100px;
   margin-right: 100px;
-  height: 50vh;
+  height: 460px;
 }
 
 #leftLine {
-  left: 10%;
-  top: 25%;
+
   animation-fill-mode: forwards;
 }
 
 #rightLine {
-  right: 10%;
-  top: 25%;
+
   animation-fill-mode: forwards;
 }
 
@@ -105,7 +105,7 @@ body {
   display: flex;
   position: relative;
   place-items: center;
-  min-width: 320px;
+  min-width: 100svh;
   min-height: 100svh;
   z-index: -2;
 }
@@ -117,6 +117,14 @@ body {
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
+}
+
+#homeBodyContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 250px;
 }
 
 .dashboard #homeBody {

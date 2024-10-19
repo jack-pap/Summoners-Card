@@ -117,7 +117,10 @@ function Dashboard() {
 
         let newGameName, result;
         newGameName = decodeURIComponent(summonerName.split("-")[0].trim());
-        if ((!data && !storedTransformedData) || storedTransformedData?.gameName !== summonerName) {
+        if (
+          (!data && !storedTransformedData) ||
+          storedTransformedData?.gameName !== summonerName
+        ) {
           result = await getSummonerStats(
             summonerName.split("-")[1],
             newGameName,
@@ -228,8 +231,8 @@ function Dashboard() {
   }
   return (
     <>
+    <Header />
       <div className="dashboard">
-        <Header />
         <div id="homeBody">
           <div id="summonerContainer">
             <div id="winrateBlockContainer">
