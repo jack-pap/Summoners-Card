@@ -116,7 +116,7 @@ function Dashboard() {
         setIsLoading(true);
 
         let newGameName, result;
-        if (!data && !storedTransformedData) {
+        if ((!data && !storedTransformedData) || storedTransformedData.gameName != summonerName) {
           newGameName = decodeURIComponent(summonerName.split("-")[0].trim());
           result = await getSummonerStats(
             summonerName.split("-")[1],
