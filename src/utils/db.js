@@ -13,6 +13,13 @@ const db = knex({
     connectionLimit: 10, 
     queueLimit: 0, 
   },
+  pool: {
+    min: 0,
+    max: 20,
+    idleTimeoutMillis: 30000,
+    reapIntervalMillis: 1000,
+    createRetryIntervalMillis: 100,
+  }
 });
 
 async function initDatabase() {
