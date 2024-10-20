@@ -696,11 +696,7 @@ export async function getExtendedMatchList(region, puuid, lastGameDate) {
   );
   if (DBExtendedMatchList.length < 10) {
     const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?endTime=${APIFormatDate}&start=1&count=10&type=ranked&api_key=${API_KEY}`;
-    const data = await apiCall(matchListApiURL);
-    var matchList = [];
-    for (const match of data) {
-      matchList.push(match);
-    }
+    const matchList = await apiCall(matchListApiURL);
     return matchList;
   }
 
@@ -765,93 +761,108 @@ export async function matchInfoListDriver(region, matchIDs, puuid) {
  * @returns {string[][]}
  */
 export async function getMatchInfoList(matchIDs, region, puuid) {
-  var matchInfoList = [];
-  for (const matchID of matchIDs) {
-    const DBMatchInfo = await apiGETDatabaseCall(
-      "matches",
-      `?matchID=${matchID}&puuid=${puuid}`
-    );
+  const matchInfoList = [];
 
-    if (DBMatchInfo.length > 0) {
-      const parsedMatchInfo = JSON.parse(DBMatchInfo[0].matchInfo);
-      matchInfoList.push([
-        parsedMatchInfo.contents,
-        parsedMatchInfo.ownPlayerInfo,
-        parsedMatchInfo.participantsList,
-      ]);
-      continue;
-    }
+  const DBMatchInfos = await Promise.all(
+    matchIDs.map((matchID) =>
+      apiGETDatabaseCall("matches", `?matchID=${matchID}&puuid=${puuid}`)
+    )
+  );
 
-    const { contents, participants } = await matchInfoAPICall(region, matchID);
-    if (!Object.values(GAME_MODES).includes(contents.gameQueueID)) continue;
+  await Promise.all(
+    matchIDs.map(async (matchID, index) => {
+      const DBMatchInfo = DBMatchInfos[index];
 
-    const participantsList = [];
-    var ownPlayerInfo = null;
+      // If found in DB process it
+      if (DBMatchInfo.length > 0) {
+        const parsedMatchInfo = JSON.parse(DBMatchInfo[0].matchInfo);
+        matchInfoList.push([
+          parsedMatchInfo.contents,
+          parsedMatchInfo.ownPlayerInfo,
+          parsedMatchInfo.participantsList,
+        ]);
+        return;
+      }
 
-    for (const playerInfo of participants) {
-      const pickedPlayerInfo = (({
-        win,
-        championId,
-        champLevel,
-        kills,
-        deaths,
-        assists,
-        totalMinionsKilled,
-        visionScore,
-        summoner1Id,
-        summoner2Id,
-        perks,
-        item0,
-        item1,
-        item2,
-        item3,
-        item4,
-        item5,
-        item6,
-        riotIdGameName,
-        riotIdTagline,
-        teamPosition,
-      }) => ({
-        win,
-        championId,
-        champLevel,
-        kills,
-        deaths,
-        assists,
-        totalMinionsKilled,
-        visionScore,
-        summoner1Id,
-        summoner2Id,
-        perks,
-        item0,
-        item1,
-        item2,
-        item3,
-        item4,
-        item5,
-        item6,
-        riotIdGameName,
-        riotIdTagline,
-        teamPosition,
-      }))(playerInfo);
+      const { contents, participants } = await matchInfoAPICall(
+        region,
+        matchID
+      );
 
-      participantsList.push(pickedPlayerInfo);
-      if (playerInfo.puuid == puuid) ownPlayerInfo = pickedPlayerInfo;
-    }
+      // Dont process any unranked games
+      if (!Object.values(GAME_MODES).includes(contents.gameQueueID)) return;
 
-    matchInfoList.push([contents, ownPlayerInfo, participantsList]);
 
-    apiPOSTDatabaseCall("matches", "", {
-      puuid: puuid,
-      matchID: matchID,
-      matchInfo: {
-        contents: contents,
-        ownPlayerInfo: ownPlayerInfo,
-        participantsList: participantsList,
-      },
-      matchDate: contents.gameDateSQLFormat,
-    });
-  }
+      var ownPlayerInfo;
+      // Keeps only necessary JSON data
+      const participantsList = participants.map((playerInfo) => {
+        const pickedPlayerInfo = (({
+          win,
+          championId,
+          champLevel,
+          kills,
+          deaths,
+          assists,
+          totalMinionsKilled,
+          visionScore,
+          summoner1Id,
+          summoner2Id,
+          perks,
+          item0,
+          item1,
+          item2,
+          item3,
+          item4,
+          item5,
+          item6,
+          riotIdGameName,
+          riotIdTagline,
+          teamPosition,
+        }) => ({
+          win,
+          championId,
+          champLevel,
+          kills,
+          deaths,
+          assists,
+          totalMinionsKilled,
+          visionScore,
+          summoner1Id,
+          summoner2Id,
+          perks,
+          item0,
+          item1,
+          item2,
+          item3,
+          item4,
+          item5,
+          item6,
+          riotIdGameName,
+          riotIdTagline,
+          teamPosition,
+        }))(playerInfo);
+
+        if (playerInfo.puuid == puuid) {
+          ownPlayerInfo = pickedPlayerInfo;
+        }
+        return pickedPlayerInfo;
+      });
+
+      matchInfoList.push([contents, ownPlayerInfo, participantsList]);
+
+      apiPOSTDatabaseCall("matches", "", {
+        puuid: puuid,
+        matchID: matchID,
+        matchInfo: {
+          contents: contents,
+          ownPlayerInfo: ownPlayerInfo,
+          participantsList: participantsList,
+        },
+        matchDate: contents.gameDateSQLFormat,
+      });
+    })
+  );
+
   return matchInfoList;
 }
 

@@ -440,12 +440,13 @@ select:focus {
 }
 
 #summonerIcon {
-  width: auto;
-  height: auto;
+  width: 120px;
+  height: 120px;
+  border: 1px solid #c89b3c;
+  border-radius: 7%;
 }
 
 #summonerIcon img {
-  border: 1px solid #c89b3c;
   border-radius: 7%;
 }
 
@@ -798,6 +799,8 @@ img {
 .championImage img {
   z-index: 0;
   border: 2px solid #383838;
+  width: 85px;
+  height: 85px;
 }
 
 .spellsAndRunesContainer {
@@ -853,10 +856,6 @@ img {
   font-size: 16px;
 }
 
-.otherPlayers img {
-  width: 30px;
-  height: 30px;
-}
 
 .player {
   position: relative;

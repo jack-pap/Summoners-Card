@@ -203,6 +203,7 @@ function Dashboard() {
       );
       makeMatchHistory(summonerMatchInfo, setIsTempLoading);
 
+      document.documentElement.style.overflowY = "scroll";
       document.getElementById("footer").style.position = "relative";
       document.getElementById("homeBody").style.animation =
         "fade-in 1s forwards";
@@ -662,6 +663,12 @@ async function getProfileBackground(
 ) {
   const [championId] = summonerChampionWinrateInfo.keys();
   const championName = championsInfo.get(championId).replace(/[\s\W]/g, "");
+  const specialCases = {
+    NunuWillump: "nunu",
+    RenataGlasc: "renata",
+    Wukong: "monkeyking",
+  };
+  championName = specialCases[championName] || championName;
   const container = document.getElementById("profileBg");
 
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
@@ -1159,12 +1166,7 @@ async function getChampionAssets(championId, insideClass, parentComponent) {
   const championImage = await apiImageCall(finalURL);
 
   const img = (
-    <Image
-      src={championImage}
-      width={85}
-      height={85}
-      alt={`Champion ${championId} Icon`}
-    />
+    <Image src={championImage} width={30} height={30} alt={championData.name} />
   );
   const championImageComponent = parentComponent.querySelector(insideClass);
   const root = createRoot(championImageComponent);
@@ -1359,7 +1361,7 @@ async function getItemAssets(summonerInfo, divClass, component) {
             src={image}
             width={45}
             height={45}
-            alt="Summoner Item Icon"
+            alt={`Summoner Item ${itemId}`}
             key={`${itemId}-${index}`}
           />
         );
@@ -1375,7 +1377,7 @@ async function getItemAssets(summonerInfo, divClass, component) {
   root.render(
     <>
       {imagesArray}
-      {[...Array(emptyImagesCounter)].map((index) => (
+      {[...Array(emptyImagesCounter)].map((_, index) => (
         <div key={`empty-${index}`} className="emptyItem" />
       ))}
     </>
