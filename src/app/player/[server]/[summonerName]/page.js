@@ -662,7 +662,7 @@ async function getProfileBackground(
   championsInfo
 ) {
   const [championId] = summonerChampionWinrateInfo.keys();
-  const championName = championsInfo.get(championId).replace(/[\s\W]/g, "");
+  var championName = championsInfo.get(championId).replace(/[\s\W]/g, "");
   const specialCases = {
     NunuWillump: "nunu",
     RenataGlasc: "renata",
