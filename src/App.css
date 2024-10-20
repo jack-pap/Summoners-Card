@@ -445,9 +445,7 @@ select:focus {
 }
 
 #summonerIcon img {
-  width: 120px;
-  height: 120px;
-  border: 1.9px solid #c89b3c;
+  border: 1px solid #c89b3c;
   border-radius: 7%;
 }
 
@@ -799,8 +797,6 @@ img {
 
 .championImage img {
   z-index: 0;
-  height: 85px;
-  width: 85px;
   border: 2px solid #383838;
 }
 
@@ -818,11 +814,6 @@ img {
   gap: 5px;
 }
 
-.spellsImages img {
-  width: 35px;
-  height: 35px;
-}
-
 .runeImages {
   display: flex;
   flex-direction: column;
@@ -833,16 +824,6 @@ img {
   align-self: center;
 }
 
-#primaryRune {
-  width: 40px;
-  height: 40px;
-}
-
-#secondaryRune {
-  width: 22px;
-  height: 22px;
-}
-
 .itemImages {
   display: flex;
   flex-wrap: wrap;
@@ -850,11 +831,6 @@ img {
   width: 206px;
   align-items: center;
   gap: 7px;
-}
-
-.itemImages img {
-  width: 45px;
-  height: 45px;
 }
 
 .emptyItem {
@@ -969,8 +945,6 @@ img {
 }
 
 #championBlock img {
-  width: 42px;
-  height: 42px;
   vertical-align: middle;
 }
 

@@ -3,6 +3,7 @@ import React from "react";
 import "../../../../App.css";
 import { memo } from "react";
 import { useRouter, useParams } from "next/navigation";
+import Image from "next/image";
 import { createRoot } from "react-dom/client";
 import {
   getSummonerStats,
@@ -116,7 +117,7 @@ function Dashboard() {
         setIsLoading(true);
 
         let newGameName, result;
-        newGameName = decodeURIComponent(summonerName.split("-")[0].trim());
+        newGameName = summonerName.split("-")[0].trim();
         if (
           (!data && !storedTransformedData) ||
           storedTransformedData?.gameName !== summonerName
@@ -231,7 +232,7 @@ function Dashboard() {
   }
   return (
     <>
-    <Header />
+      <Header />
       <div className="dashboard">
         <div id="homeBody">
           <div id="summonerContainer">
@@ -323,7 +324,7 @@ function Dashboard() {
                           : 0
                       }
                       text={
-                        !isNaN(summonerWinrateInfo.rankedSoloWinrate)
+                        summonerWinrateInfo.rankedSoloWinrate
                           ? `${summonerWinrateInfo.rankedSoloWinrate}%`
                           : `0%`
                       }
@@ -425,8 +426,8 @@ function Dashboard() {
                 <div id="profileBg"> </div>
                 <div id="profileIconGroupContainer"></div>
                 <div id="name">
-                  <div id="gameName"> {gameName} </div>
-                  <div id="tagLine"> #{tagLine} </div>
+                  <div id="gameName"> {decodeURIComponent(gameName)} </div>
+                  <div id="tagLine"> #{decodeURIComponent(tagLine)} </div>
                   <div
                     id="iconContainer"
                     onClick={() => {
@@ -662,20 +663,14 @@ async function getProfileBackground(
   const [championId] = summonerChampionWinrateInfo.keys();
   const championName = championsInfo.get(championId).replace(/[\s\W]/g, "");
   const container = document.getElementById("profileBg");
-  var championImage;
-  // var championImage = await apiImageCall(
-  //   `https://summoners-card.onrender.com/assets/Champion_Backgrounds/${championName}_splash_centered_0.jpg`
-  // );
 
-  //if (!championImage) {
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
   const champImageURL = `/lol-game-data/assets/ASSETS/Characters/${championName}/Skins/Base/Images/${championName}_splash_centered_0.jpg`;
   const extractedPath = champImageURL
     .replace("/lol-game-data/assets/", "")
     .toLowerCase();
   const finalURL = baseImageURL + extractedPath;
-  championImage = await apiImageCall(finalURL);
-  //}
+  const championImage = await apiImageCall(finalURL);
 
   const img = document.createElement("img");
   img.src = championImage;
@@ -1090,12 +1085,13 @@ async function makeProfileIcon(summonerInfo) {
 
   const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${summonerInfo[2]}.jpg`;
   const profileIconImage = await apiImageCall(imgURL);
-  const img = document.createElement("img");
-  img.src = profileIconImage;
-
+  const img = (
+    <Image src={profileIconImage} width={120} height={120} alt="Profile Icon" />
+  );
   const profileIconImageComponent = component.querySelector("#summonerIcon");
-  profileIconImageComponent.appendChild(img);
+  const root = createRoot(profileIconImageComponent);
 
+  root.render(img);
   container.appendChild(component);
 }
 
@@ -1152,12 +1148,6 @@ async function makeRankedEmblem(summonerRankedInfo, containerName) {
  * @param {HTMLDivElement} parentComponent
  */
 async function getChampionAssets(championId, insideClass, parentComponent) {
-  var championImage;
-  // championImage = await apiImageCall(
-  //   `https://summoners-card.onrender.com/assets/Champion_Icons/${championId}.png`
-  // );
-
-  //if (!championImage) {
   const championDataURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${championId}.json`;
   const championData = await apiCall(championDataURL);
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
@@ -1166,14 +1156,20 @@ async function getChampionAssets(championId, insideClass, parentComponent) {
     .replace("/lol-game-data/assets/", "")
     .toLowerCase();
   const finalURL = baseImageURL + extractedPath;
-  championImage = await apiImageCall(finalURL);
-  //}
+  const championImage = await apiImageCall(finalURL);
 
-  const img = document.createElement("img");
-  img.src = championImage;
-
+  const img = (
+    <Image
+      src={championImage}
+      width={85}
+      height={85}
+      alt={`Champion ${championId} Icon`}
+    />
+  );
   const championImageComponent = parentComponent.querySelector(insideClass);
-  championImageComponent.appendChild(img);
+  const root = createRoot(championImageComponent);
+
+  root.render(img);
 }
 
 /**
@@ -1206,7 +1202,8 @@ async function getSummonerSpellAssets(
   );
 
   const spellsImagesComponent = component.querySelector(divClass);
-  spellsImagesComponent.append(img1, img2);
+  const root = createRoot(spellsImagesComponent);
+  root.render([img1, img2]);
 }
 
 /**
@@ -1225,28 +1222,27 @@ async function getSummonerSpellImage(
 ) {
   const spellObject = summonerSpellsData.find((spell) => spell.id === spellID);
   const parts = spellObject.iconPath.split("/");
-  const spellName = parts[parts.length - 1];
-  var summonerSpellImage;
-  // summonerSpellImage = await apiImageCall(
-  //   `https://summoners-card.onrender.com/assets/Summoner_Spells/${spellName}`
-  // );
-
-  //if (!summonerSpellImage) {
   const summonerSpellImageURL = spellObject.iconPath;
   const extractedPath = summonerSpellImageURL
     .replace("/lol-game-data/assets/", "")
     .toLowerCase();
   const finalURL = baseImageURL + extractedPath;
-  summonerSpellImage = await apiImageCall(finalURL);
-  //}
+  const summonerSpellImage = await apiImageCall(finalURL);
 
-  const img = document.createElement("img");
-  img.src = summonerSpellImage;
+  const img = (
+    <Image
+      src={summonerSpellImage}
+      width={35}
+      height={35}
+      alt="Summoner Spell Icon"
+    />
+  );
+
   return img;
 }
 
 /**
- * Driver method to get rune image files and make
+ * Driver method to get rune image files and render
  * HTMLImageElement components
  *
  * @param {number} mainRuneID
@@ -1260,8 +1256,15 @@ async function getSummonerRuneAssets(
   divClass,
   component
 ) {
-  await getRuneImage(mainRuneID, component, divClass, false);
-  await getRuneImage(secondaryRuneID, component, divClass, true);
+  const runeImages = await Promise.all([
+    getRuneImage(mainRuneID, component, divClass, false),
+    getRuneImage(secondaryRuneID, component, divClass, true),
+  ]);
+
+  const summonerRunesImagesComponent = component.querySelector(divClass);
+  const root = createRoot(summonerRunesImagesComponent);
+
+  root.render(<>{runeImages}</>);
 }
 
 /**
@@ -1283,14 +1286,6 @@ async function getRuneImage(runeID, component, divClass, isSecondary) {
     ? summonerRuneData.styles.find((rune) => rune.id === runeID)
     : summonerRuneData.find((rune) => rune.id === runeID);
 
-  const parts = runeObject.iconPath.split("/");
-  const runeName = parts[parts.length - 1];
-  var summonerRuneImage;
-  // summonerRuneImage = await apiImageCall(
-  //   `https://summoners-card.onrender.com/assets/Summoner_Runes/${runeName}`
-  // );
-
-  // if (!summonerRuneImage) {
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
   const runeImageURL = runeObject.iconPath;
 
@@ -1298,16 +1293,34 @@ async function getRuneImage(runeID, component, divClass, isSecondary) {
     .replace("/lol-game-data/assets/", "")
     .toLowerCase();
   const finalURL = baseImageURL + extractedPath;
+  const summonerRuneImage = await apiImageCall(finalURL);
 
-  summonerRuneImage = await apiImageCall(finalURL);
-  //}
+  var img;
+  if (!isSecondary) {
+    img = (
+      <Image
+        src={summonerRuneImage}
+        width={40}
+        height={40}
+        alt={"Primary Rune Icon"}
+        id={"primaryRune"}
+        key={"Primary Rune"}
+      />
+    );
+  } else {
+    img = (
+      <Image
+        src={summonerRuneImage}
+        width={22}
+        height={22}
+        alt={"Secondary Rune Icon"}
+        id={"secondaryRune"}
+        key={"Secondary Rune"}
+      />
+    );
+  }
 
-  const img = document.createElement("img");
-  img.setAttribute("id", isSecondary ? "secondaryRune" : "primaryRune");
-  img.src = summonerRuneImage;
-
-  const summonerRunesImagesComponent = component.querySelector(divClass);
-  summonerRunesImagesComponent.appendChild(img);
+  return img;
 }
 
 /**
@@ -1331,26 +1344,42 @@ async function getItemAssets(summonerInfo, divClass, component) {
     summonerInfo.item5,
     summonerInfo.item6,
   ];
+
   var emptyImagesCounter = 0;
+  const imagesArray = await Promise.all(
+    itemIds.map(async (itemId, index) => {
+      if (itemId !== 0) {
+        const image = await getSummonerItemImage(
+          summonerItemData,
+          itemId,
+          baseImageURL
+        );
+        return (
+          <Image
+            src={image}
+            width={45}
+            height={45}
+            alt="Summoner Item Icon"
+            key={`${itemId}-${index}`}
+          />
+        );
+      } else {
+        emptyImagesCounter++;
+        return null;
+      }
+    })
+  );
 
-  for (var i = 0; i < 7; i++) {
-    if (itemIds[i] != 0) {
-      var image = await getSummonerItemImage(
-        summonerItemData,
-        itemIds[i],
-        baseImageURL
-      );
-      const itemsImagesComponent = component.querySelector(divClass);
-      itemsImagesComponent.append(image);
-    } else emptyImagesCounter++;
-  }
-
-  for (var j = 0; j < emptyImagesCounter; j++) {
-    var emptyImage = document.createElement("div");
-    emptyImage.className = "emptyItem";
-    const itemsImagesComponent = component.querySelector(divClass);
-    itemsImagesComponent.append(emptyImage);
-  }
+  const itemsImagesComponent = component.querySelector(divClass);
+  const root = createRoot(itemsImagesComponent);
+  root.render(
+    <>
+      {imagesArray}
+      {[...Array(emptyImagesCounter)].map((index) => (
+        <div key={`empty-${index}`} className="emptyItem" />
+      ))}
+    </>
+  );
 }
 
 /**
@@ -1365,25 +1394,14 @@ async function getItemAssets(summonerInfo, divClass, component) {
  */
 async function getSummonerItemImage(summonerItemData, itemID, baseImageURL) {
   const itemObject = summonerItemData.find((item) => item.id === itemID);
-  const parts = itemObject.iconPath.split("/");
-  const imageName = parts[parts.length - 1];
-  var summonerItemImage;
-  // summonerItemImage = await apiImageCall(
-  //   `https://summoners-card.onrender.com/assets/Summoner_Items/${imageName}`
-  // );
-
-  // if (!summonerItemImage) {
   const summonerItemImageURL = itemObject.iconPath;
 
   const extractedPath = summonerItemImageURL
     .replace("/lol-game-data/assets/", "")
     .toLowerCase();
   const finalURL = baseImageURL + extractedPath;
-  summonerItemImage = await apiImageCall(finalURL);
-  //}
-  const img = document.createElement("img");
-  img.src = summonerItemImage;
-  return img;
+  const summonerItemImage = await apiImageCall(finalURL);
+  return summonerItemImage;
 }
 
 /**

@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import Image from "next/image";
 import ProgressBar from "@ramonak/react-progress-bar";
 
 const ChampionEntry = memo(
@@ -6,7 +7,12 @@ const ChampionEntry = memo(
     <div className="champEntry">
       <div id="champContainer">
         <div className="champImage">
-          <img src={championImage} alt={championName} />
+          <Image
+            src={championImage}
+            width={42}
+            height={42}
+            alt={`${championName} Winrate Icon`}
+          />
         </div>
         <div className="champName">{championName}</div>
       </div>
