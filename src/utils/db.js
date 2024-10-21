@@ -15,12 +15,14 @@ const db = knex({
   },
   pool: {
     min: 0,
-    max: 20,
-    idleTimeoutMillis: 30000,
+    max: 10,
+    idleTimeoutMillis: 5000,
     reapIntervalMillis: 1000,
     createRetryIntervalMillis: 100,
-  }
+  },
 });
+
+console.log("Knex instance created successfully " + Date.now());
 
 async function initDatabase() {
   try {

@@ -130,6 +130,7 @@ function App() {
 
   useEffect(() => {
     document.getElementById("homeBody").style.animation = "fade-in 1s forwards"; // Play fade in animation
+    document.getElementById("footer").style.position = "absolute";
     loadVersion()
       .then((version) => {
         setPatchVersion(
@@ -354,7 +355,7 @@ export async function getInput(
   const region = regionValue;
 
   // Checks for valid summoner name input
-  if (!summonerName.match(/\s*#[^\s]*\S+$/)) {
+  if (!summonerName.match(/\s*#[^\s]*\S+\s*$/)) {
     document.querySelector(".MuiAlert-message").textContent =
       "Please ensure that the summoner name has no whitespace or special symbols";
     setOpen(true);
@@ -791,7 +792,6 @@ export async function getMatchInfoList(matchIDs, region, puuid) {
 
       // Dont process any unranked games
       if (!Object.values(GAME_MODES).includes(contents.gameQueueID)) return;
-
 
       var ownPlayerInfo;
       // Keeps only necessary JSON data

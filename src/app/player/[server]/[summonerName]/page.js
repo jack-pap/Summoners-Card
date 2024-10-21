@@ -1124,19 +1124,12 @@ async function makeRankedEmblems(summonerRankedInfo) {
  * @param {string} containerName
  */
 async function makeRankedEmblem(summonerRankedInfo, containerName) {
-  var rankedIconImage;
-  // rankedIconImage = await apiImageCall(
-  //   `https://summoners-card.onrender.com/assets/Ranked_Emblems/emblem-${summonerRankedInfo.rankedTier}.png`
-  // );
-
   const container = document.getElementById(containerName);
   const component = document.createElement("div");
   component.setAttribute("class", "rankedEmblem");
 
-  //if (!rankedIconImage) {
   const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/ranked-emblem/emblem-${summonerRankedInfo.rankedTier.toLowerCase()}.png`;
-  rankedIconImage = await apiImageCall(imgURL);
-  //}
+  const rankedIconImage = await apiImageCall(imgURL);
 
   const img = document.createElement("img");
   img.src = rankedIconImage;

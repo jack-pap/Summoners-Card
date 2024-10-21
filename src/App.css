@@ -931,8 +931,8 @@ img {
 }
 
 #championBlock {
-  width: 378px;
-  min-height: 527px;
+  min-height: 529px;
+  min-width: 378px;
   display: flex;
   flex-direction: column;
   align-items: center;
