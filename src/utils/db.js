@@ -1,40 +1,35 @@
 require("dotenv").config();
 import knex from "knex";
 
-var cachedDb;
+var db;
 
-export function getDB() {
-  if (!cachedDb) {
-    cachedDb = knex({
-      client: "mysql",
-      connection: {
-        host: process.env.AWS_ENDPOINT,
-        port: 3306,
-        user: "admin",
-        password: process.env.SQL_PASSWORD,
-        database: "summonerscard",
-      },
-      pool: {
-        min: 0,
-        max: 20,
-        idleTimeoutMillis: 10000,
-        reapIntervalMillis: 1000,
-        createRetryIntervalMillis: 100,
-      },
-    });
-  }
-  return cachedDb;
-}
+db = knex({
+  client: "mysql",
+  connection: {
+    host: process.env.AWS_ENDPOINT,
+    port: 3306,
+    user: "admin",
+    password: process.env.SQL_PASSWORD,
+    database: "summonerscard",
+  },
+  pool: {
+    min: 0,
+    max: 50,
+    idleTimeoutMillis: 5000,
+    reapIntervalMillis: 1000,
+    createRetryIntervalMillis: 100,
+  },
+});
 
 console.log("Knex instance created successfully " + Date.now());
 
 async function initDatabase() {
   try {
-    const summonerTableExists = await cachedDb.schema.hasTable("summonerInfo");
-    const matchTableExists = await cachedDb.schema.hasTable("matchInfo");
+    const summonerTableExists = await db.schema.hasTable("summonerInfo");
+    const matchTableExists = await db.schema.hasTable("matchInfo");
 
     if (!summonerTableExists) {
-      await cachedDb.schema.createTable("summonerInfo", (table) => {
+      await db.schema.createTable("summonerInfo", (table) => {
         table.string("puuid").primary();
         table.json("summonerWinrate").notNullable();
         table.dateTime("lastUpdatedDate").notNullable();
@@ -43,7 +38,7 @@ async function initDatabase() {
     }
 
     if (!matchTableExists) {
-      await cachedDb.schema.createTable("matchInfo", (table) => {
+      await db.schema.createTable("matchInfo", (table) => {
         table.string("puuid").notNullable();
         table.string("matchID").primary();
         table.json("matchInfo").notNullable();
@@ -64,3 +59,5 @@ async function initDatabase() {
 
 // Run the initialization
 // initDatabase();
+
+export default db;
