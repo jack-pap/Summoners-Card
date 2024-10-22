@@ -30,11 +30,11 @@ console.log("Knex instance created successfully " + Date.now());
 
 async function initDatabase() {
   try {
-    const summonerTableExists = await db.schema.hasTable("summonerInfo");
-    const matchTableExists = await db.schema.hasTable("matchInfo");
+    const summonerTableExists = await cachedDb.schema.hasTable("summonerInfo");
+    const matchTableExists = await cachedDb.schema.hasTable("matchInfo");
 
     if (!summonerTableExists) {
-      await db.schema.createTable("summonerInfo", (table) => {
+      await cachedDb.schema.createTable("summonerInfo", (table) => {
         table.string("puuid").primary();
         table.json("summonerWinrate").notNullable();
         table.dateTime("lastUpdatedDate").notNullable();
@@ -43,7 +43,7 @@ async function initDatabase() {
     }
 
     if (!matchTableExists) {
-      await db.schema.createTable("matchInfo", (table) => {
+      await cachedDb.schema.createTable("matchInfo", (table) => {
         table.string("puuid").notNullable();
         table.string("matchID").primary();
         table.json("matchInfo").notNullable();
