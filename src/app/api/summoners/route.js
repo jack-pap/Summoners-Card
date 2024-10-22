@@ -1,9 +1,10 @@
-import db from "@/src/utils/db";
+import { getDB } from "@/src/utils/db";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
     const body = await request.json();
+    const db = getDB();
     await db("summonerInfo")
       .insert({
         RiotID: body.RiotID,
@@ -31,6 +32,7 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const RiotID = searchParams.get("RiotID");
   try {
+    const db = getDB();
     const userData = await db
       .select("*")
       .from("summonerInfo")

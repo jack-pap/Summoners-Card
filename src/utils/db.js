@@ -1,26 +1,30 @@
 require("dotenv").config();
 import knex from "knex";
 
-const db = knex({
-  client: "mysql",
-  connection: {
-    host: process.env.AWS_ENDPOINT,
-    port: 3306,
-    user: "admin",
-    password: process.env.SQL_PASSWORD,
-    database: "summonerscard",
-    waitForConnections: true,
-    connectionLimit: 10, 
-    queueLimit: 0, 
-  },
-  pool: {
-    min: 0,
-    max: 10,
-    idleTimeoutMillis: 5000,
-    reapIntervalMillis: 1000,
-    createRetryIntervalMillis: 100,
-  },
-});
+var cachedDb;
+
+export function getDB() {
+  if (!cachedDb) {
+    cachedDb = knex({
+      client: "mysql",
+      connection: {
+        host: process.env.AWS_ENDPOINT,
+        port: 3306,
+        user: "admin",
+        password: process.env.SQL_PASSWORD,
+        database: "summonerscard",
+      },
+      pool: {
+        min: 0,
+        max: 20,
+        idleTimeoutMillis: 10000,
+        reapIntervalMillis: 1000,
+        createRetryIntervalMillis: 100,
+      },
+    });
+  }
+  return cachedDb;
+}
 
 console.log("Knex instance created successfully " + Date.now());
 
@@ -60,5 +64,3 @@ async function initDatabase() {
 
 // Run the initialization
 // initDatabase();
-
-export default db;

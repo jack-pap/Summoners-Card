@@ -1,8 +1,9 @@
+import { getDB } from "@/src/utils/db";
 import { NextResponse } from "next/server";
-import db from "@/src/utils/db";
 
 export async function POST(request) {
   try {
+    const db = getDB();
     const body = await request.json();
     await db("matchInfo").insert({
       puuid: body.puuid,
@@ -39,6 +40,7 @@ export async function GET(request) {
 
 async function getMatchSpecific(matchID, puuid) {
   try {
+    const db = getDB();
     var query = db
       .select("*")
       .from("matchInfo")
@@ -59,6 +61,7 @@ async function getMatchSpecific(matchID, puuid) {
 
 async function getExtendedMatchIDs(matchDate, puuid) {
   try {
+    const db = getDB();
     var query = db
       .select("matchID")
       .from("matchInfo")
@@ -81,6 +84,7 @@ async function getExtendedMatchIDs(matchDate, puuid) {
 
 async function getMatchIDs(puuid) {
   try {
+    const db = getDB();
     var query = db
       .select("matchID")
       .from("matchInfo")
