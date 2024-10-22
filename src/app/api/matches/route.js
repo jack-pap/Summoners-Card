@@ -4,12 +4,13 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
   try {
     const body = await request.json();
-    await db("matchInfo").insert({
-      puuid: body.puuid,
-      matchID: body.matchID,
-      matchInfo: body.matchInfo,
-      matchDate: body.matchDate,
-    });
+    await db.query(
+      `
+      INSERT INTO matchInfo (puuid, matchID, matchInfo, matchDate)
+      VALUES (?, ?, ?, ?);
+    `,
+      [body.puuid, body.matchID, body.matchInfo, body.matchDate]
+    );
     return NextResponse.json({
       message: `Match '${body.matchID}' entry created.`,
     });
@@ -39,12 +40,13 @@ export async function GET(request) {
 
 async function getMatchSpecific(matchID, puuid) {
   try {
-    var query = db
-      .select("*")
-      .from("matchInfo")
-      .where("matchID", matchID)
-      .andWhere("puuid", puuid);
-    const match = await query;
+    const match = await db.query(
+      `
+      SELECT * FROM matchInfo 
+      WHERE matchID = ? AND puuid = ?;
+    `,
+      [matchID, puuid]
+    );
     console.log(match);
     return NextResponse.json(match);
   } catch (error) {
@@ -59,14 +61,15 @@ async function getMatchSpecific(matchID, puuid) {
 
 async function getExtendedMatchIDs(matchDate, puuid) {
   try {
-    var query = db
-      .select("matchID")
-      .from("matchInfo")
-      .limit(10)
-      .where("puuid", puuid)
-      .andWhere("matchDate", "<", matchDate)
-      .orderBy("matchDate", "desc");
-    const matchIDs = await query;
+    const matchIDs = await db.query(
+      `
+      SELECT matchID FROM matchInfo 
+      WHERE puuid = ? AND matchDate < ? 
+      ORDER BY matchDate DESC 
+      LIMIT 10;
+    `,
+      [puuid, matchDate]
+    );
     console.log(matchIDs);
     return NextResponse.json(matchIDs);
   } catch (error) {
@@ -81,12 +84,14 @@ async function getExtendedMatchIDs(matchDate, puuid) {
 
 async function getMatchIDs(puuid) {
   try {
-    var query = db
-      .select("matchID")
-      .from("matchInfo")
-      .where("puuid", puuid)
-      .orderBy("matchDate", "desc");
-    const matchIDs = await query;
+    const matchIDs = await db.query(
+      `
+      SELECT matchID FROM matchInfo 
+      WHERE puuid = ? 
+      ORDER BY matchDate DESC;
+    `,
+      [puuid]
+    );
     console.log(matchIDs);
     return NextResponse.json(matchIDs);
   } catch (error) {

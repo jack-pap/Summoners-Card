@@ -1,27 +1,17 @@
 require("dotenv").config();
-import knex from "knex";
 
-var db;
-
-db = knex({
-  client: "mysql",
-  connection: {
+const db = require("serverless-mysql")({
+  config: {
     host: process.env.AWS_ENDPOINT,
     port: 3306,
     user: "admin",
     password: process.env.SQL_PASSWORD,
     database: "summonerscard",
-  },
-  pool: {
-    min: 0,
-    max: 50,
-    idleTimeoutMillis: 5000,
-    reapIntervalMillis: 1000,
-    createRetryIntervalMillis: 100,
+    waitForConnections: true,
+    connectionLimit: 50,
+    queueLimit: 0,
   },
 });
-
-console.log("Knex instance created successfully " + Date.now());
 
 async function initDatabase() {
   try {

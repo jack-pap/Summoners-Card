@@ -4,10 +4,10 @@ import { NextResponse } from "next/server";
 export async function GET(request, { params }) {
   const { puuid } = params;
   try {
-    const userData = await db
-      .select("summonerInfo")
-      .from("summonerInfo")
-      .where("puuid", puuid);
+    const userData = await db.query(
+      "SELECT summonerInfo FROM summonerInfo WHERE puuid = ?",
+      [puuid]
+    );
     return NextResponse.json(userData);
   } catch (error) {
     return NextResponse.json(

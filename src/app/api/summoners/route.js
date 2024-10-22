@@ -3,17 +3,23 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
-    const body = await request.json();    
-    await db("summonerInfo")
-      .insert({
-        RiotID: body.RiotID,
-        puuid: body.puuid,
-        summonerInfo: body.summonerInfo,
-        lastUpdatedDate: body.lastUpdatedDate,
-      })
-      .onConflict("puuid")
-      .merge(["RiotID", "puuid", "summonerInfo", "lastUpdatedDate"]);
-
+    const body = await request.json();
+    await db.query(
+      `
+      INSERT INTO summonerInfo (RiotID, puuid, summonerInfo, lastUpdatedDate)
+      VALUES (?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE 
+          RiotID = VALUES(RiotID),
+          summonerInfo = VALUES(summonerInfo),
+          lastUpdatedDate = VALUES(lastUpdatedDate);
+    `,
+      [
+        body.RiotID,
+        body.puuid,
+        body.summonerInfo,
+        body.lastUpdatedDate,
+      ]
+    );
     return NextResponse.json({
       message: `Summoner '${body.RiotID}' entry created/updated.`,
     });
@@ -31,10 +37,10 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const RiotID = searchParams.get("RiotID");
   try {
-    const userData = await db
-      .select("*")
-      .from("summonerInfo")
-      .where("RiotID", RiotID);
+    const userData = await db.query(
+      "SELECT * FROM summonerInfo WHERE RiotID = ?",
+      [RiotID]
+    );
     return NextResponse.json(userData);
   } catch (error) {
     return NextResponse.json(
