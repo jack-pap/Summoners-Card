@@ -1,4 +1,5 @@
 require("dotenv").config();
+import * as mysql2 from "mysql2";
 
 const db = require("serverless-mysql")({
   config: {
@@ -7,6 +8,7 @@ const db = require("serverless-mysql")({
     password: process.env.SQL_PASSWORD,
     database: "summonerscard",
   },
+  library: mysql2,
 });
 
 async function initDatabase() {

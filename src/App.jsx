@@ -443,15 +443,15 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
     DBSummoner.length > 0 &&
     (await matchListUpdated(region, DBSummoner[0].puuid, null))
   ) {
-    const parsedSummonerInfo = JSON.parse(DBSummoner[0].summonerInfo);
+    const processedSummonerInfo = DBSummoner[0].summonerInfo;
 
     puuid = DBSummoner[0].puuid;
-    summonerInfo = parsedSummonerInfo.summonerInfo;
-    rankedInfo = parsedSummonerInfo.rankedInfo;
-    masteryInfo = new Map(parsedSummonerInfo.masteryInfo);
+    summonerInfo = processedSummonerInfo.summonerInfo;
+    rankedInfo = processedSummonerInfo.rankedInfo;
+    masteryInfo = new Map(processedSummonerInfo.masteryInfo);
     matchList = await getMatchList(region, puuid, 0, 30);
     matchInfoList = await matchInfoListDriver(region, matchList, puuid);
-    summonerWinrate = parsedSummonerInfo.summonerWinrate;
+    summonerWinrate = processedSummonerInfo.summonerWinrate;
   } else {
     puuid = await getPUUID(tagLine, gameName);
     summonerInfo = await getSummonerInfo(server, puuid);
@@ -776,11 +776,11 @@ export async function getMatchInfoList(matchIDs, region, puuid) {
 
       // If found in DB process it
       if (DBMatchInfo.length > 0) {
-        const parsedMatchInfo = JSON.parse(DBMatchInfo[0].matchInfo);
+        const matchInfo = DBMatchInfo[0].matchInfo;
         matchInfoList.push([
-          parsedMatchInfo.contents,
-          parsedMatchInfo.ownPlayerInfo,
-          parsedMatchInfo.participantsList,
+          matchInfo.contents,
+          matchInfo.ownPlayerInfo,
+          matchInfo.participantsList,
         ]);
         return;
       }
