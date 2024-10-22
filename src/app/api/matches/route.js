@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
   try {
     const body = await request.json();
-    await db.query(
+    db.query(
       `
       INSERT INTO matchInfo (puuid, matchID, matchInfo, matchDate)
       VALUES (?, ?, ?, ?);
@@ -14,15 +14,15 @@ export async function POST(request) {
     return NextResponse.json({
       message: `Match '${body.matchID}' entry created.`,
     });
-  } catch (err) {
+  } catch (error) {
     return NextResponse.json(
       {
-        message: `There was an error creating match ${
-          request.json().matchID
-        } entry: ${err}`,
+        message: `There was an error creating match entry: ${error}`,
       },
       { status: 500 }
     );
+  } finally {
+    await db.end();
   }
 }
 
@@ -56,6 +56,8 @@ async function getMatchSpecific(matchID, puuid) {
       },
       { status: 500 }
     );
+  } finally {
+    await db.end();
   }
 }
 
@@ -71,6 +73,7 @@ async function getExtendedMatchIDs(matchDate, puuid) {
       [puuid, matchDate]
     );
     console.log(matchIDs);
+    await db.end();
     return NextResponse.json(matchIDs);
   } catch (error) {
     return NextResponse.json(
@@ -79,6 +82,8 @@ async function getExtendedMatchIDs(matchDate, puuid) {
       },
       { status: 500 }
     );
+  } finally {
+    await db.end();
   }
 }
 
@@ -93,6 +98,7 @@ async function getMatchIDs(puuid) {
       [puuid]
     );
     console.log(matchIDs);
+    await db.end();
     return NextResponse.json(matchIDs);
   } catch (error) {
     return NextResponse.json(
@@ -101,5 +107,7 @@ async function getMatchIDs(puuid) {
       },
       { status: 500 }
     );
+  } finally {
+    await db.end();
   }
 }

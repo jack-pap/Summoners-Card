@@ -14,5 +14,7 @@ export async function GET(request, { params }) {
       { message: `There was an error retrieving summoner info: ${error}` },
       { status: 500 }
     );
+  } finally {
+    await db.end();
   }
 }
