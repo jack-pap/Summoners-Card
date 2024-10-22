@@ -3,13 +3,9 @@ require("dotenv").config();
 const db = require("serverless-mysql")({
   config: {
     host: process.env.AWS_ENDPOINT,
-    port: 3306,
     user: "admin",
     password: process.env.SQL_PASSWORD,
     database: "summonerscard",
-    waitForConnections: true,
-    connectionLimit: 50,
-    queueLimit: 0,
   },
 });
 

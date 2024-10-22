@@ -2,10 +2,6 @@ const path = require("path");
 const webpack = require("webpack");
 
 module.exports = {
-  experimental: {
-    serverComponentsExternalPackages: ["knex"],
-    appDir: true,
-  },
   webpack: (config, { isServer }) => {
     // Add alias for @
     config.resolve.alias["@"] = path.resolve(__dirname);
