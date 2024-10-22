@@ -12,7 +12,12 @@ export async function POST(request) {
           summonerInfo = VALUES(summonerInfo),
           lastUpdatedDate = VALUES(lastUpdatedDate);
     `,
-      [body.RiotID, body.puuid, body.summonerInfo, body.lastUpdatedDate]
+      [
+        body.RiotID,
+        body.puuid,
+        JSON.stringify(body.summonerInfo),
+        body.lastUpdatedDate,
+      ]
     );
     return NextResponse.json({
       message: `Summoner '${body.RiotID}' entry created/updated.`,

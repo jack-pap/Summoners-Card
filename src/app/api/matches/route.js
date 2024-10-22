@@ -9,7 +9,7 @@ export async function POST(request) {
       INSERT INTO matchInfo (puuid, matchID, matchInfo, matchDate)
       VALUES (?, ?, ?, ?);
     `,
-      [body.puuid, body.matchID, body.matchInfo, body.matchDate]
+      [body.puuid, body.matchID,  JSON.stringify(body.matchInfo), body.matchDate]
     );
     return NextResponse.json({
       message: `Match '${body.matchID}' entry created.`,
