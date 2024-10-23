@@ -3,12 +3,13 @@
 import "../App.css";
 import React from "react";
 
-const ErrorPage = ({ statusCode }) => {
+function ErrorPage({ errorMessage }) {
   return (
-    <div>
-      <h1>{statusCode ? `Error ${statusCode}` : "Error"}</h1>
-    </div>
+    <>
+      <div id="homeBody">
+        <h1>{`Error ${errorMessage}`}</h1>
+      </div>
+    </>
   );
-};
-
+}
 export default ErrorPage;

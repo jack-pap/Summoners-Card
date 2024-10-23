@@ -2,6 +2,7 @@
 import React from "react";
 import "../../../../App.css";
 import { memo } from "react";
+import { notFound } from "next/navigation";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import { createRoot } from "react-dom/client";
@@ -89,6 +90,7 @@ function Dashboard() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isTempLoading, setIsTempLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const [isVisible, setIsVisible] = useState(false);
   const [gameName, setGameName] = useState("");
@@ -103,11 +105,11 @@ function Dashboard() {
   const [championsInfo, setChampions] = useState(null);
   const [graphData, setgraphData] = useState(null);
 
-  useEffect(() => {
-    if (!serverOptions.find((option) => option.label === server)) {
-      return <ErrorPage errorMessage={`Invalid server "${server}"`} />;
-    }
+  if (!serverOptions.find((option) => option.label === server)) {
+    setError(`Invalid server "${server}"`);
+  }
 
+  useEffect(() => {
     const fetchData = async () => {
       if (hasFetched.current) return;
       hasFetched.current = true;
@@ -120,17 +122,24 @@ function Dashboard() {
         newGameName = summonerName.split("-")[0].trim();
 
         const noDataAvailable = !data && !storedTransformedData;
-        const matchListNotUpdated = !(await matchListUpdated(region, storedTransformedData?.puuid));
+        const matchListNotUpdated = !(await matchListUpdated(
+          region,
+          storedTransformedData?.puuid
+        ));
         const gameNameMismatch =
           storedTransformedData?.gameName !== summonerName;
 
         if (noDataAvailable || matchListNotUpdated || gameNameMismatch) {
-          result = await getSummonerStats(
-            summonerName.split("-")[1],
-            newGameName,
-            serverDictionary[server],
-            region
-          );
+          try {
+            result = await getSummonerStats(
+              summonerName.split("-")[1],
+              newGameName,
+              serverDictionary[server],
+              region
+            );
+          } catch (error) {
+            setError(`Cannot find ${summonerName}`);
+          }
         } else {
           const resultData = data || storedTransformedData;
           result = {
@@ -218,6 +227,10 @@ function Dashboard() {
     summonerChampionWinrateInfo,
     isLoading,
   ]);
+
+  if (error) {
+    return notFound();
+  }
 
   ownUsername = gameName;
   if (isLoading) {
