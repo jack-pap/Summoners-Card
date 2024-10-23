@@ -10,10 +10,10 @@
             "use": "@vercel/node"
         }
     ],
-    "rewrites": [
+    "routes": [
         {
-            "source": "/proxy/(.*)",
-            "destination": "/api/index.js"
+            "src": "/proxy/(.*)",
+            "dest": "/api/index.js"
         }
     ]
 }
