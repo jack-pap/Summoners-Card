@@ -15,7 +15,7 @@ const PROXY_URL = `${process.env.NEXT_PUBLIC_PROXY_URL}/api`;
  */
 export async function apiCall(apiURL) {
   try {
-    const proxyURL = `${PROXY_URL}/?url=${encodeURIComponent(apiURL)}`;
+    const proxyURL = `${BASE_URL}/proxy?url=${encodeURIComponent(apiURL)}`;
     const response = await fetch(proxyURL);
     if (!response.ok) {
       throw new Error(`Network response was not ok ${response.status}`);
