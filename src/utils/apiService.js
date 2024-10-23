@@ -5,6 +5,7 @@ import fetch from "isomorphic-fetch";
  */
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api`;
+const PROXY_URL = `${process.env.NEXT_PUBLIC_PROXY_URL}`;
 
 /**
  * API call to fetch data from a route end point
@@ -14,9 +15,7 @@ const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api`;
  */
 export async function apiCall(apiURL) {
   try {
-    const proxyURL = `http://localhost:3001/proxy?url=${encodeURIComponent(
-      apiURL
-    )}`;
+    const proxyURL = `${PROXY_URL}/proxy?url=${encodeURIComponent(apiURL)}`;
     const response = await fetch(proxyURL);
     if (!response.ok) {
       throw new Error(`Network response was not ok ${response.status}`);
