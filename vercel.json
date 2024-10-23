@@ -12,7 +12,7 @@
     ],
     "rewrites": [
         {
-            "source": "/proxy/(.*)",
+            "source": "/proxy",
             "destination": "/api"
         }
     ]
