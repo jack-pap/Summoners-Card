@@ -9,5 +9,11 @@
             "src": "src/app/api/index.js",
             "use": "@vercel/node"
         }
+    ],
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/api"
+        }
     ]
 }

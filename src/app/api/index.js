@@ -77,18 +77,6 @@ app.prepare().then(() => {
     }
   });
 
-  // Proxy route to be called by controller to fetch data from API endpoint without caching
-  server.get("/proxyNoCache", async (req, res) => {
-    const apiURL = req.query.url;
-    try {
-      const response = await fetch(apiURL);
-      const data = await response.json();
-      res.json(data);
-    } catch (error) {
-      res.status(500).json({ error: `Failed to fetch data` });
-    }
-  });
-
   server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
   });
