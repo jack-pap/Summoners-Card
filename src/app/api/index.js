@@ -45,6 +45,17 @@ app.prepare().then(() => {
 
   server.use(cors()); // Enable CORS for everywhere
   server.use(bodyParser.json()); // Parse JSON bodies
+  server.use((req, res, next) => {
+    if (req.method === "OPTIONS") {
+      res.setHeader("Access-Control-Allow-Origin", req.get("Origin") || "*");
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+      // Allow private network access
+      res.setHeader("Access-Control-Allow-Private-Network", "true");
+      return res.status(200).end();
+    }
+    next();
+  });
 
   //Database middleware routes
   // app.use("/summoner", summonerRouter);
