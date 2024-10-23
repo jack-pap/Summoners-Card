@@ -9,11 +9,5 @@
             "src": "src/app/api/index.js",
             "use": "@vercel/node"
         }
-    ],
-    "rewrites": [
-        {
-            "source": "/proxy",
-            "destination": "/api"
-        }
     ]
 }
