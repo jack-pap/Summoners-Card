@@ -118,10 +118,17 @@ function Dashboard() {
 
         let newGameName, result;
         newGameName = summonerName.split("-")[0].trim();
-        if (
-          (!data && !storedTransformedData) ||
-          storedTransformedData?.gameName !== summonerName
-        ) {
+
+        const noDataAvailable = !data && !storedTransformedData;
+        const matchListNotUpdated = !(await matchListUpdated(
+          region,
+          DBSummoner[0].puuid,
+          null
+        ));
+        const gameNameMismatch =
+          storedTransformedData?.gameName !== summonerName;
+
+        if (noDataAvailable || matchListNotUpdated || gameNameMismatch) {
           result = await getSummonerStats(
             summonerName.split("-")[1],
             newGameName,

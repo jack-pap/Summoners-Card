@@ -5,7 +5,7 @@ import {
   ChampionEntryList,
   getChampionImage,
 } from "../../src/components/ChampionEntryList.jsx";
-import * as apiService from "../../api/controller/apiService.js";
+import * as apiService from "@/src/utils/apiService.js";
 
 jest.mock("../../src/components/ChampionEntry.jsx", () => ({
   __esModule: true,
@@ -14,9 +14,9 @@ jest.mock("../../src/components/ChampionEntry.jsx", () => ({
   )),
 }));
 
-jest.mock("../../api/controller/apiService.js", () => ({
+jest.mock("@/src/utils/apiService.js", () => ({
   apiImageCall: jest.fn(),
-  apiProxyCall: jest.fn(),
+  apiCall: jest.fn(),
 }));
 
 describe("ChampionEntryList render tests", () => {

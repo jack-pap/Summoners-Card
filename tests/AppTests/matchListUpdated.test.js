@@ -1,12 +1,9 @@
-const AppModule = require("../../src/pages/App.jsx");
-const {
-  apiGETDatabaseCall,
-  apiProxyNoCacheCall,
-} = require("../../api/controller/apiService.js");
+const AppModule = require("@/src/App.jsx");
+const { apiGETDatabaseCall, apiCall } = require("@/src/utils/apiService.js");
 
-jest.mock("../../api/controller/apiService.js", () => ({
+jest.mock("@/src/utils/apiService.js", () => ({
   apiGETDatabaseCall: jest.fn(),
-  apiProxyNoCacheCall: jest.fn(),
+  apiCall: jest.fn(),
 }));
 
 describe("matchListUpdated function tests", () => {
@@ -15,9 +12,9 @@ describe("matchListUpdated function tests", () => {
     const puuid = "PtSa$ap1!2xj0-";
 
     apiGETDatabaseCall.mockResolvedValue([{ matchID: "recentMatchData" }]);
-    apiProxyNoCacheCall.mockResolvedValue(["recentMatchData"]);
+    apiCall.mockResolvedValue(["recentMatchData"]);
 
-    const result = await AppModule.matchListUpdated(region, puuid, null);
+    const result = await AppModule.matchListUpdated(region, puuid);
 
     expect(result).toEqual(true);
   });
@@ -27,9 +24,9 @@ describe("matchListUpdated function tests", () => {
     const puuid = "PtSa$ap1!2xj0-";
 
     apiGETDatabaseCall.mockResolvedValue({});
-    apiProxyNoCacheCall.mockResolvedValue([{ matchID: "notRecentMatchData" }]);
+    apiCall.mockResolvedValue([{ matchID: "notRecentMatchData" }]);
 
-    const result = await AppModule.matchListUpdated(region, puuid, null);
+    const result = await AppModule.matchListUpdated(region, puuid);
 
     expect(result).toEqual(false);
   });
@@ -39,13 +36,9 @@ describe("matchListUpdated function tests", () => {
     const puuid = "PtSa$ap1!2xj0-";
 
     apiGETDatabaseCall.mockResolvedValue([{ matchID: "recentMatchData" }]);
-    apiProxyNoCacheCall.mockResolvedValue(["recentMatchData"]);
+    apiCall.mockResolvedValue(["recentMatchData"]);
 
-    const result = await AppModule.matchListUpdated(
-      region,
-      puuid,
-      "recentMatchData"
-    );
+    const result = await AppModule.matchListUpdated(region, puuid);
 
     expect(result).toEqual(true);
   });
@@ -54,14 +47,10 @@ describe("matchListUpdated function tests", () => {
     const region = "europe";
     const puuid = "PtSa$ap1!2xj0-";
 
-    apiGETDatabaseCall.mockResolvedValue([{ matchID: "recentMatchData" }]);
-    apiProxyNoCacheCall.mockResolvedValue([]);
+    apiGETDatabaseCall.mockResolvedValue([]);
+    apiCall.mockResolvedValue(["recentMatchData"]);
 
-    const result = await AppModule.matchListUpdated(
-      region,
-      puuid,
-      "notRecentMatchData"
-    );
+    const result = await AppModule.matchListUpdated(region, puuid);
 
     expect(result).toEqual(false);
   });

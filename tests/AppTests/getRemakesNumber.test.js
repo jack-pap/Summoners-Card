@@ -1,5 +1,4 @@
-const AppModule = require("../../src/pages/App.jsx");
-
+const AppModule = require("@/src/App.jsx");
 describe("getRemakesNumber function tests", () => {
   test("Returns remakes number for both queues", async () => {
     const rankedInfo = [{ rankedGames: 2 }, { rankedGames: 1 }];

@@ -1,12 +1,9 @@
-const AppModule = require("../../src/pages/App.jsx");
-const {
-  apiGETDatabaseCall,
-  apiProxyCall,
-} = require("../../api/controller/apiService.js");
+const AppModule = require("@/src/App.jsx");
+const { apiGETDatabaseCall, apiCall } = require("@/src/utils/apiService.js");
 
-jest.mock("../../api/controller/apiService.js", () => ({
+jest.mock("@/src/utils/apiService.js", () => ({
   apiGETDatabaseCall: jest.fn(),
-  apiProxyCall: jest.fn(),
+  apiCall: jest.fn(),
 }));
 
 describe("getExtendedMatchList function tests", () => {
@@ -26,7 +23,7 @@ describe("getExtendedMatchList function tests", () => {
       "4",
       "5",
     ]);
-    apiProxyCall.mockResolvedValue(["1A", "2B"]);
+    apiCall.mockResolvedValue(["1A", "2B"]);
 
     const result = await AppModule.getExtendedMatchList(
       region,
@@ -42,7 +39,7 @@ describe("getExtendedMatchList function tests", () => {
     const puuid = "PtSa$ap1!2xj0-";
 
     apiGETDatabaseCall.mockResolvedValue(["A", "B", "C", "D"]);
-    apiProxyCall.mockResolvedValue(["1A", "2B", "3B"]);
+    apiCall.mockResolvedValue(["1A", "2B", "3B"]);
 
     const result = await AppModule.getExtendedMatchList(
       region,

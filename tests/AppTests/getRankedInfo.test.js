@@ -1,15 +1,14 @@
-import * as apiService from "../../api/controller/apiService.js";
+import * as apiService from "@/src/utils/apiService.js";
 
-const AppModule = require("../../src/pages/App.jsx");
-
-jest.mock("../../api/controller/apiService.js");
+const AppModule = require("@/src/App.jsx");
+jest.mock("@/src/utils/apiService.js");
 
 describe("getRankedInfo function tests", () => {
   test("Returns ranked solo only", async () => {
     const server = "EUW";
     const id = "PtSa$ap1!2xj0-";
 
-    apiService.apiProxyNoCacheCall.mockResolvedValue([
+    apiService.apiCall.mockResolvedValue([
       {
         queueType: "RANKED_SOLO_5x5",
         tier: 1,
@@ -40,7 +39,7 @@ describe("getRankedInfo function tests", () => {
     const server = "EUW";
     const id = "PtSa$ap1!2xj0-";
 
-    apiService.apiProxyNoCacheCall.mockResolvedValue([
+    apiService.apiCall.mockResolvedValue([
       {
         queueType: "RANKED_FLEX_SR",
         tier: 1,
@@ -71,7 +70,7 @@ describe("getRankedInfo function tests", () => {
     const server = "EUW";
     const id = "PtSa$ap1!2xj0-";
 
-    apiService.apiProxyNoCacheCall.mockResolvedValue([
+    apiService.apiCall.mockResolvedValue([
       {
         queueType: "RANKED_FLEX_SR",
         tier: 1,
@@ -118,7 +117,7 @@ describe("getRankedInfo function tests", () => {
     const server = "EUW";
     const id = "PtSa$ap1!2xj0-";
 
-    apiService.apiProxyNoCacheCall.mockResolvedValue([{}, {}]);
+    apiService.apiCall.mockResolvedValue([{}, {}]);
 
     const result = await AppModule.getRankedInfo(server, id);
 

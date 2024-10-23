@@ -1,14 +1,14 @@
 const {
   apiPOSTDatabaseCall,
   apiGETDatabaseCall,
-  apiProxyCall,
-} = require("../../api/controller/apiService.js");
-const AppModule = require("../../src/pages/App.jsx");
+  apiCall,
+} = require("@/src/utils/apiService.js");
+const AppModule = require("@/src/App.jsx");
 
-jest.mock("../../api/controller/apiService.js", () => ({
+jest.mock("@/src/utils/apiService.js", () => ({
   apiPOSTDatabaseCall: jest.fn(),
   apiGETDatabaseCall: jest.fn(),
-  apiProxyCall: jest.fn(),
+  apiCall: jest.fn(),
 }));
 
 describe("getMatchInfoList function tests", () => {
@@ -22,7 +22,7 @@ describe("getMatchInfoList function tests", () => {
 
     apiGETDatabaseCall.mockResolvedValue({});
     apiPOSTDatabaseCall.mockResolvedValue({});
-    apiProxyCall.mockResolvedValue({
+    apiCall.mockResolvedValue({
       info: {
         gameEndTimestamp: 1633072800000,
         gameDuration: 1800,

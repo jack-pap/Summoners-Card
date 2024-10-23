@@ -1,8 +1,8 @@
-const { apiProxyCall } = require("../../api/controller/apiService.js");
-const AppModule = require("../../src/pages/App.jsx");
+const { apiCall } = require("@/src/utils/apiService.js");
+const AppModule = require("@/src/App.jsx");
 
-jest.mock("../../api/controller/apiService.js", () => ({
-  apiProxyCall: jest.fn(),
+jest.mock("@/src/utils/apiService.js", () => ({
+  apiCall: jest.fn(),
 }));
 
 describe("matchInfoAPICall function tests", () => {
@@ -13,7 +13,7 @@ describe("matchInfoAPICall function tests", () => {
     const region = "europe";
     const puuid = "PtSa$ap1!2xj0-";
 
-    apiProxyCall.mockResolvedValue({
+    apiCall.mockResolvedValue({
       info: {
         gameEndTimestamp: new Date(1633072800000),
         gameDuration: 1800,

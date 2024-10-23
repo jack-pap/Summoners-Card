@@ -1,3 +1,3 @@
-const AppModule = require("../../src/pages/App.jsx");
+const AppModule = require("@/src/App.jsx");
 
 test("TEST", async () => { });

@@ -164,7 +164,6 @@ footer {
 #gitIcon:hover {
   background-color: #d8a841;
   cursor: pointer;
-  transform: scale(1.1);
 }
 
 #iconContainer {

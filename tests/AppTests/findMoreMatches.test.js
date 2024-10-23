@@ -1,14 +1,28 @@
-const AppModule = require("../../src/pages/App.jsx");
+const {
+  findMoreMatches,
+  getMatchList,
+  getMatchInfoList,
+} = require("@/src/App.jsx");
+
+jest.mock("isomorphic-fetch");
+
+jest.mock("@/src/App.jsx", () => ({
+  getMatchList: jest.fn(),
+  getMatchInfoList: jest.fn(),
+  findMoreMatches: jest.requireActual("@/src/App.jsx").findMoreMatches,
+}));
 
 describe("findMoreMatches function tests", () => {
   test("Returns matches", async () => {
     const region = "europe";
     const puuid = "PtSa$ap1!2xj0-";
 
-    jest.spyOn(AppModule, 'getMatchList').mockReturnValue(["A","B","C"]);
-    jest.spyOn(AppModule, 'getMatchInfoList').mockReturnValue({ matchInfoList: [1, 2, 3] });
+    getMatchList.mockResolvedValue(["A", "B", "C"]);
+    getMatchInfoList.mockResolvedValue({
+      matchInfoList: [1, 2, 3],
+    });
 
-    const result = await AppModule.findMoreMatches(region, puuid);
+    const result = await findMoreMatches(region, puuid);
 
     expect(result).toEqual([1, 2, 3]);
   });
@@ -17,11 +31,14 @@ describe("findMoreMatches function tests", () => {
     const region = "europe";
     const puuid = "PtSa$ap1!2xj0-";
 
-    jest.spyOn(AppModule, 'getMatchList').mockReturnValue(["A","B","C"]);
-    jest.spyOn(AppModule, 'getMatchInfoList').mockReturnValue({ matchInfoList: [] });
+    getMatchList.mockResolvedValue(["A", "B", "C"]);
 
-    const result = await AppModule.findMoreMatches(region, puuid);
+    getMatchInfoList.mockResolvedValue({
+      matchInfoList: [],
+    });
 
-    expect(result).toEqual([]);
+    const result = await findMoreMatches(region, puuid);
+
+    expect(result).toBeNull();
   });
 });

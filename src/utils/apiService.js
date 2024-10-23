@@ -28,50 +28,6 @@ export async function apiCall(apiURL) {
 }
 
 /**
- * API call to Riot for data by calling the proxy route server and passing the apiURL endpoint
- *
- * @param {string} apiURL
- * @returns {Promise}
- */
-export async function apiProxyCall(apiURL) {
-  const proxyURL = `${BASE_URL}/proxy?url=${apiURL}`;
-  try {
-    const response = await fetch(apiURL);
-    if (!response.ok) {
-      throw new Error(`Network response was not ok ${response.status}`);
-    }
-    const data = await response.json();
-    console.log(data);
-    return data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
-
-/**
- * API call to Riot for data by calling the proxy route server that doesn't cache the request
- *
- * @param {string} apiURL
- * @returns {Promise}
- */
-export async function apiProxyNoCacheCall(apiURL) {
-  const proxyURL = `${BASE_URL}/proxyNoCache?url=${encodeURIComponent(apiURL)}`;
-  try {
-    const response = await fetch(apiURL);
-    if (!response.ok) {
-      throw new Error(`Network response was not ok ${response.status}`);
-    }
-    const data = await response.json();
-    console.log(data);
-    return data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
-
-/**
  * API call to imageURL to get image data
  *
  * @param {string} imageURL

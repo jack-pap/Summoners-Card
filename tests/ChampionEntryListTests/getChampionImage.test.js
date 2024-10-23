@@ -1,8 +1,8 @@
-import { apiImageCall, apiProxyCall } from "../../api/controller/apiService.js";
+import { apiImageCall, apiCall } from "@/src/utils/apiService.js";
 
 const championEntryList = require("../../src/components/ChampionEntryList.jsx");
 
-jest.mock("../../api/controller/apiService.js");
+jest.mock("@/src/utils/apiService.js");
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
@@ -34,7 +34,7 @@ describe("getChampionImage function tests", () => {
     const mockImage = "mockImageDataBlob201";
 
     apiImageCall.mockResolvedValueOnce(null);
-    apiProxyCall.mockResolvedValueOnce(mockChampionData);
+    apiCall.mockResolvedValueOnce(mockChampionData);
     apiImageCall.mockResolvedValueOnce(mockImage);
 
     const result = await championEntryList.getChampionImage(championId);

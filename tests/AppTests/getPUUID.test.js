@@ -1,8 +1,8 @@
-const AppModule = require("../../src/pages/App.jsx");
-const { apiProxyCall } = require("../../api/controller/apiService.js");
+const AppModule = require("@/src/App.jsx");
+const { apiCall } = require("@/src/utils/apiService.js");
 
-jest.mock("../../api/controller/apiService.js", () => ({
-  apiProxyCall: jest.fn(),
+jest.mock("@/src/utils/apiService.js", () => ({
+  apiCall: jest.fn(),
 }));
 
 describe("getPUUID function tests", () => {
@@ -16,7 +16,7 @@ describe("getPUUID function tests", () => {
 
     const puuid = "PtSa$ap1!2xj0-";
 
-    apiProxyCall.mockResolvedValue({ puuid: puuid });
+    apiCall.mockResolvedValue({ puuid: puuid });
 
     const result = await AppModule.getPUUID(tagLine, gameName);
 

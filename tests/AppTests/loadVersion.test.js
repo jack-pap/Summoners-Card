@@ -1,9 +1,10 @@
 import React from "react";
-const AppModule = require("../../src/pages/App.jsx");
+const AppModule = require("@/src/App.jsx");
+const fetch = require("isomorphic-fetch");
 
-global.fetch = jest.fn();
+jest.mock("isomorphic-fetch");
 
-jest.mock("../../src/pages/ErrorPage.jsx", () => ({
+jest.mock("@/src/components/ErrorPage.jsx", () => ({
   __esModule: true,
   default: jest.fn(() => <div data-testid="error-page">Mocked ErrorPage</div>),
 }));

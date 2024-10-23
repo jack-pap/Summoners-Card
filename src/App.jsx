@@ -297,7 +297,6 @@ export async function loadVersion() {
     fetch(apiURL)
       .then((response) => {
         if (!response.ok) {
-          alert(`Cannot retrieve version number`);
           throw new ErrorPage(`Network response was not ok ${response.status}`);
         }
         return response.json();
@@ -441,7 +440,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
 
   if (
     DBSummoner.length > 0 &&
-    (await matchListUpdated(region, DBSummoner[0].puuid, null))
+    (await matchListUpdated(region, DBSummoner[0].puuid))
   ) {
     const processedSummonerInfo = DBSummoner[0].summonerInfo;
 
@@ -665,7 +664,7 @@ export async function getMatchList(
   matchAmountStart,
   matchAmount
 ) {
-  if (await matchListUpdated(region, puuid, null)) {
+  if (await matchListUpdated(region, puuid)) {
     const DBMatchList = await apiGETDatabaseCall("matches", `?puuid=${puuid}`);
     return DBMatchList.map((obj) => Object.values(obj)[0]);
   } else {
@@ -707,21 +706,19 @@ export async function getExtendedMatchList(region, puuid, lastGameDate) {
 /**
  * Cross references the most recent match a summoner
  * played through an API call and checks if it is in
- * the database or if the right one is stored in state
+ * the database to determine if the list is updated
  *
  * @param {string} region
  * @param {string} puuid
- * @param {string} stateMatch
  * @returns {boolean}
  */
-export async function matchListUpdated(region, puuid, stateMatch) {
+export async function matchListUpdated(region, puuid) {
   const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${0}&count=${1}&type=ranked&api_key=${API_KEY}`;
   const data = await apiCall(matchListApiURL);
   const DBMatch = await apiGETDatabaseCall(
     "matches",
     `?matchID=${data[0]}&puuid=${puuid}`
   );
-  if (stateMatch && DBMatch[0]) return stateMatch == DBMatch[0].matchID;
   return DBMatch.length > 0;
 }
 

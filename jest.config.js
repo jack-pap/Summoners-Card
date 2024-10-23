@@ -1,9 +1,10 @@
-/**
- * For a detailed explanation regarding each configuration property, visit:
- * https://jestjs.io/docs/configuration
- */
+const nextJest = require("next/jest");
 
 /** @type {import('jest').Config} */
+const createJestConfig = nextJest({
+  dir: "./",
+});
+
 const config = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
@@ -94,9 +95,9 @@ const config = {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    "\\.(css|less)$": "identity-obj-proxy"
+    "\\.(css|less)$": "identity-obj-proxy", // Existing mapping for CSS/LESS files
+    "^@/(.*)$": "<rootDir>/$1", // Alias for '@/'
   },
-
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
 
@@ -200,4 +201,4 @@ const config = {
   // watchman: true,
 };
 
-module.exports = config;
+module.exports = createJestConfig(config);

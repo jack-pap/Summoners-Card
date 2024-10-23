@@ -1,6 +1,7 @@
-const apiService = require("../../api/controller/apiService.js");
+const fetch = require("isomorphic-fetch");
+const apiService = require("@/src/utils/apiService.js");
 
-global.fetch = jest.fn();
+jest.mock("isomorphic-fetch");
 
 describe("apiPOSTDatabaseCall function tests", () => {
   beforeEach(() => {
@@ -25,9 +26,9 @@ describe("apiPOSTDatabaseCall function tests", () => {
 
     expect(result).toStrictEqual({ data: "success" });
     expect(fetch).toHaveBeenCalledWith(
-      `https://summoners-card.onrender.com/${path}/${queryRoute}`,
+      `http://localhost:3000/api/${path}/${queryRoute}`,
       expect.objectContaining({
-        method: "post",
+        method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -52,9 +53,9 @@ describe("apiPOSTDatabaseCall function tests", () => {
     ).rejects.toThrow("Network response was not ok 500");
 
     expect(fetch).toHaveBeenCalledWith(
-      `https://summoners-card.onrender.com/${path}/${queryRoute}`,
+      `http://localhost:3000/api/${path}/${queryRoute}`,
       expect.objectContaining({
-        method: "post",
+        method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",

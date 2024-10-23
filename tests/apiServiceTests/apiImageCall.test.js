@@ -1,6 +1,7 @@
-const apiService = require("../../api/controller/apiService.js");
+const fetch = require("isomorphic-fetch");
+const apiService = require("@/src/utils/apiService.js");
 
-global.fetch = jest.fn();
+jest.mock("isomorphic-fetch");
 
 describe("apiImageCall function tests", () => {
   beforeEach(() => {
