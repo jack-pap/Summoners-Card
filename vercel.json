@@ -15,9 +15,5 @@
             "source": "/(.*)",
             "destination": "/api"
         }
-    ],
-    "env": {
-        "AWS_ENDPOINT": "@AWS_ENDPOINT",
-        "API_KEY": "@VITE_API_KEY"
-    }
+    ]
 }
