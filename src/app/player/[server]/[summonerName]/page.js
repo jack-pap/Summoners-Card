@@ -120,11 +120,7 @@ function Dashboard() {
         newGameName = summonerName.split("-")[0].trim();
 
         const noDataAvailable = !data && !storedTransformedData;
-        const matchListNotUpdated = !(await matchListUpdated(
-          region,
-          DBSummoner[0].puuid,
-          null
-        ));
+        const matchListNotUpdated = !(await matchListUpdated(region, storedTransformedData?.puuid));
         const gameNameMismatch =
           storedTransformedData?.gameName !== summonerName;
 
