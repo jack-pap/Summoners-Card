@@ -38,7 +38,7 @@ app.prepare().then(() => {
   });
 
   // Proxy route to be called by controller to fetch data from API endpoint
-  server.get("/proxy", async (req, res) => {
+  server.get("/api", async (req, res) => {
     const apiURL = req.query.url;
     try {
       const response = await fetch(apiURL);
