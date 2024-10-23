@@ -1,0 +1,23 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "package.json",
+            "use": "@vercel/static-build"
+        },
+        {
+            "src": "src/app/api/index.js",
+            "use": "@vercel/node"
+        }
+    ],
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/api"
+        }
+    ],
+    "env": {
+        "AWS_ENDPOINT": "@AWS_ENDPOINT",
+        "API_KEY": "@VITE_API_KEY"
+    }
+}
