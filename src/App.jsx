@@ -448,7 +448,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
     summonerInfo = processedSummonerInfo.summonerInfo;
     rankedInfo = processedSummonerInfo.rankedInfo;
     masteryInfo = new Map(processedSummonerInfo.masteryInfo);
-    matchList = await getMatchList(region, puuid, 0, 25);
+    matchList = await getMatchList(region, puuid, 0, 20);
     matchInfoList = await matchInfoListDriver(region, matchList, puuid);
     summonerWinrate = processedSummonerInfo.summonerWinrate;
   } else {
@@ -456,7 +456,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
     summonerInfo = await getSummonerInfo(server, puuid);
     rankedInfo = await getRankedInfo(server, summonerInfo[0]);
     masteryInfo = await getMasteryInfo(server, puuid);
-    matchList = await getMatchList(region, puuid, 0, 25);
+    matchList = await getMatchList(region, puuid, 0, 20);
     matchInfoList = await matchInfoListDriver(region, matchList, puuid);
     summonerWinrate = getSummonerWinrates(rankedInfo, matchInfoList);
 
