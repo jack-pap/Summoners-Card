@@ -5,7 +5,6 @@ import fetch from "isomorphic-fetch";
  */
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api`;
-const PROXY_URL = `${process.env.NEXT_PUBLIC_PROXY_URL}/api`;
 
 /**
  * API call to fetch data from a route end point

@@ -448,7 +448,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
     summonerInfo = processedSummonerInfo.summonerInfo;
     rankedInfo = processedSummonerInfo.rankedInfo;
     masteryInfo = new Map(processedSummonerInfo.masteryInfo);
-    matchList = await getMatchList(region, puuid, 0, 30);
+    matchList = await getMatchList(region, puuid, 0, 25);
     matchInfoList = await matchInfoListDriver(region, matchList, puuid);
     summonerWinrate = processedSummonerInfo.summonerWinrate;
   } else {
@@ -456,7 +456,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
     summonerInfo = await getSummonerInfo(server, puuid);
     rankedInfo = await getRankedInfo(server, summonerInfo[0]);
     masteryInfo = await getMasteryInfo(server, puuid);
-    matchList = await getMatchList(region, puuid, 0, 30);
+    matchList = await getMatchList(region, puuid, 0, 25);
     matchInfoList = await matchInfoListDriver(region, matchList, puuid);
     summonerWinrate = getSummonerWinrates(rankedInfo, matchInfoList);
 
@@ -712,7 +712,7 @@ export async function getExtendedMatchList(region, puuid, lastGameDate) {
  * @param {string} puuid
  * @returns {boolean}
  */
-export async function matchListUpdated(region, puuid) {
+export async function matchListUpdated(region, puuid, storedMatch) {
   const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${0}&count=${1}&type=ranked&api_key=${API_KEY}`;
   const data = await apiCall(matchListApiURL);
   const DBMatch = await apiGETDatabaseCall(

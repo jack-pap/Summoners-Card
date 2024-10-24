@@ -94,6 +94,7 @@ async function getMatchIDs(puuid) {
       SELECT matchID FROM matchInfo 
       WHERE puuid = ? 
       ORDER BY matchDate DESC;
+      LIMIT 40;
     `,
       [puuid]
     );
