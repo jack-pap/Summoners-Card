@@ -7,6 +7,7 @@ import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import { createRoot } from "react-dom/client";
 import {
+  getPUUID,
   getSummonerStats,
   getExtendedMatchList,
   matchInfoListDriver,
@@ -118,13 +119,15 @@ function Dashboard() {
         gameQueues = await getGameQueues();
         setIsLoading(true);
 
-        let newGameName, result;
-        newGameName = summonerName.split("-")[0].trim();
+        var result;
+        const newGameName = summonerName.split("-")[0].trim();
+        const fetchedTagLine = summonerName.split("-")[1].trim();
+        const fetchedPUUID = await getPUUID(fetchedTagLine, newGameName);
 
         const noDataAvailable = !data && !storedTransformedData;
         const matchListNotUpdated = !(await matchListUpdated(
           region,
-          storedTransformedData?.puuid
+          fetchedPUUID
         ));
         const gameNameMismatch =
           storedTransformedData?.gameName !== summonerName;
