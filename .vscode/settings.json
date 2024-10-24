@@ -16,6 +16,19 @@
       "name": "summoner",
       "database": "summoner",
       "username": "root"
+    },
+    {
+      "mysqlOptions": {
+        "authProtocol": "default",
+        "enableSsl": "Disabled"
+      },
+      "previewLimit": 50,
+      "server": "summonerscarddb.cb40ckcg4u3a.eu-north-1.rds.amazonaws.com",
+      "port": 3306,
+      "driver": "MySQL",
+      "name": "AWS RDS",
+      "database": "summonerscard",
+      "username": "admin"
     }
   ],
   "sqltools.useNodeRuntime": true,

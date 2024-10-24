@@ -737,7 +737,7 @@ async function makeChampionWinrate(
  */
 async function makeMatchHistory(summonerMatchInfo, setIsTempLoading) {
   setIsTempLoading(true);
-  await makeMatchEntries(summonerMatchInfo, 15);
+  await makeMatchEntries(summonerMatchInfo, 20);
   setIsTempLoading(false);
 }
 

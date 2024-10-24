@@ -774,11 +774,11 @@ export async function getMatchInfoList(matchIDs, region, puuid) {
       // If found in DB process it
       if (DBMatchInfo.length > 0) {
         const matchInfo = DBMatchInfo[0].matchInfo;
-        matchInfoList.push([
+        matchInfoList[index] = [
           matchInfo.contents,
           matchInfo.ownPlayerInfo,
           matchInfo.participantsList,
-        ]);
+        ];
         return;
       }
 
@@ -845,7 +845,7 @@ export async function getMatchInfoList(matchIDs, region, puuid) {
         return pickedPlayerInfo;
       });
 
-      matchInfoList.push([contents, ownPlayerInfo, participantsList]);
+      matchInfoList[index] = [contents, ownPlayerInfo, participantsList];
 
       apiPOSTDatabaseCall("matches", "", {
         puuid: puuid,
