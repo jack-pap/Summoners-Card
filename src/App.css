@@ -824,6 +824,17 @@ img {
 
 .runeImages img {
   align-self: center;
+  border: 1px solid #c89b3c;
+  border-radius: 1000%;
+  background-color: #252525;
+}
+
+#primaryRune {
+  padding: 1px
+}
+
+#secondaryRune {
+  padding: 5px
 }
 
 .itemImages {
