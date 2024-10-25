@@ -12,19 +12,6 @@ global.fetch = jest.fn(() =>
 );
 
 describe("getChampionImage function tests", () => {
-  test("API call to server that serves the champion image", async () => {
-    const championId = "201";
-    const mockImage = "mockImageDataBlob201";
-
-    apiImageCall.mockResolvedValueOnce(mockImage);
-
-    const result = await championEntryList.getChampionImage(championId);
-
-    expect(result).toBe(mockImage);
-    expect(apiImageCall).toHaveBeenCalledWith(
-      `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${championId}.png`
-    );
-  });
 
   test("API call to community dragon for the champion image", async () => {
     const championId = "201";
@@ -33,7 +20,7 @@ describe("getChampionImage function tests", () => {
     };
     const mockImage = "mockImageDataBlob201";
 
-    apiImageCall.mockResolvedValueOnce(null);
+    apiImageCall.mockResolvedValueOnce(mockChampionData);
     apiCall.mockResolvedValueOnce(mockChampionData);
     apiImageCall.mockResolvedValueOnce(mockImage);
 

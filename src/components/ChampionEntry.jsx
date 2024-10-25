@@ -11,7 +11,7 @@ const ChampionEntry = memo(
             src={championImage}
             width={42}
             height={42}
-            alt={`${championName} Winrate Icon`}
+            alt={`${championName}`}
           />
         </div>
         <div className="champName">{championName}</div>

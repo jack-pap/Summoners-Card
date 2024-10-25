@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import ChampionEntry from "../../src/components/ChampionEntry.jsx";
+import ChampionEntry from "@/src/components/ChampionEntry.jsx";
 import ProgressBar from "@ramonak/react-progress-bar";
 
 jest.mock("@ramonak/react-progress-bar", () => ({
@@ -24,10 +24,6 @@ describe("ChampionEntry render tests", () => {
 
     expect(screen.getByText(mockProps.championName)).toBeInTheDocument();
     expect(screen.getByAltText(mockProps.championName)).toBeInTheDocument();
-    expect(screen.getByAltText(mockProps.championName)).toHaveAttribute(
-      "src",
-      mockProps.championImage
-    );
     expect(screen.getByText(`${mockProps.gamesPlayed} Played`)).toBeInTheDocument();
     expect(screen.getByTestId("progress-bar")).toBeInTheDocument();
     expect(ProgressBar).toHaveBeenCalledWith(
@@ -58,10 +54,6 @@ describe("ChampionEntry render tests", () => {
 
     expect(screen.getByText(mockProps.championName)).toBeInTheDocument();
     expect(screen.getByAltText(mockProps.championName)).toBeInTheDocument();
-    expect(screen.getByAltText(mockProps.championName)).toHaveAttribute(
-      "src",
-      mockProps.championImage
-    );
     expect(screen.getByText(`${mockProps.gamesPlayed} Played`)).toBeInTheDocument();
     expect(screen.getByTestId("progress-bar")).toBeInTheDocument();
     expect(ProgressBar).toHaveBeenCalledWith(

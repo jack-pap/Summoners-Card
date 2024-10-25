@@ -1,4 +1,4 @@
-const matchEntry = require("../../src/components/MatchEntry.jsx");
+const matchEntry = require("@/src/components/MatchEntry.jsx");
 
 describe("getMatchStatus function tests", () => {
   test("Remake with win", () => {

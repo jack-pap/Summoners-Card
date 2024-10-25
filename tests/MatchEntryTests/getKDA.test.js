@@ -1,4 +1,4 @@
-const matchEntry = require("../../src/components/MatchEntry.jsx");
+const matchEntry = require("@/src/components/MatchEntry.jsx");
 
 describe("getKDA function tests", () => {
   test("Zero stats", () => {

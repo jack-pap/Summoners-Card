@@ -712,7 +712,7 @@ export async function getExtendedMatchList(region, puuid, lastGameDate) {
  * @param {string} puuid
  * @returns {boolean}
  */
-export async function matchListUpdated(region, puuid, storedMatch) {
+export async function matchListUpdated(region, puuid) {
   const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${0}&count=${1}&type=ranked&api_key=${API_KEY}`;
   const data = await apiCall(matchListApiURL);
   const DBMatch = await apiGETDatabaseCall(

@@ -4,10 +4,10 @@ import "@testing-library/jest-dom";
 import {
   ChampionEntryList,
   getChampionImage,
-} from "../../src/components/ChampionEntryList.jsx";
+} from "@/src/components/ChampionEntryList.jsx";
 import * as apiService from "@/src/utils/apiService.js";
 
-jest.mock("../../src/components/ChampionEntry.jsx", () => ({
+jest.mock("@/src/components/ChampionEntry.jsx", () => ({
   __esModule: true,
   default: jest.fn(({ championName }) => (
     <div data-testid="championEntry">Mocked {championName}</div>

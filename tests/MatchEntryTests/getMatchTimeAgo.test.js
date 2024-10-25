@@ -1,4 +1,4 @@
-const matchEntry = require("../../src/components/MatchEntry.jsx");
+const matchEntry = require("@/src/components/MatchEntry.jsx");
 
 const yearAgo = new Date(new Date() - 1000 * 60 * 60 * 24 * 365);
 const dayAgo = new Date(new Date() - 1000 * 60 * 60 * 24);

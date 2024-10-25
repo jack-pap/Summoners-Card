@@ -1,9 +1,9 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import MatchEntry from "../../src/components/MatchEntry.jsx";
+import MatchEntry from "@/src/components/MatchEntry.jsx";
 
-jest.mock("../../src/components/MatchEntry.jsx", () => ({
+jest.mock("@/src/components/MatchEntry.jsx", () => ({
   __esModule: true,
   default: function MatchEntry({ summonerMatchInfo, counter, gameQueues }) {
     const getMatchStatusName = jest.fn().mockReturnValue("matchEntryWin");

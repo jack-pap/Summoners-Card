@@ -1,4 +1,4 @@
-const matchEntry = require("../../src/components/MatchEntry.jsx");
+const matchEntry = require("@/src/components/MatchEntry.jsx");
 
 // Total kills: 35
 // Kill participation: 8
