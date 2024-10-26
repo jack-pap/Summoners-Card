@@ -51,6 +51,9 @@ describe("ChampionEntryList render tests", () => {
       queueId: 420,
     };
 
+    apiService.apiCall.mockResolvedValue({
+      squarePortraitPath: "path/to/braumSquare.png",
+    });
     apiService.apiImageCall.mockResolvedValue("path/to/BraumImage.png");
 
     render(<ChampionEntryList {...mockProps} />);

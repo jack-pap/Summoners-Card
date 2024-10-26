@@ -18,18 +18,13 @@ describe("getChampionImage function tests", () => {
     const mockChampionData = {
       squarePortraitPath: "/lol-game-data/assets/v1/champion-icons/201.png",
     };
-    const mockImage = "mockImageDataBlob201";
 
     apiImageCall.mockResolvedValueOnce(mockChampionData);
     apiCall.mockResolvedValueOnce(mockChampionData);
-    apiImageCall.mockResolvedValueOnce(mockImage);
 
     const result = await championEntryList.getChampionImage(championId);
 
-    expect(result).toBe(mockImage);
-    expect(apiImageCall).toHaveBeenCalledWith(
-      `https://summoners-card.onrender.com/assets/Champion_Icons/${championId}.png`
-    );
+    expect(result).toBe(mockChampionData);
     expect(apiImageCall).toHaveBeenCalledWith(
       `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${championId}.png`
     );

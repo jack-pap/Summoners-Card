@@ -557,20 +557,25 @@ export async function getMasteryInfo(server, puuid) {
  * @param {string[][]} matchInfoList
  */
 export function getSummonerWinrates(rankedInfo, matchInfoList) {
-  const remakes = getRemakesNumber(rankedInfo, matchInfoList);
+  const flexRemakes = getRemakesNumber(rankedInfo, matchInfoList, 440);
+  const soloRemakes = getRemakesNumber(rankedInfo, matchInfoList, 420);
   const winrates = {
     normalWinrate: 1, //TODO FIX THIS TO GET NORMAL WINRATE
     rankedFlexWinrate:
       Math.round(
         (rankedInfo[0].rankedWins /
-          (rankedInfo[0].rankedWins + rankedInfo[0].rankedLosses - remakes)) *
+          (rankedInfo[0].rankedWins +
+            rankedInfo[0].rankedLosses -
+            flexRemakes)) *
           100 *
           10
       ) / 10,
     rankedSoloWinrate:
       Math.round(
         (rankedInfo[1].rankedWins /
-          (rankedInfo[1].rankedWins + rankedInfo[1].rankedLosses - remakes)) *
+          (rankedInfo[1].rankedWins +
+            rankedInfo[1].rankedLosses -
+            soloRemakes)) *
           100 *
           10
       ) / 10,
@@ -587,12 +592,16 @@ export function getSummonerWinrates(rankedInfo, matchInfoList) {
  * @param {string[][]} matchInfoList
  * @returns {number}
  */
-export function getRemakesNumber(rankedInfo, matchInfoList) {
+export function getRemakesNumber(rankedInfo, matchInfoList, gameQueueID) {
   var remakeNumber = 0;
   const totalRankedGames =
     rankedInfo[0].rankedGames ?? 0 + rankedInfo[1].rankedGames ?? 0;
   for (const matchInfo of matchInfoList.slice(0, totalRankedGames)) {
-    if (matchInfo[0].gameDuration < 300) remakeNumber++;
+    if (
+      matchInfo[0].gameDuration < 300 &&
+      gameQueueID == matchInfo[0].gameQueueID
+    )
+      remakeNumber++;
   }
   return remakeNumber;
 }

@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 
+const whiteListSites = [
+  "https://raw.communitydragon.org/",
+  "https://ddragon.leagueoflegends.com/",
+  "api.riotgames.com",
+];
+
 export async function GET(request) {
   try {
-    // Get the URL from the search params
     const { searchParams } = new URL(request.url);
     const apiURL = searchParams.get("url");
+    if (!whiteListSites.some((word) => apiURL.includes(word))) return;
 
     if (!apiURL) {
       return NextResponse.json({ error: "No URL provided" }, { status: 400 });

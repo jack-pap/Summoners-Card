@@ -14,7 +14,7 @@ describe("apiCall function tests", () => {
       json: () => Promise.resolve({ testData: "123" }),
     });
 
-    const URL = "Google.com";
+    const URL = "api.riotgames.com";
     const result = await apiService.apiCall(URL);
 
     expect(result).toStrictEqual({ testData: "123" });
@@ -29,7 +29,7 @@ describe("apiCall function tests", () => {
       status: 500,
       json: () => Promise.resolve({ testData: "123" }),
     });
-    const URL = "Google.com";
+    const URL = "api.riotgames.com";
 
     await expect(apiService.apiCall(URL)).rejects.toThrow(
       "Network response was not ok 500"
