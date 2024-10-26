@@ -20,8 +20,9 @@ app.prepare().then(() => {
     app.render(req, res, actualPage, queryParams);
   });
 
-  server.use(cors()); 
-  server.use(bodyParser.json()); 
+  server.disable("x-powered-by");
+  server.use(cors());
+  server.use(bodyParser.json());
   server.use((req, res, next) => {
     if (req.method === "OPTIONS") {
       res.setHeader("Access-Control-Allow-Origin", req.get("Origin") || "*");

@@ -5,6 +5,11 @@ import fetch from "isomorphic-fetch";
  */
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api`;
+const whiteListSites = [
+  "https://raw.communitydragon.org/",
+  "https://ddragon.leagueoflegends.com/",
+  "api.riotgames.com",
+];
 
 /**
  * API call to fetch data from a route end point
@@ -14,6 +19,7 @@ const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api`;
  */
 export async function apiCall(apiURL) {
   try {
+    if (!whiteListSites.some((word) => apiURL.includes(word))) return;
     const proxyURL = `${BASE_URL}/proxy?url=${encodeURIComponent(apiURL)}`;
     const response = await fetch(proxyURL);
     if (!response.ok) {
@@ -36,6 +42,7 @@ export async function apiCall(apiURL) {
  */
 export async function apiImageCall(imageURL) {
   try {
+    if (!whiteListSites.some((word) => imageURL.includes(word))) return;
     const response = await fetch(imageURL);
     if (!response.ok) {
       throw new Error(`Image data failed to request: ${response.status}`);
