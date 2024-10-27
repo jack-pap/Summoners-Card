@@ -45,6 +45,22 @@ async function initDatabase() {
   }
 }
 
+// CREATE TABLE `matchInfo` (
+//   `puuid` varchar(255) NOT NULL,
+//   `matchID` varchar(255) NOT NULL,
+//   `matchInfo` json DEFAULT NULL,
+//   `matchDate` datetime DEFAULT NULL,
+//   PRIMARY KEY (`puuid`,`matchID`)
+// )
+
+// CREATE TABLE `summonerInfo` (
+//   `RiotID` varchar(255) NOT NULL,
+//   `puuid` varchar(255) NOT NULL,
+//   `summonerInfo` json DEFAULT NULL,
+//   `lastUpdatedDate` datetime DEFAULT NULL,
+//   PRIMARY KEY (`puuid`)
+// )
+
 // Run the initialization
 // initDatabase();
 
