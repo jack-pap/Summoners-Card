@@ -12,7 +12,9 @@ export const metadata = {
   description: "A stats viewing web application using the Riot API",
   charset: "UTF-8",
   favicon: "/favicon.ico",
-  ogImage: "/logo.png"
+  openGraph: {
+    images: "/logo.png",
+  },
 };
 
 export const viewport = {
