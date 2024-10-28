@@ -6,7 +6,7 @@ const fetch = (...args) =>
 const bodyParser = require("body-parser");
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
-const port = 3001;
+const port = 3000;
 
 const NodeCache = require("node-cache");
 const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });
