@@ -41,10 +41,9 @@ AWS_ENDPOINT= Amazon endpoint for AWS RDS
 > npm install 
 ```
 
-## Running
+## Running locally
 
 ```bash
-> npm start 
 > npm run dev 
 ```
 ## Documentation
@@ -61,6 +60,7 @@ Documentation for all methods can be found [here](https://jack-pap.github.io/Sum
 ## Screenshots
 ![homepage](https://github.com/user-attachments/assets/6191574a-2d2e-4fbe-955f-8b30944513d3)
 
-![dashboard](https://github.com/user-attachments/assets/3e6234f1-fbdf-4bdf-b2ec-481f9e59c01d)
+![dashboard](https://github.com/user-attachments/assets/4f45a4f3-3993-4e60-ba3e-adeb72b28bfa)
+
 
 
