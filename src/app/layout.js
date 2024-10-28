@@ -9,8 +9,10 @@ import { Analytics } from "@vercel/analytics/react";
 
 export const metadata = {
   title: "Summoners Card",
+  description: "A stats viewing web application using the Riot API",
   charset: "UTF-8",
   favicon: "/favicon.ico",
+  ogImage: "/logo.png"
 };
 
 export const viewport = {
