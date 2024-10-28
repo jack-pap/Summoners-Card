@@ -1,7 +1,5 @@
 module.exports = {
   presets: [
-    ["@babel/preset-env", { targets: { node: "current" } }],
-    "@babel/preset-react",
     [
       "next/babel",
       {
@@ -12,5 +10,5 @@ module.exports = {
       },
     ],
   ],
-  plugins: [["styled-jsx/babel", { optimizeForSpeed: true }]],
+  plugins: [],
 };
