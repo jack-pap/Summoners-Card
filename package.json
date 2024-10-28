@@ -50,6 +50,7 @@
         "react-spinners": "^0.13.8",
         "serverless-mysql": "^1.5.5",
         "styled-components": "^6.1.8",
+        "styled-jsx": "^5.1.6",
         "webpack": "^5.95.0",
         "zustand": "^5.0.0"
     },
