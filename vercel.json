@@ -13,11 +13,11 @@
     "routes": [
         {
             "src": "/api/(.*)",
-            "dest": "/src/api/proxy.js"
+            "dest": "/src/api/index.js"
         },
         {
             "src": "/(.*)",
-            "dest": "/src/api/proxy.js"
+            "dest": "/src/api/index.js"
         }
     ]
 }

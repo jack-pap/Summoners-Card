@@ -8,6 +8,12 @@ const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const port = 3000;
 
+const whiteListSites = [
+    "https://raw.communitydragon.org/",
+    "https://ddragon.leagueoflegends.com/",
+    "api.riotgames.com",
+  ];
+  
 const NodeCache = require("node-cache");
 const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });
 
@@ -40,8 +46,10 @@ app.prepare().then(() => {
 
   // Proxy route to be called by controller to fetch data from API endpoint
   server.get("/api", async (req, res) => {
-    const apiURL = req.query.url;
     try {
+      const apiURL = req.query.url;
+      if (!whiteListSites.some((word) => apiURL.includes(word))) return;
+
       const response = await fetch(apiURL);
       const data = await response.json();
       res.json(data);
