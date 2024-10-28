@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import express from "express";
 import next from "next";
 import cors from "cors";
-import fetch from "isomorphic-fetch";
 import bodyParser from "body-parser";
 import NodeCache from "node-cache";
 
