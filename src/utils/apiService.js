@@ -20,7 +20,7 @@ const whiteListSites = [
 export async function apiCall(apiURL) {
   try {
     if (!whiteListSites.some((word) => apiURL.includes(word))) return;
-    const proxyURL = `${BASE_URL}/proxy?url=${encodeURIComponent(apiURL)}`;
+    const proxyURL = `http://localhost:3001/api/?url=${encodeURIComponent(apiURL)}`;
     const response = await fetch(proxyURL);
     if (!response.ok) {
       throw new Error(`Network response was not ok ${response.status}`);

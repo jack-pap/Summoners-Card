@@ -323,6 +323,7 @@ select:focus {
 }
 
 .summonerField {
+  color: #ffffff;
   padding: 0.5em;
   width: 15.2cm;
   height: 1cm;
@@ -479,6 +480,7 @@ select:focus {
 }
 
 #name {
+  color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -533,6 +535,7 @@ select:focus {
 
 
 .rankedRank {
+  color: #ffffff;
   display: flex;
   flex-direction: row;
   align-items: center;
