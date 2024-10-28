@@ -13,7 +13,7 @@ export const metadata = {
   charset: "UTF-8",
   favicon: "/favicon.ico",
   openGraph: {
-    images: "/logo.png",
+    images: "/logobg.jpg",
   },
 };
 
