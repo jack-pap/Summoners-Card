@@ -1,15 +1,5 @@
 {
     "version": 2,
-    "builds": [
-        {
-            "src": "src/app/api/index.js",
-            "use": "@vercel/node"
-        },
-        {
-            "src": "package.json",
-            "use": "@vercel/next"
-        }
-    ],
     "rewrites": [
         {
             "source": "/(.*)",
