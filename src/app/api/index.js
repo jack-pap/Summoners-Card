@@ -1,3 +1,6 @@
+import React, {Component} from 'react';
+import css from 'styled-jsx/css';
+
 const express = require("express");
 const next = require("next");
 const cors = require("cors");
@@ -9,11 +12,11 @@ const app = next({ dev });
 const port = 3000;
 
 const whiteListSites = [
-    "https://raw.communitydragon.org/",
-    "https://ddragon.leagueoflegends.com/",
-    "api.riotgames.com",
-  ];
-  
+  "https://raw.communitydragon.org/",
+  "https://ddragon.leagueoflegends.com/",
+  "api.riotgames.com",
+];
+
 const NodeCache = require("node-cache");
 const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });
 
