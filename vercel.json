@@ -2,18 +2,22 @@
     "version": 2,
     "builds": [
         {
-            "src": "package.json",
-            "use": "@vercel/next"
-        },
-        {
             "src": "src/app/api/index.js",
             "use": "@vercel/node"
+        },
+        {
+            "src": "package.json",
+            "use": "@vercel/next"
         }
     ],
     "routes": [
         {
+            "src": "/api/(.*)",
+            "dest": "/src/api/proxy.js"
+        },
+        {
             "src": "/(.*)",
-            "dest": "/api"
+            "dest": "/src/api/proxy.js"
         }
     ]
 }
