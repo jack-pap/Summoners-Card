@@ -50,7 +50,8 @@ async function initDatabase() {
 //   `matchID` varchar(255) NOT NULL,
 //   `matchInfo` json DEFAULT NULL,
 //   `matchDate` datetime DEFAULT NULL,
-//   PRIMARY KEY (`puuid`,`matchID`)
+//   PRIMARY KEY (`puuid`,`matchID`),
+//   KEY `idx_puuid_matchDate` (`puuid`,`matchDate` DESC)
 // )
 
 // CREATE TABLE `summonerInfo` (
@@ -58,7 +59,9 @@ async function initDatabase() {
 //   `puuid` varchar(255) NOT NULL,
 //   `summonerInfo` json DEFAULT NULL,
 //   `lastUpdatedDate` datetime DEFAULT NULL,
-//   PRIMARY KEY (`puuid`)
+//   PRIMARY KEY (`puuid`),
+//   KEY `idx_summonerInfo_puuid` (`puuid`),
+//   KEY `idx_summonerInfo_RiotID` (`RiotID`)
 // )
 
 // Run the initialization

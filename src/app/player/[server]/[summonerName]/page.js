@@ -740,7 +740,7 @@ async function makeChampionWinrate(
  */
 async function makeMatchHistory(summonerMatchInfo, setIsTempLoading) {
   setIsTempLoading(true);
-  await makeMatchEntries(summonerMatchInfo, 20);
+  await makeMatchEntries(summonerMatchInfo, 15);
   setIsTempLoading(false);
 }
 
@@ -1466,7 +1466,7 @@ function checkIfOwnPlayer(playerName, playerTagLine, playerComponent) {
   } else {
     playerComponent.innerHTML = `
       <div class="playerImage"></div>
-      <a class="playerUsername" href="${playerName}-${playerTagLine}" target="_blank">${playerName}</a>
+      <a class="playerUsername" href="${playerName}-${playerTagLine}">${playerName}</a>
       <span class="tooltip-text">${playerName} #${playerTagLine}</span>
       `;
   }

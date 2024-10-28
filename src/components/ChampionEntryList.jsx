@@ -48,6 +48,7 @@ export const ChampionEntryList = memo(
             const champData = summonerChampionWinrateInfo.get(champId);
             const championInfo = championsInfo.get(champId);
             const championImage = await getChampionImage(champId);
+            const championMasteryImage = await getChampionMasteryImage(champData.championLevel);
 
             return {
               champId,
@@ -55,6 +56,7 @@ export const ChampionEntryList = memo(
               gamesPlayed: champData[`${gameType}Games`],
               winrate: champData[`${gameType}Winrate`],
               championImage,
+              championMasteryImage
             };
           })
         );
@@ -77,8 +79,7 @@ export const ChampionEntryList = memo(
 
 /**
  * Retrieves champion image through API call to
- * server to send the static image or to a third party API
- * to retrieve the image
+ * a third party API to retrieve the image
  *
  * @param {number} championId
  * @returns {Promise}
@@ -94,6 +95,23 @@ export async function getChampionImage(championId) {
   const finalURL = baseImageURL + extractedPath;
   const championImage = await apiImageCall(finalURL);
 
+  return championImage;
+}
+
+/**
+ * Retrieves champion mastery level image through API call to
+ * a third party API to retrieve the image
+ *
+ * @param {number} championId
+ * @returns {Promise}
+ */
+export async function getChampionMasteryImage(masteryLevel) {
+  var baseImageURL;
+  if (masteryLevel >= 10)
+    baseImageURL = `https://raw.communitydragon.org/14.10/plugins/rcp-fe-lol-collections/global/default/images/item-element/crest-and-banner-mastery-10.png`;
+  else
+    baseImageURL = `https://raw.communitydragon.org/14.10/plugins/rcp-fe-lol-collections/global/default/images/item-element/crest-and-banner-mastery-${masteryLevel}.png`;
+  const championImage = await apiImageCall(baseImageURL);
   return championImage;
 }
 

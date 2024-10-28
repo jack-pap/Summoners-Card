@@ -987,6 +987,18 @@ img {
   gap: 5px;
 }
 
+.champImage {
+  position: relative;
+  display: inline-block;
+}
+
+#championMasteryImage {
+  position: absolute;
+  top: 18%;
+  left: 18%;
+  transform: translate(-50%, -50%);
+}
+
 #statNames {
   display: flex;
   font-size: 17px;
