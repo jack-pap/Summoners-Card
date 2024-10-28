@@ -1,8 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 
-const withStyledJsx = require('@styled-jsx/webpack') // add `styled-jsx`
-module.exports = withStyledJsx({
+module.exports = {
   webpack: (config, { isServer }) => {
     // Add alias for @
     config.resolve.alias["@"] = path.resolve(__dirname);
@@ -23,4 +22,4 @@ module.exports = withStyledJsx({
     );
     return config;
   },
-});
+};
