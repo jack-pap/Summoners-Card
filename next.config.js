@@ -1,10 +1,24 @@
-const path = require("path");
-const webpack = require("webpack");
+import path from "path";
+import webpack from "webpack";
 
-module.exports = {
+export default {
+  babel: {
+    presets: [
+      [
+        "next/babel",
+        {
+          "preset-env": {},
+          "transform-runtime": {},
+          "styled-jsx": {},
+          "class-properties": {},
+        },
+      ],
+    ],
+    plugins: ["styled-jsx/babel"],
+  },
   webpack: (config, { isServer }) => {
     // Add alias for @
-    config.resolve.alias["@"] = path.resolve(__dirname);
+    config.resolve.alias["@"] = path.resolve();
 
     // Add fallback for fs, net, and tls if not server
     if (!isServer) {
@@ -15,11 +29,13 @@ module.exports = {
         tls: false,
       };
     }
+
     config.plugins.push(
       new webpack.NormalModuleReplacementPlugin(/node:/, (resource) => {
         resource.request = resource.request.replace(/^node:/, "");
       })
     );
+
     return config;
   },
 };
