@@ -11,6 +11,9 @@
         "docs": "jsdoc -c log.config.json",
         "test": "jest"
     },
+    "resolutions": {
+        "styled-jsx": "5.1.6"
+    },
     "dependencies": {
         "@azure/app-configuration": "^1.7.0",
         "@azure/identity": "^4.4.1",
