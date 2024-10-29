@@ -2,14 +2,6 @@ import path from "path";
 import webpack from "webpack";
 
 export default {
-  experimental: {
-    forceSwcTransforms: true,
-  },
-  compiler: {
-    // This will enable both styled-components and styled-jsx
-    styledComponents: true,
-    emotion: true,
-  },
   webpack: (config, { isServer }) => {
     // Add alias for @
     config.resolve.alias["@"] = path.resolve();
