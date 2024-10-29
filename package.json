@@ -51,6 +51,7 @@
         "react-router-dom": "^6.20.1",
         "react-select": "^5.8.0",
         "react-spinners": "^0.13.8",
+        "sass": "^1.80.4",
         "serverless-mysql": "^1.5.5",
         "styled-components": "^6.1.8",
         "styled-jsx": "^5.1.6",

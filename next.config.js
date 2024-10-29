@@ -2,9 +2,6 @@ import path from "path";
 import webpack from "webpack";
 
 export default {
-  compiler: {
-    styledComponents: true,
-  },
   webpack: (config, { isServer }) => {
     // Add alias for @
     config.resolve.alias["@"] = path.resolve();
