@@ -1,16 +1,15 @@
-import style from "styled-jsx/style.js"
-import express from "express";
-import next from "next";
-import cors from "cors";
-import bodyParser from "body-parser";
-import NodeCache from "node-cache";
-
-console.log(style);
+const express = require("express");
+const next = require("next");
+const cors = require("cors");
 const fetch = (...args) =>
   import("isomorphic-fetch").then(({ default: fetch }) => fetch(...args));
+const bodyParser = require("body-parser");
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const port = 3000;
+
+const NodeCache = require("node-cache");
+const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });
 
 const whiteListSites = [
   "https://raw.communitydragon.org/",
@@ -18,7 +17,6 @@ const whiteListSites = [
   "api.riotgames.com",
 ];
 
-const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });
 
 app.prepare().then(() => {
   const server = express();
@@ -66,4 +64,4 @@ app.prepare().then(() => {
   });
 });
 
-export default app;
+module.exports = app;
