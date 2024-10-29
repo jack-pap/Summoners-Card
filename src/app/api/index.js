@@ -11,9 +11,6 @@ const port = 3000;
 const NodeCache = require("node-cache");
 const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });
 
-const style = require("styled-jsx/style")
-console.log(style)
-
 const whiteListSites = [
   "https://raw.communitydragon.org/",
   "https://ddragon.leagueoflegends.com/",
