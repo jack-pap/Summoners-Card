@@ -2,19 +2,8 @@ import path from "path";
 import webpack from "webpack";
 
 export default {
-  babel: {
-    presets: [
-      [
-        "next/babel",
-        {
-          "preset-env": {},
-          "transform-runtime": {},
-          "styled-jsx": {},
-          "class-properties": {},
-        },
-      ],
-    ],
-    plugins: ["styled-jsx/babel"],
+  compiler: {
+    styledComponents: true,
   },
   webpack: (config, { isServer }) => {
     // Add alias for @
