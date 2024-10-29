@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import style from "styled-jsx/style.js"
 import express from "express";
 import next from "next";
 import cors from "cors";
 import bodyParser from "body-parser";
 import NodeCache from "node-cache";
 
+console.log(style);
 const fetch = (...args) =>
   import("isomorphic-fetch").then(({ default: fetch }) => fetch(...args));
 const dev = process.env.NODE_ENV !== "production";
@@ -65,4 +66,4 @@ app.prepare().then(() => {
   });
 });
 
-module.exports = app;
+export default app;
