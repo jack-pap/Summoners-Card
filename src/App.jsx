@@ -21,7 +21,7 @@ import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
 import ErrorPage from "@/src/components/ErrorPage";
 
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+
 
 const serverOptions = [
   { value: "EUW1", label: "EUW", region: "europe" },
@@ -496,7 +496,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
  * @returns {string}
  */
 export async function getPUUID(tagLine, gameName) {
-  const puuidApiURL = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}?api_key=${API_KEY}`;
+  const puuidApiURL = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}`;
   const data = await apiCall(puuidApiURL);
   return data.puuid;
 }
@@ -510,7 +510,7 @@ export async function getPUUID(tagLine, gameName) {
  * @returns {string[]}
  */
 export async function getSummonerInfo(server, puuid) {
-  const summonerInfoApiURL = `https://${server}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}?api_key=${API_KEY}`;
+  const summonerInfoApiURL = `https://${server}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}`;
   const data = await apiCall(summonerInfoApiURL);
   return [data.id, data.summonerLevel, data.profileIconId];
 }
@@ -526,7 +526,7 @@ export async function getSummonerInfo(server, puuid) {
  * that holds champion data
  */
 export async function getMasteryInfo(server, puuid) {
-  const masteryApiURL = `https://${server}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}?api_key=${API_KEY}`;
+  const masteryApiURL = `https://${server}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}`;
   const data = await apiCall(masteryApiURL);
   var championStatsMapping = new Map(); // Mapping of championId to JSON stats
   for (const champion of data) {
@@ -677,7 +677,7 @@ export async function getMatchList(
     const DBMatchList = await apiGETDatabaseCall("matches", `?puuid=${puuid}`);
     return DBMatchList.map((obj) => Object.values(obj)[0]);
   } else {
-    const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${matchAmountStart}&count=${matchAmount}&type=ranked&api_key=${API_KEY}`;
+    const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${matchAmountStart}&count=${matchAmount}&type=ranked`;
     const data = await apiCall(matchListApiURL);
     var matchList = [];
     for (const match of data) {
@@ -704,7 +704,7 @@ export async function getExtendedMatchList(region, puuid, lastGameDate) {
     `?puuid=${puuid}&matchDate=${lastGameDate}`
   );
   if (DBExtendedMatchList.length < 10) {
-    const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?endTime=${APIFormatDate}&start=1&count=10&type=ranked&api_key=${API_KEY}`;
+    const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?endTime=${APIFormatDate}&start=1&count=10&type=ranked`;
     const matchList = await apiCall(matchListApiURL);
     return matchList;
   }
@@ -722,7 +722,7 @@ export async function getExtendedMatchList(region, puuid, lastGameDate) {
  * @returns {boolean}
  */
 export async function matchListUpdated(region, puuid) {
-  const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${0}&count=${1}&type=ranked&api_key=${API_KEY}`;
+  const matchListApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${0}&count=${1}&type=ranked`;
   const data = await apiCall(matchListApiURL);
   const DBMatch = await apiGETDatabaseCall(
     "matches",
@@ -881,7 +881,7 @@ export async function getMatchInfoList(matchIDs, region, puuid) {
  * @returns {Promise<JSON>}
  */
 export async function matchInfoAPICall(region, matchID) {
-  const matchInfoApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchID}?api_key=${API_KEY}`;
+  const matchInfoApiURL = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchID}`;
   const data = await apiCall(matchInfoApiURL);
   const contents = {
     gameID: matchID,
@@ -920,7 +920,7 @@ export async function findMoreMatches(region, puuid) {
  * @returns {JSON}
  */
 export async function getRankedInfo(server, id) {
-  const rankedApiURL = `https://${server}.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`;
+  const rankedApiURL = `https://${server}.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}`;
   const data = await apiCall(rankedApiURL);
   var rankedSoloInfo = null;
   var rankedFlexInfo = null;

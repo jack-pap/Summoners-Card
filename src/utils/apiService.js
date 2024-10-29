@@ -5,7 +5,7 @@ import fetch from "isomorphic-fetch";
  */
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api`;
-const PROXY_URL = `${process.env.NEXT_PUBLIC_PROXY_URL}/api`;
+const SERVER_URL = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`;
 const whiteListSites = [
   "https://raw.communitydragon.org/",
   "https://ddragon.leagueoflegends.com/",
@@ -21,7 +21,7 @@ const whiteListSites = [
 export async function apiCall(apiURL) {
   try {
     if (!whiteListSites.some((word) => apiURL.includes(word))) return;
-    const proxyURL = `${PROXY_URL}?url=${encodeURIComponent(apiURL)}`;
+    const proxyURL = `${SERVER_URL}?url=${encodeURIComponent(apiURL)}`;
     const response = await fetch(proxyURL);
     if (!response.ok) {
       throw new Error(`Network response was not ok ${response.status}`);
