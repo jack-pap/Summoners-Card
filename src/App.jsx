@@ -21,8 +21,6 @@ import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
 import ErrorPage from "@/src/components/ErrorPage";
 
-
-
 const serverOptions = [
   { value: "EUW1", label: "EUW", region: "europe" },
   { value: "EUN1", label: "EUNE", region: "europe" },
@@ -745,12 +743,13 @@ export async function matchListUpdated(region, puuid) {
 export async function matchInfoListDriver(region, matchIDs, puuid) {
   var matchInfoList = await getMatchInfoList(matchIDs, region, puuid);
 
-  if (matchInfoList.length < matchIDs.length) {
-    const moreMatchesObject = await findMoreMatches(region, puuid);
-    if (moreMatchesObject) {
-      matchInfoList = [...new Set(matchInfoList.concat(moreMatchesObject))];
-    }
-  }
+  // Disabled for now while rate limit is low  
+  // if (matchInfoList.length < matchIDs.length) {
+  //   const moreMatchesObject = await findMoreMatches(region, puuid);
+  //   if (moreMatchesObject) {
+  //     matchInfoList = [...new Set(matchInfoList.concat(moreMatchesObject))];
+  //   }
+  // }
 
   return matchInfoList;
 }
