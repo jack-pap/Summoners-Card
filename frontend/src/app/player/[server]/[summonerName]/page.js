@@ -1271,8 +1271,8 @@ async function getSummonerRuneAssets(
   component
 ) {
   const runeImages = await Promise.all([
-    getRuneImage(mainRuneID, component, divClass, false),
-    getRuneImage(secondaryRuneID, component, divClass, true),
+    getRuneImage(mainRuneID, false),
+    getRuneImage(secondaryRuneID, true),
   ]);
 
   const summonerRunesImagesComponent = component.querySelector(divClass);

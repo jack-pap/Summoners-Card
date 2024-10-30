@@ -13,8 +13,7 @@ const NodeCache = require("node-cache");
 const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });
 
 const allowedOrigins = [process.env.ALLOWED_ORIGIN];
-console.log(process.env.ALLOWED_ORIGIN)
-console.log(allowedOrigins)
+
 const whiteListSites = [
   "https://raw.communitydragon.org/",
   "https://ddragon.leagueoflegends.com/",
