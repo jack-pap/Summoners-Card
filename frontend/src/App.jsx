@@ -897,7 +897,7 @@ export async function matchInfoAPICall(region, matchID) {
 /**
  * Attempts to find more ranked/normal games to fill
  * the desired matchIDs length. If the length cannot be
- * filled it means no games can be found and it returns
+ * filled it means no games can be found and it returnsASDASDADASD
  *
  * @param {string} region
  * @param {string} puuid
