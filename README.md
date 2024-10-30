@@ -69,7 +69,9 @@ Documentation for all methods can be found [here](https://jack-pap.github.io/Sum
 
 ## Features
 
-- Stylish modern front-end design 
+- Stylish modern front-end design
+- Vercel deployment
+- Express.js backend server that sends and receives API requests
 - MySQL database hosted on [AWS RDS](https://aws.amazon.com/rds/)
 - Extensive testing (unit, component tests) using [Jest](https://jestjs.io/)
 - Thorough documentation using [JSDoc](https://jsdoc.app/)
