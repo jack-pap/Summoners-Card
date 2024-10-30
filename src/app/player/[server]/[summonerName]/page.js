@@ -373,7 +373,7 @@ function Dashboard() {
                     {
                       data: graphData.map((item) => item.value),
                       color: "rgb(197, 134, 0)",
-                      label: "Win/Loss Ratio",
+                      label: "Net Win Count",
                       valueFormatter: (v, { dataIndex }) => {
                         if (dataIndex >= 0 && dataIndex < graphData.length) {
                           const { date, label } = graphData[dataIndex];
@@ -1287,11 +1287,9 @@ async function getSummonerRuneAssets(
  * in the JSON data and then creates a HTMLImageElement to append the file image
  *
  * @param {number} runeID
- * @param {HTMLDivElement} component
- * @param {string} divClass
  * @param {boolean} isSecondary
  */
-async function getRuneImage(runeID, component, divClass, isSecondary) {
+async function getRuneImage(runeID, isSecondary) {
   const runeDataURL = isSecondary
     ? `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perkstyles.json`
     : `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perks.json`;
