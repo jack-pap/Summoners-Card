@@ -667,7 +667,7 @@ async function getGameQueues() {
 
 function copyToClipBoard(gameName, tagLine) {
   var toolTip = document.getElementById("copyToClipboardIconText");
-  navigator.clipboard.writeText(gameName + "#" + tagLine);
+  navigator.clipboard.writeText(decodeURIComponent(gameName) + "#" + tagLine);
   toolTip.innerHTML = "Copied!";
 }
 
