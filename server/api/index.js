@@ -12,7 +12,7 @@ const API_KEY = process.env.API_KEY;
 const NodeCache = require("node-cache");
 const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });
 
-const allowedOrigins = ["https://summonerscard.com", "http://localhost:3000"];
+const allowedOrigins = [process.env.ALLOWED_ORIGIN];
 const whiteListSites = [
   "https://raw.communitydragon.org/",
   "https://ddragon.leagueoflegends.com/",
