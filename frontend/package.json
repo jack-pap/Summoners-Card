@@ -7,7 +7,7 @@
         "build": "next build",
         "start": "node src/app/api/index.js",
         "lint": "next lint",
-        "docs": "jsdoc -c log.config.json",
+        "docs": "jsdoc -c frontend/log.config.json",
         "test": "jest"
     },
     "resolutions": {
