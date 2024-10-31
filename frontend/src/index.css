@@ -106,9 +106,11 @@ body {
   display: flex;
   position: relative;
   place-items: center;
-  min-width: 100svh;
   min-height: 100svh;
   z-index: -2;
+  overflow-x: auto;
+  min-width: fit-content;
+  min-height: 100svh;
 }
 
 #homeBody {
