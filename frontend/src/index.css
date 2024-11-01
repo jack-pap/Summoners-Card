@@ -142,7 +142,7 @@ a:focus {
 
 @media only screen and (max-width: 600px) {
   h1 {
-    font-size: 60px;
+    font-size: 55px;
     width: fit-content;
   }
 
