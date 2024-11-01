@@ -1053,7 +1053,6 @@ img {
     min-width: fit-content;
     gap: 10px;
     font-size: 11px;
-    justify-content: center;
   }
 
   #win {
@@ -1063,7 +1062,7 @@ img {
   .matchStatsContainer {
     display: flex;
     flex-direction: column;
-    min-width: fit-content;
+    min-width: 90px;
     gap: 5px;
   }
 
@@ -1107,7 +1106,7 @@ img {
   }
 
   .itemImages {
-    width: 180px;
+    width: 150px;
   }
 
   .itemImages img {
