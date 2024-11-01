@@ -999,26 +999,31 @@ img {
 }
 
 @media only screen and (max-width: 600px) {
+  #infoIcon {
+    height: 18px;
+    width: 18px;
+
+  }
 
   .tooltip-text {
     display: none;
   }
 
   #errorPopup {
-    width: 440px;
+    width: 400px;
   }
 
   .MuiAlert-message {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   footer {
     font-size: 11px;
-    width: min(450px, 100%);
+    width: min(400px, 100%);
   }
 
   .summonerField {
-    width: 400px;
+    width: 350px;
   }
 
   #summonerContainer {

@@ -186,8 +186,6 @@ function App() {
                 <svg
                   id="infoIcon"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -743,7 +741,7 @@ export async function matchListUpdated(region, puuid) {
 export async function matchInfoListDriver(region, matchIDs, puuid) {
   var matchInfoList = await getMatchInfoList(matchIDs, region, puuid);
 
-  // Disabled for now while rate limit is low  
+  // Disabled for now while rate limit is low
   // if (matchInfoList.length < matchIDs.length) {
   //   const moreMatchesObject = await findMoreMatches(region, puuid);
   //   if (moreMatchesObject) {
