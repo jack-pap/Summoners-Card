@@ -999,6 +999,11 @@ img {
 }
 
 @media only screen and (max-width: 600px) {
+
+  .tooltip-text {
+    display: none;
+  }
+
   #errorPopup {
     width: 440px;
   }
