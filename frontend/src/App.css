@@ -972,6 +972,12 @@ img {
   display: inline-block;
 }
 
+.champName {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 #championMasteryImage {
   position: absolute;
   top: 18%;
@@ -996,6 +1002,51 @@ img {
 .gamesPlayed {
   font-size: 11pt;
   width: 83px;
+}
+
+
+@media only screen and (max-width: 1200px) {
+
+  .summonerField {
+    width: 540px;
+  }
+
+  #summonerBlock {
+    min-width: fit-content;
+    width: 470px;
+  }
+
+  .winrateContainer {
+    height: 180px;
+    width: 100%;
+  }
+
+  #winrateBlock {
+    width: 318px;
+  }
+
+  .winrateGraph {
+    width: 318px;
+  }
+
+  .winrateGraph svg {
+    width: 350px !important;
+}
+
+  #championBlock {
+    min-width: 328px;
+  }
+
+  #champContainer {
+    width: 100px;
+  }
+
+
+  #matchHistoryBlock {
+    min-width: fit-content;
+    width: 1128px;
+  }
+
 }
 
 @media only screen and (max-width: 600px) {
@@ -1123,7 +1174,3 @@ img {
     display: none;
   }
 }
-
-@media only screen and (min-width: 600px) {}
-
-@media only screen and (min-width: 1200px) {}

@@ -531,7 +531,6 @@ function Dashboard() {
                 aria-label="Basic button group"
                 fullWidth
               >
-                makeChampionWinrate
                 {/* <Button
                 onClick={() => {
                   makeChampionWinrate(

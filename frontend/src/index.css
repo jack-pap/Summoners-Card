@@ -150,5 +150,20 @@ a:focus {
   .line {
     display: none;
   }
+}
 
+@media only screen and (max-width: 1200px) {
+  h1 {
+    font-size: 90px;
+    width: fit-content;
+    text-shadow: 3px 3px 0px #785A28;
+  }
+
+  .line {
+    height: 400px;
+  }
+
+  #homeBodyContainer {
+    gap: 80px;
+  }
 }
