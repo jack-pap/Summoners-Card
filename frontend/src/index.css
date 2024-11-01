@@ -139,3 +139,15 @@ a:focus {
 .customButton:focus {
   outline: none;
 }
+
+@media only screen and (max-width: 600px) {
+  h1 {
+    font-size: 70px;
+    width: fit-content;
+  }
+
+  .line {
+    display: none;
+  }
+
+}

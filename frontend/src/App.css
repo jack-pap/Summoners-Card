@@ -1,9 +1,3 @@
-@media only screen and (max-width: 600px) {}
-
-@media only screen and (min-width: 600px) {}
-
-@media only screen and (min-width: 1200px) {}
-
 #root {
   max-width: 100%;
   margin: 0 auto;
@@ -208,6 +202,7 @@ footer {
   border-radius: 50px;
   border: 0px solid transparent;
   transition: all 0.3s ease-in-out;
+  z-index: 10;
 }
 
 #scrollUpIcon:hover {
@@ -1002,3 +997,124 @@ img {
   font-size: 11pt;
   width: 83px;
 }
+
+@media only screen and (max-width: 600px) {
+  #errorPopup {
+    width: 440px;
+  }
+
+  .MuiAlert-message {
+    font-size: 12px;
+  }
+
+  footer {
+    font-size: 11px;
+    width: min(450px, 100%);
+  }
+
+  .summonerField {
+    width: 400px;
+  }
+
+  #summonerContainer {
+    align-items: center;
+    flex-direction: column;
+  }
+
+  #summonerBlock {
+    order: 1;
+    min-width: fit-content;
+    width: 470px;
+  }
+
+  #winrateBlockContainer {
+    order: 2;
+  }
+
+  #championBlock {
+    order: 3;
+  }
+
+  #matchHistoryBlock {
+    width: 450px;
+  }
+
+  .matchEntryWin, .matchEntryDefeat, .matchEntryRemake {
+    min-width: fit-content;
+    gap: 10px;
+    font-size: 11px;
+    justify-content: center;
+  }
+
+  #win {
+    font-size: 15px;
+  }
+
+  .matchStatsContainer {
+    display: flex;
+    flex-direction: column;
+    min-width: fit-content;
+    gap: 5px;
+  }
+
+  .championContainer {
+    flex-direction: column;
+  }
+
+  .championImage img {
+    width: 55px;
+    height: 55px;
+  }
+
+  .championLevel {
+    width: 18px;
+    height: 18px;
+    margin-left: 45px;
+    margin-top: -20px;
+  }
+
+  .spellsImages img {
+    width: 25px;
+    height: 25px;
+  }
+
+  #primaryRune {
+    width: 25px;
+    height: 25px;
+  }
+
+  #secondaryRune {
+    width: 12px;
+    height: 12px;
+  }
+
+  .playerStats {
+    min-width: 100px;
+  }
+
+  #performanceStats {
+    font-size: 15px;
+  }
+
+  .itemImages {
+    width: 180px;
+  }
+
+  .itemImages img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .emptyItem {
+    width: 30px;
+    height: 30px;
+  }
+
+  .otherPlayers {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 600px) {}
+
+@media only screen and (min-width: 1200px) {}

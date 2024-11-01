@@ -354,7 +354,7 @@ export async function getInput(
   // Checks for valid summoner name input
   if (!summonerName.match(/\s*#[^\s]*\S+\s*$/)) {
     document.querySelector(".MuiAlert-message").textContent =
-      "Please ensure that the summoner name has no whitespace or special symbols";
+      "Please ensure that the summoner name has no special symbols";
     setOpen(true);
     return;
   }
