@@ -1,3 +1,9 @@
+@media only screen and (max-width: 600px) {}
+
+@media only screen and (min-width: 600px) {}
+
+@media only screen and (min-width: 1200px) {}
+
 #root {
   max-width: 100%;
   margin: 0 auto;
@@ -15,28 +21,6 @@ a {
   translate: 0px -100px;
   transform: scale(0);
   pointer-events: none;
-}
-
-@keyframes moveRight {
-  0% {
-    height: 55vh;
-    left: 10%;
-  }
-
-  25% {
-    left: 10%;
-    height: 70vh;
-  }
-
-  70% {
-    left: 44.8%;
-    height: 70vh;
-  }
-
-  100% {
-    left: 44.8%;
-    height: 0vh;
-  }
 }
 
 @font-face {
