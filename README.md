@@ -1,10 +1,12 @@
 
+<div align="center">
+   
+   ![logo](https://github.com/user-attachments/assets/c7754f0d-7adc-4e0e-955b-12f02ba75e94)
+   
+</div>
+
 <p align="center">
-   <img alt="logo" src="./logo.png">
-</p>
- 
-<p align="center">
-  
+
   <img src="https://img.shields.io/badge/Riot_API-%23EB0029?logo=riotgames" alt="Riot API Badge">
   <img src="https://img.shields.io/badge/Next.js-black?logo=nextdotjs" alt="Next.js Badge">
   <img src="https://img.shields.io/badge/Express.js-black?logo=express" alt="Express.js Badge">
