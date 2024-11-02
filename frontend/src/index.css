@@ -140,18 +140,6 @@ a:focus {
   outline: none;
 }
 
-@media only screen and (max-width: 600px) {
-  h1 {
-    font-size: 55px;
-    width: fit-content;
-    text-shadow: 3px 3px 0px #785A28;
-  }
-
-  .line {
-    display: none;
-  }
-}
-
 @media only screen and (max-width: 1300px) {
   h1 {
     font-size: 90px;
@@ -167,3 +155,16 @@ a:focus {
     gap: 80px;
   }
 }
+
+@media only screen and (max-width: 600px) {
+  h1 {
+    font-size: 55px;
+    width: fit-content;
+    text-shadow: 3px 3px 0px #785A28;
+  }
+
+  .line {
+    display: none;
+  }
+}
+
