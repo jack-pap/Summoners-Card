@@ -1085,8 +1085,20 @@ img {
   #summonerBlock {
     order: 1;
     min-width: fit-content;
-    width: 470px;
+    width: 460px;
   }
+
+  #winrateBlock {
+    width: 460px;
+  }
+
+  .winrateGraph {
+    width: 460px;
+  }
+
+  .winrateGraph svg {
+    width: 460px !important;
+}
 
   #winrateBlockContainer {
     order: 2;
@@ -1094,15 +1106,19 @@ img {
 
   #championBlock {
     order: 3;
+    min-width: 460px;
   }
 
   #matchHistoryBlock {
-    width: 450px;
+    width: 448px;
+    padding: 5px;
+    padding-top: 15px;
   }
 
   .matchEntryWin, .matchEntryDefeat, .matchEntryRemake {
     min-width: fit-content;
-    gap: 10px;
+    gap: 8px;
+    padding: 0px 5px;
     font-size: 11px;
   }
 
