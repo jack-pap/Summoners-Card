@@ -12,6 +12,25 @@ const API_KEY = process.env.API_KEY;
 const NodeCache = require("node-cache");
 const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });
 
+// Middleware to cache responses
+const cacheMiddleware = (req, res, next) => {
+  const key = req.query.url;
+  const cachedResponse = cache.get(key);
+
+  if (cachedResponse) {
+    console.log(`Cache hit for URL: ${key}`);
+    res.json(cachedResponse);
+  } else {
+    console.log(`Cache miss for URL: ${key}`);
+    res.sendResponse = res.json;
+    res.json = (body) => {
+      cache.set(key, body);
+      res.sendResponse(body);
+    };
+    next();
+  }
+};
+
 const allowedOrigins = [process.env.ALLOWED_ORIGIN];
 
 const whiteListSites = [
@@ -40,8 +59,11 @@ app.use(
 // Middleware to check referer for /api route to check origin
 app.use("/api", (req, res, next) => {
   const referer = req.get("Referer") || req.get("Origin");
-  
-  if (!referer || !allowedOrigins.some((allowedOrigin) => referer.startsWith(allowedOrigin))) {
+
+  if (
+    !referer ||
+    !allowedOrigins.some((allowedOrigin) => referer.startsWith(allowedOrigin))
+  ) {
     return res.status(403).json({ error: "Access forbidden" });
   }
 
@@ -61,7 +83,7 @@ app.get("/", (req, res) => {
 });
 
 // Proxy route to be called by controller to fetch data from API endpoint
-app.get("/api", async (req, res) => {
+app.get("/api", cacheMiddleware, async (req, res) => {
   try {
     var apiURL = req.query.url;
     if (!whiteListSites.some((word) => apiURL.includes(word))) return;
@@ -70,7 +92,6 @@ app.get("/api", async (req, res) => {
         ? `&api_key=${API_KEY}`
         : `?api_key=${API_KEY}`;
     }
-    console.log(apiURL);
     const response = await fetch(apiURL);
     const data = await response.json();
     res.json(data);

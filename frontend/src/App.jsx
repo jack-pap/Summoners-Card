@@ -885,7 +885,7 @@ export async function getMatchInfoList(matchIDs, region, puuid) {
  *
  * @param {string} matchDate
  * @param {string} matchID
- * @returns
+ * @returns {boolean}
  */
 export function checkMatchEligibility(matchDate, matchID) {
   // Dont process any unranked or older than a year games
