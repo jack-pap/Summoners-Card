@@ -906,6 +906,8 @@ function makeSummonerBadges(
   summonerChampionWinrateInfo,
   championsInfo
 ) {
+  if (summonerMatchInfo.length == 0) return;
+  
   const summComponent = document.getElementById("summonerBlock");
   const root = createRoot(summComponent.querySelector(".summonerChips"));
   const allSummonerChips = [];

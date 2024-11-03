@@ -882,15 +882,17 @@ export async function getMatchInfoList(matchIDs, region, puuid) {
 /**
  * Checks a match for its date and queue ID
  * to determine if it should be processed or not
- * 
- * @param {string} matchDate 
- * @param {string} matchID 
- * @returns 
+ *
+ * @param {string} matchDate
+ * @param {string} matchID
+ * @returns
  */
-export async function checkMatchEligibility(matchDate, matchID) {
+export function checkMatchEligibility(matchDate, matchID) {
   // Dont process any unranked or older than a year games
   const isOverAYearAgo = Date.now() - new Date(matchDate) > 31536000000;
-  return !Object.values(GAME_MODES).includes(matchID) || isOverAYearAgo;
+  const isNotValidGameMode = !Object.values(GAME_MODES).includes(matchID);
+
+  return isNotValidGameMode || isOverAYearAgo;
 }
 
 /**
