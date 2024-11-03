@@ -765,7 +765,7 @@ export async function matchInfoListDriver(region, matchIDs, puuid) {
  * @returns {string[][]}
  */
 export async function getMatchInfoList(matchIDs, region, puuid) {
-  const matchInfoList = [];
+  var matchInfoList = [];
 
   const DBMatchInfos = await Promise.all(
     matchIDs.map((matchID) =>
@@ -780,6 +780,13 @@ export async function getMatchInfoList(matchIDs, region, puuid) {
       // If found in DB process it
       if (DBMatchInfo.length > 0) {
         const matchInfo = DBMatchInfo[0].matchInfo;
+        if (
+          checkMatchEligibility(
+            matchInfo.contents.gameDateSQLFormat,
+            matchInfo.contents.gameQueueID
+          )
+        )
+          return;
         matchInfoList[index] = [
           matchInfo.contents,
           matchInfo.ownPlayerInfo,
@@ -793,8 +800,10 @@ export async function getMatchInfoList(matchIDs, region, puuid) {
         matchID
       );
 
-      // Dont process any unranked games
-      if (!Object.values(GAME_MODES).includes(contents.gameQueueID)) return;
+      if (
+        checkMatchEligibility(contents.gameDateSQLFormat, contents.gameQueueID)
+      )
+        return;
 
       var ownPlayerInfo;
       // Keeps only necessary JSON data
@@ -866,7 +875,22 @@ export async function getMatchInfoList(matchIDs, region, puuid) {
     })
   );
 
+  matchInfoList = matchInfoList.filter((n) => n); // Filters empty entries
   return matchInfoList;
+}
+
+/**
+ * Checks a match for its date and queue ID
+ * to determine if it should be processed or not
+ * 
+ * @param {string} matchDate 
+ * @param {string} matchID 
+ * @returns 
+ */
+export async function checkMatchEligibility(matchDate, matchID) {
+  // Dont process any unranked or older than a year games
+  const isOverAYearAgo = Date.now() - new Date(matchDate) > 31536000000;
+  return !Object.values(GAME_MODES).includes(matchID) || isOverAYearAgo;
 }
 
 /**

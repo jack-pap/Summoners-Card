@@ -686,11 +686,17 @@ async function getProfileBackground(
     RenataGlasc: "renata",
     Wukong: "monkeyking",
   };
+  const specialCases2 = ["LeeSin", "Teemo"];
   championName = specialCases[championName] || championName;
   const container = document.getElementById("profileBg");
-
   const baseImageURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/`;
-  const champImageURL = `/lol-game-data/assets/ASSETS/Characters/${championName}/Skins/Base/Images/${championName}_splash_centered_0.jpg`;
+  var champImageURL = `/lol-game-data/assets/ASSETS/Characters/${championName}/Skins/Base/Images/${championName}_splash_centered_0.jpg`;
+
+  if (specialCases2.includes(championName)) {
+    champImageURL = `/lol-game-data/assets/ASSETS/Characters/${championName}/Skins/Base/Images/${championName}_splash_centered_0.asu_${championName}.jpg`;
+  } else if (championName == "Aurora")
+    champImageURL = `/lol-game-data/assets/ASSETS/Characters/${championName}/Skins/Base/Images/${championName}_splash_centered_0.${championName}.jpg`;
+
   const extractedPath = champImageURL
     .replace("/lol-game-data/assets/", "")
     .toLowerCase();
@@ -1365,6 +1371,10 @@ async function getItemAssets(summonerInfo, divClass, component) {
           itemId,
           baseImageURL
         );
+        if (!image) {
+          emptyImagesCounter++;
+          return null;
+        }
         return (
           <Image
             src={image}
@@ -1405,6 +1415,7 @@ async function getItemAssets(summonerInfo, divClass, component) {
  */
 async function getSummonerItemImage(summonerItemData, itemID, baseImageURL) {
   const itemObject = summonerItemData.find((item) => item.id === itemID);
+  if (!itemObject) return null;
   const summonerItemImageURL = itemObject.iconPath;
 
   const extractedPath = summonerItemImageURL
