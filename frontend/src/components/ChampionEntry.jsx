@@ -15,8 +15,8 @@ const ChampionEntry = memo(
         <div className="champImage">
           <Image
             src={championImage}
-            width={47}
-            height={47}
+            width={50}
+            height={50}
             alt={`${championName}`}
           />
           <Image

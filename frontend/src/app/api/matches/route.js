@@ -6,7 +6,7 @@ export async function POST(request) {
     const body = await request.json();
     db.query(
       `
-      INSERT INTO matchInfo (puuid, matchID, matchInfo, matchDate)
+      INSERT IGNORE INTO matchInfo (puuid, matchID, matchInfo, matchDate)
       VALUES (?, ?, ?, ?);
     `,
       [body.puuid, body.matchID, JSON.stringify(body.matchInfo), body.matchDate]
