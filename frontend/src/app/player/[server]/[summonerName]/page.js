@@ -582,6 +582,7 @@ function Dashboard() {
             <div id="matchHistoryHeader"> MATCH HISTORY </div>
             <div id="matchList" />
             <ButtonGroup
+            id="loadingButtonGroup"
               variant="outlined"
               sx={{
                 ".MuiButtonGroup-grouped": {
@@ -600,6 +601,7 @@ function Dashboard() {
               width="300px"
             >
               <LoadingButton
+                id="loadingButton"
                 loading={isTempLoading}
                 loadingIndicator={
                   <CircularProgress sx={{ color: "#d8a841" }} size={35} />
@@ -744,6 +746,15 @@ async function makeChampionWinrate(
  * @param {React.Dispatch<React.SetStateAction<boolean>>} setIsTempLoading
  */
 async function makeMatchHistory(summonerMatchInfo, setIsTempLoading) {
+  if (summonerMatchInfo.length == 0) {
+    document.getElementById("loadingButtonGroup").style.display = "none";
+    const container = document.getElementById("matchList");
+    const gamesNotFoundElement = document.createElement("div");
+    gamesNotFoundElement.setAttribute("id", "notFoundText")
+    gamesNotFoundElement.innerHTML = `No matches found`;
+    container.appendChild(gamesNotFoundElement)
+    return;
+  }
   setIsTempLoading(true);
   await makeMatchEntries(summonerMatchInfo, 15);
   setIsTempLoading(false);
@@ -767,7 +778,6 @@ async function extendMatchHistory(
   setIsTempLoading
 ) {
   setIsTempLoading(true);
-
   const lastMatchDate = summonerMatchInfo.find(
     (matchObject) =>
       matchObject[0].gameID ===
@@ -907,7 +917,7 @@ function makeSummonerBadges(
   championsInfo
 ) {
   if (summonerMatchInfo.length == 0) return;
-  
+
   const summComponent = document.getElementById("summonerBlock");
   const root = createRoot(summComponent.querySelector(".summonerChips"));
   const allSummonerChips = [];
