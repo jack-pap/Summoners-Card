@@ -78,10 +78,13 @@ Documentation for all methods can be found [here](https://jack-pap.github.io/Sum
 - Extensive testing (unit, component tests) using [Jest](https://jestjs.io/)
 - Thorough documentation using [JSDoc](https://jsdoc.app/)
 
-## Screenshots
+## Screenshots Desktop
 ![homepage](https://github.com/user-attachments/assets/6191574a-2d2e-4fbe-955f-8b30944513d3)
 
 ![dashboard](https://github.com/user-attachments/assets/4f45a4f3-3993-4e60-ba3e-adeb72b28bfa)
 
-
-
+## Screenshots Mobile
+<div style="display: flex; justify-content: space-between;">
+  <img src="https://github.com/user-attachments/assets/3e85f8c7-a8bf-468a-803c-6c237bf5efd2" alt="mobileHome" width="45%" />
+  <img src="https://github.com/user-attachments/assets/e7fdb65b-fa98-4710-8f55-a5bcf7c7862d" alt="mobileDashboard" width="45%" />
+</div>
