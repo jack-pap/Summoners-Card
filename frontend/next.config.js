@@ -2,8 +2,22 @@ import path from "path";
 import webpack from "webpack";
 
 export default {
+    async headers() {
+      return [
+        {
+          // Match all request paths 
+          source: '/:path*',
+          headers: [
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=36000, must-revalidate',
+            },
+          ],
+        }
+      ];
+    },
   webpack: (config, { isServer }) => {
-    // Add alias for @
+    // Add alias for @ when importing
     config.resolve.alias["@"] = path.resolve();
 
     // Add fallback for fs, net, and tls if not server
