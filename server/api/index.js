@@ -19,12 +19,16 @@ const cacheMiddleware = (req, res, next) => {
 
   if (cachedResponse) {
     console.log(`Cache hit for URL: ${key}`);
+    res.set("Cache-Control", "public, max-age=36000, immutable");
+    res.set("Expires", new Date(Date.now() + 36000).toUTCString());
     res.json(cachedResponse);
   } else {
     console.log(`Cache miss for URL: ${key}`);
     res.sendResponse = res.json;
     res.json = (body) => {
       cache.set(key, body);
+      res.set("Cache-Control", "public, max-age=36000, immutable");
+      res.set("Expires", new Date(Date.now() + 36000).toUTCString());
       res.sendResponse(body);
     };
     next();
