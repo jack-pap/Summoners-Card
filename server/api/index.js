@@ -9,6 +9,14 @@ const port = 3001;
 
 const API_KEY = process.env.API_KEY;
 
+const allowedOrigins = [process.env.ALLOWED_ORIGIN];
+
+const whiteListSites = [
+  "https://raw.communitydragon.org/",
+  "https://ddragon.leagueoflegends.com/",
+  "api.riotgames.com",
+];
+
 const NodeCache = require("node-cache");
 const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });
 
@@ -16,7 +24,16 @@ const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });
 const cacheMiddleware = (req, res, next) => {
   const key = req.query.url;
   const cachedResponse = cache.get(key);
-
+  
+  if (key.includes("api.riotgames.com")) {
+    res.set(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, proxy-revalidate"
+    );
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
+    return next();
+  }
   if (cachedResponse) {
     console.log(`Cache hit for URL: ${key}`);
     res.set("Cache-Control", "public, max-age=36000, must-revalidate");
@@ -34,14 +51,6 @@ const cacheMiddleware = (req, res, next) => {
     next();
   }
 };
-
-const allowedOrigins = [process.env.ALLOWED_ORIGIN];
-
-const whiteListSites = [
-  "https://raw.communitydragon.org/",
-  "https://ddragon.leagueoflegends.com/",
-  "api.riotgames.com",
-];
 
 app.disable("x-powered-by");
 app.use(bodyParser.json());
