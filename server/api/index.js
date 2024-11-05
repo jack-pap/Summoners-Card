@@ -24,8 +24,8 @@ const cache = new NodeCache({ stdTTL: 10000, checkperiod: 120 });
 const cacheMiddleware = (req, res, next) => {
   const key = req.query.url;
   const cachedResponse = cache.get(key);
-  
-  if (key.includes("api.riotgames.com")) {
+
+  if (key.includes("count=1")) {
     res.set(
       "Cache-Control",
       "no-store, no-cache, must-revalidate, proxy-revalidate"
