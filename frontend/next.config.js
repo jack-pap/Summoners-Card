@@ -10,7 +10,7 @@ export default {
           headers: [
             {
               key: 'Cache-Control',
-              value: 'public, max-age=36000, must-revalidate',
+              value: 'public, max-age=120, must-revalidate',
             },
           ],
         }
