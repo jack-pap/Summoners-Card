@@ -35,7 +35,7 @@ export async function GET(request) {
 
   if (matchID) return getMatchSpecific(matchID, puuid);
   if (matchDate) return getExtendedMatchIDs(matchDate, puuid);
-  return getMatchIDs(puuid);
+  return getMatchIDs(puuid, request);
 }
 
 async function getMatchSpecific(matchID, puuid) {
@@ -88,7 +88,7 @@ async function getExtendedMatchIDs(matchDate, puuid) {
   }
 }
 
-async function getMatchIDs(puuid) {
+async function getMatchIDs(puuid, request) {
   try {
     const matchIDs = await db.query(
       `
@@ -101,6 +101,11 @@ async function getMatchIDs(puuid) {
     );
     console.log(matchIDs);
     await db.end();
+    request.headers.set(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, proxy-revalidate"
+    );
+    request.headers.set("Expires", "0");
     return NextResponse.json(matchIDs);
   } catch (error) {
     return NextResponse.json(
