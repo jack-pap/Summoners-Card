@@ -5,8 +5,7 @@ export default {
     async headers() {
       return [
         {
-          // Match all request paths 
-          source: '/:path*',
+          source: '/summoners',
           headers: [
             {
               key: 'Cache-Control',

@@ -35,7 +35,7 @@ export async function GET(request) {
 
   if (matchID) return getMatchSpecific(matchID, puuid);
   if (matchDate) return getExtendedMatchIDs(matchDate, puuid);
-  return getMatchIDs(puuid, request);
+  return getMatchIDs(puuid);
 }
 
 async function getMatchSpecific(matchID, puuid) {
@@ -49,7 +49,13 @@ async function getMatchSpecific(matchID, puuid) {
       [matchID, puuid]
     );
     console.log(match);
-    return NextResponse.json(match);
+    return NextResponse.json(match, {
+      headers: {
+        "Cache-Control": "public, max-age=120, must-revalidate",
+        Pragma: "cache",
+        Expires: new Date(Date.now() + 120000).toUTCString(),
+      },
+    });
   } catch (error) {
     return NextResponse.json(
       {
@@ -75,7 +81,13 @@ async function getExtendedMatchIDs(matchDate, puuid) {
     );
     console.log(matchIDs);
     await db.end();
-    return NextResponse.json(matchIDs);
+    return NextResponse.json(matchIDs, {
+      headers: {
+        "Cache-Control": "public, max-age=120, must-revalidate",
+        Pragma: "cache",
+        Expires: new Date(Date.now() + 120000).toUTCString(),
+      },
+    });
   } catch (error) {
     return NextResponse.json(
       {
@@ -88,7 +100,7 @@ async function getExtendedMatchIDs(matchDate, puuid) {
   }
 }
 
-async function getMatchIDs(puuid, request) {
+async function getMatchIDs(puuid) {
   try {
     const matchIDs = await db.query(
       `
@@ -101,12 +113,13 @@ async function getMatchIDs(puuid, request) {
     );
     console.log(matchIDs);
     await db.end();
-    request.headers.set(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate, proxy-revalidate"
-    );
-    request.headers.set("Expires", "0");
-    return NextResponse.json(matchIDs);
+    return NextResponse.json(matchIDs, {
+      headers: {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    });
   } catch (error) {
     return NextResponse.json(
       {
