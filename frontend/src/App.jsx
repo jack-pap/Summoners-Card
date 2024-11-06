@@ -289,21 +289,17 @@ function App() {
 export async function loadVersion() {
   const apiURL = "https://ddragon.leagueoflegends.com/api/versions.json";
 
-  return new Promise((resolve, reject) => {
-    fetch(apiURL)
-      .then((response) => {
-        if (!response.ok) {
-          throw new ErrorPage(`Network response was not ok ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  try {
+    const response = await fetch(apiURL);
+
+    if (!response.ok) {
+      throw new Error(`Network response was not ok ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
 }
 
 /**
