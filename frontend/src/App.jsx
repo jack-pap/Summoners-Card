@@ -290,7 +290,9 @@ export async function loadVersion() {
   const apiURL = "https://ddragon.leagueoflegends.com/api/versions.json";
 
   return new Promise((resolve, reject) => {
-    fetch(apiURL)
+    fetch(apiURL, {
+      cache: "no-cache",
+    })
       .then((response) => {
         if (!response.ok) {
           throw new ErrorPage(`Network response was not ok ${response.status}`);
