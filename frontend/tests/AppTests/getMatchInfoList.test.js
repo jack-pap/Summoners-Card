@@ -24,7 +24,7 @@ describe("getMatchInfoList function tests", () => {
     apiPOSTDatabaseCall.mockResolvedValue({});
     apiCall.mockResolvedValue({
       info: {
-        gameEndTimestamp: 1633072800000,
+        gameEndTimestamp: 1723072800000,
         gameDuration: 1800,
         queueId: 420,
         participants: [
@@ -85,8 +85,8 @@ describe("getMatchInfoList function tests", () => {
     expect(result).toEqual([
       [
         {
-          gameDate: new Date(1633072800000),
-          gameDateSQLFormat: "2021-10-01 07:20:00",
+          gameDate: new Date(1723072800000),
+          gameDateSQLFormat: "2024-08-07 23:20:00",
           gameDuration: 1800,
           gameID: "A",
           gameQueueID: 420,

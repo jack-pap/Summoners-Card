@@ -33,7 +33,7 @@ describe("matchInfoListDriver function tests", () => {
 
     apiCall.mockResolvedValueOnce({
       info: {
-        gameEndTimestamp: 1633017600000,
+        gameEndTimestamp: 1723072800000,
         gameDuration: 1800,
         queueId: 420,
         participants: [
@@ -69,8 +69,8 @@ describe("matchInfoListDriver function tests", () => {
     expect(result).toEqual([
       [
         {
-          gameDate: new Date(1633017600000),
-          gameDateSQLFormat: "2021-09-30 16:00:00",
+          gameDate: new Date(1723072800000),
+          gameDateSQLFormat: "2024-08-07 23:20:00",
           gameDuration: 1800,
           gameID: "A",
           gameQueueID: 420,

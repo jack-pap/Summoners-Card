@@ -19,7 +19,7 @@ describe("apiCall function tests", () => {
 
     expect(result).toStrictEqual({ testData: "123" });
     expect(fetch).toHaveBeenCalledWith(
-      `http://localhost:3000/api/proxy?url=${encodeURIComponent(URL)}`
+      `http://localhost:3001/api?url=${encodeURIComponent(URL)}`
     );
   });
 
@@ -35,7 +35,7 @@ describe("apiCall function tests", () => {
       "Network response was not ok 500"
     );
     expect(fetch).toHaveBeenCalledWith(
-      `http://localhost:3000/api/proxy?url=${encodeURIComponent(URL)}`
+      `http://localhost:3001/api?url=${encodeURIComponent(URL)}`
     );
   });
 });
