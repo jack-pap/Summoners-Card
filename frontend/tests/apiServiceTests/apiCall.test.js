@@ -1,5 +1,7 @@
+require("dotenv").config();
 const fetch = require("isomorphic-fetch");
 const apiService = require("@/src/utils/apiService.js");
+const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
 jest.mock("isomorphic-fetch");
 
@@ -19,7 +21,7 @@ describe("apiCall function tests", () => {
 
     expect(result).toStrictEqual({ testData: "123" });
     expect(fetch).toHaveBeenCalledWith(
-      `http://localhost:3001/api?url=${encodeURIComponent(URL)}`
+      `${BASE_URL}/api?url=${encodeURIComponent(URL)}`
     );
   });
 
@@ -35,7 +37,7 @@ describe("apiCall function tests", () => {
       "Network response was not ok 500"
     );
     expect(fetch).toHaveBeenCalledWith(
-      `http://localhost:3001/api?url=${encodeURIComponent(URL)}`
+      `${BASE_URL}/api?url=${encodeURIComponent(URL)}`
     );
   });
 });

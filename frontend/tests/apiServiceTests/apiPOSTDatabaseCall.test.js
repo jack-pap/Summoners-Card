@@ -1,5 +1,7 @@
+require("dotenv").config();
 const fetch = require("isomorphic-fetch");
 const apiService = require("@/src/utils/apiService.js");
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 jest.mock("isomorphic-fetch");
 
@@ -26,7 +28,7 @@ describe("apiPOSTDatabaseCall function tests", () => {
 
     expect(result).toStrictEqual({ data: "success" });
     expect(fetch).toHaveBeenCalledWith(
-      `http://localhost:3000/api/${path}/${queryRoute}`,
+      `${BASE_URL}/api/${path}/${queryRoute}`,
       expect.objectContaining({
         method: "POST",
         headers: {
@@ -53,7 +55,7 @@ describe("apiPOSTDatabaseCall function tests", () => {
     ).rejects.toThrow("Network response was not ok 500");
 
     expect(fetch).toHaveBeenCalledWith(
-      `http://localhost:3000/api/${path}/${queryRoute}`,
+      `${BASE_URL}/api/${path}/${queryRoute}`,
       expect.objectContaining({
         method: "POST",
         headers: {
