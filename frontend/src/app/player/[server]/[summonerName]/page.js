@@ -582,7 +582,7 @@ function Dashboard() {
             <div id="matchHistoryHeader"> MATCH HISTORY </div>
             <div id="matchList" />
             <ButtonGroup
-            id="loadingButtonGroup"
+              id="loadingButtonGroup"
               variant="outlined"
               sx={{
                 ".MuiButtonGroup-grouped": {
@@ -656,8 +656,9 @@ function Dashboard() {
 }
 
 /**
- * API call to retrieve queue ids and their 
+ * API call to retrieve queue ids and their
  * respective names and return a mapping between them
+ *
  * @returns {Map<number, string>}
  */
 async function getGameQueues() {
@@ -671,17 +672,35 @@ async function getGameQueues() {
   return queueMapping;
 }
 
+/**
+ * Clipboard copy method for summoner name
+ *
+ * @param {string} gameName
+ * @param {string} tagLine
+ */
 function copyToClipBoard(gameName, tagLine) {
   var toolTip = document.getElementById("copyToClipboardIconText");
   navigator.clipboard.writeText(decodeURIComponent(gameName) + "#" + tagLine);
   toolTip.innerHTML = "Copied!";
 }
 
+/**
+ * Resets tooltip text when hovering over
+ * copy to clipboard button
+ */
 function resetCopyButton() {
   var toolTip = document.getElementById("copyToClipboardIconText");
   toolTip.innerHTML = "Copy to clipboard";
 }
 
+/**
+ * Searches for the most played champion and fetches
+ * its splash art through API call for use in the
+ * profile background
+ *
+ * @param {Object<number, Object>} summonerChampionWinrateInfo
+ * @param {Object<number, string>} championsInfo
+ */
 async function getProfileBackground(
   summonerChampionWinrateInfo,
   championsInfo
@@ -755,9 +774,9 @@ async function makeMatchHistory(summonerMatchInfo, setIsTempLoading) {
     document.getElementById("loadingButtonGroup").style.display = "none";
     const container = document.getElementById("matchList");
     const gamesNotFoundElement = document.createElement("div");
-    gamesNotFoundElement.setAttribute("id", "notFoundText")
+    gamesNotFoundElement.setAttribute("id", "notFoundText");
     gamesNotFoundElement.innerHTML = `No matches found`;
-    container.appendChild(gamesNotFoundElement)
+    container.appendChild(gamesNotFoundElement);
     return;
   }
   setIsTempLoading(true);
