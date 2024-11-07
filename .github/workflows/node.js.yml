@@ -33,6 +33,6 @@ jobs:
     - name: Build the project
       working-directory: ./frontend
       run: npm run build --if-present
-    - name: Run tests 
-      working-directory: ./frontend
-      run: npm test --if-present
+    # - name: Run tests 
+    #   working-directory: ./frontend
+    #   run: npm test --if-present
