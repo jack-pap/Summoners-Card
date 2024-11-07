@@ -25,7 +25,8 @@ const cacheMiddleware = (req, res, next) => {
   const key = req.query.url;
   const cachedResponse = cache.get(key);
 
-  if (key.includes("count=1") || key.includes("count=20")) {
+  // Checks to prevent outdated recent match check, recent game list and ranked info
+  if (key.includes("&count") || key.includes("by-summoner")) {
     res.set(
       "Cache-Control",
       "no-store, no-cache, must-revalidate, proxy-revalidate"

@@ -655,6 +655,11 @@ function Dashboard() {
   );
 }
 
+/**
+ * API call to retrieve queue ids and their 
+ * respective names and return a mapping between them
+ * @returns {Map<number, string>}
+ */
 async function getGameQueues() {
   const gameQueueURL =
     "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/queues.json";
