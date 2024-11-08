@@ -246,5 +246,5 @@ test("Renders app homepage correctly", () => {
   expect(screen.getByText("Patch Version: 14")).toBeInTheDocument();
   expect(screen.getByText("Search")).toBeInTheDocument();
   expect(screen.getByText("EUW")).toBeInTheDocument();
-  expect(screen.getByText("Enter summoner name: Gamename + #EUW")).toBeInTheDocument();
+  expect(screen.getByPlaceholderText("Enter summoner name: Gamename + #EUW")).toBeInTheDocument();
 });
