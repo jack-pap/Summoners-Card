@@ -3,10 +3,11 @@ import * as mysql2 from "mysql2";
 
 const db = require("serverless-mysql")({
   config: {
-    host: process.env.AWS_ENDPOINT,
-    user: "admin",
+    host: process.env.DB_ENDPOINT,
+    user: "avnadmin",
     password: process.env.SQL_PASSWORD,
     database: "summonerscard",
+    port: "12084",
   },
   library: mysql2,
 });
