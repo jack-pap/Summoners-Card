@@ -28,7 +28,7 @@
 - Node.js
 - Next.js
 - Express.js
-- MySQL server on AWS RDS
+- MySQL database server on Aiven
 - Riot.txt file for authentication
 - Riot API key
 - Separate deployments for backend server and frontend (e.g. Vercel)
@@ -38,7 +38,7 @@
 NEXT_PUBLIC_SERVER_URL= Your server URL used when sending requests for data (e.g. https://summonerscardserver.com)
 NEXT_PUBLIC_BASE_URL= Your URL used when using this build (e.g. https://summonerscard.com)
 SQL_PASSWORD= MySQL database server password
-AWS_ENDPOINT= Amazon endpoint for AWS RDS
+DB_ENDPOINT= Database endpoint for Aiven MySQL database
 ```
 >Ensure these variables are within a .env file inside the root directory
 
@@ -74,7 +74,7 @@ Documentation for all methods can be found [here](https://jack-pap.github.io/Sum
 - Stylish modern front-end design
 - Vercel deployment
 - Express.js backend server that sends and receives API requests
-- MySQL database hosted on [AWS RDS](https://aws.amazon.com/rds/)
+- MySQL database hosted on [Aiven](https://aiven.io/)
 - Extensive testing (unit, component tests) using [Jest](https://jestjs.io/)
 - Thorough documentation using [JSDoc](https://jsdoc.app/)
 
