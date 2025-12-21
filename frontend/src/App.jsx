@@ -452,7 +452,7 @@ export async function getSummonerStats(tagLine, gameName, server, region) {
   } else {
     puuid = await getPUUID(tagLine, gameName);
     summonerInfo = await getSummonerInfo(server, puuid);
-    rankedInfo = await getRankedInfo(server, summonerInfo[0]);
+    rankedInfo = await getRankedInfo(server, puuid);
     masteryInfo = await getMasteryInfo(server, puuid);
     matchList = await getMatchList(region, puuid, 0, 20);
     matchInfoList = await matchInfoListDriver(region, matchList, puuid);
@@ -510,7 +510,7 @@ export async function getPUUID(tagLine, gameName) {
 export async function getSummonerInfo(server, puuid) {
   const summonerInfoApiURL = `https://${server}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}`;
   const data = await apiCall(summonerInfoApiURL);
-  return [data.id, data.summonerLevel, data.profileIconId];
+  return [data.summonerLevel, data.profileIconId];
 }
 
 /**
@@ -941,11 +941,11 @@ export async function findMoreMatches(region, puuid) {
  * based on id and server
  *
  * @param {string} server
- * @param {string} id
+ * @param {string} puuid
  * @returns {JSON}
  */
-export async function getRankedInfo(server, id) {
-  const rankedApiURL = `https://${server}.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}`;
+export async function getRankedInfo(server, puuid) {
+  const rankedApiURL = `https://${server}.api.riotgames.com/lol/league/v4/entries/by-puuid/${puuid}`;
   const data = await apiCall(rankedApiURL);
   var rankedSoloInfo = null;
   var rankedFlexInfo = null;
@@ -966,6 +966,8 @@ export async function getRankedInfo(server, id) {
       rankedFlexInfo = currentRankedInfo;
     }
   }
+  console.log("ID", puuid);
+  console.log("RANKED DATA ", data);
   return [rankedFlexInfo || "Unranked", rankedSoloInfo || "Unranked"];
 }
 

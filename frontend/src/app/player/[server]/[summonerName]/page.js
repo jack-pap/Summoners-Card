@@ -1147,10 +1147,10 @@ async function makeProfileIcon(summonerInfo) {
 
   component.innerHTML = `
     <div id="summonerIcon"></div>
-    <div id="level">${summonerInfo[1]}</div>
+    <div id="level">${summonerInfo[0]}</div>
     `;
 
-  const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${summonerInfo[2]}.jpg`;
+  const imgURL = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${summonerInfo[1]}.jpg`;
   const profileIconImage = await apiImageCall(imgURL);
   const img = (
     <Image src={profileIconImage} width={120} height={120} alt="Profile Icon" />
