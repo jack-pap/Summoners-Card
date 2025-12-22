@@ -20,11 +20,22 @@ describe("getMatchInfoList function tests", () => {
     const region = "europe";
     const puuid = "PtSa$ap1!2xj0-";
 
+    // Use a recent date (1 month ago) to ensure it passes the eligibility check
+    const oneMonthAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+    const recentDate = new Date(oneMonthAgo);
+    const year = recentDate.getUTCFullYear();
+    const month = String(recentDate.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(recentDate.getUTCDate()).padStart(2, "0");
+    const hours = String(recentDate.getUTCHours()).padStart(2, "0");
+    const minutes = String(recentDate.getUTCMinutes()).padStart(2, "0");
+    const seconds = String(recentDate.getUTCSeconds()).padStart(2, "0");
+    const sqlFormatDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
     apiGETDatabaseCall.mockResolvedValue({});
     apiPOSTDatabaseCall.mockResolvedValue({});
     apiCall.mockResolvedValue({
       info: {
-        gameEndTimestamp: 1723072800000,
+        gameEndTimestamp: oneMonthAgo,
         gameDuration: 1800,
         queueId: 420,
         participants: [
@@ -85,8 +96,8 @@ describe("getMatchInfoList function tests", () => {
     expect(result).toEqual([
       [
         {
-          gameDate: new Date(1723072800000),
-          gameDateSQLFormat: "2024-08-07 23:20:00",
+          gameDate: recentDate,
+          gameDateSQLFormat: sqlFormatDate,
           gameDuration: 1800,
           gameID: "A",
           gameQueueID: 420,

@@ -13,13 +13,12 @@ describe("getSummonerInfo function tests", () => {
     const puuid = "1230DJOA1";
 
     apiCall.mockResolvedValue({
-      id: "Extinct",
       summonerLevel: 520,
       profileIconId: 200,
     });
 
     const result = await AppModule.getSummonerInfo(server, puuid);
 
-    expect(result).toEqual(["Extinct", 520, 200]);
+    expect(result).toEqual([520, 200]);
   });
 });

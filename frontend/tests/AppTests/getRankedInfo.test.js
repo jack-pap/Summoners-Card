@@ -6,7 +6,7 @@ jest.mock("@/src/utils/apiService.js");
 describe("getRankedInfo function tests", () => {
   test("Returns ranked solo only", async () => {
     const server = "EUW";
-    const id = "PtSa$ap1!2xj0-";
+    const puuid = "PtSa$ap1!2xj0-";
 
     apiService.apiCall.mockResolvedValue([
       {
@@ -19,7 +19,7 @@ describe("getRankedInfo function tests", () => {
       },
     ]);
 
-    const result = await AppModule.getRankedInfo(server, id);
+    const result = await AppModule.getRankedInfo(server, puuid);
 
     expect(result).toEqual([
       "Unranked",
@@ -37,7 +37,7 @@ describe("getRankedInfo function tests", () => {
 
   test("Returns ranked flex only", async () => {
     const server = "EUW";
-    const id = "PtSa$ap1!2xj0-";
+    const puuid = "PtSa$ap1!2xj0-";
 
     apiService.apiCall.mockResolvedValue([
       {
@@ -50,7 +50,7 @@ describe("getRankedInfo function tests", () => {
       },
     ]);
 
-    const result = await AppModule.getRankedInfo(server, id);
+    const result = await AppModule.getRankedInfo(server, puuid);
 
     expect(result).toEqual([
       {
@@ -68,7 +68,7 @@ describe("getRankedInfo function tests", () => {
 
   test("Returns both ranked modes", async () => {
     const server = "EUW";
-    const id = "PtSa$ap1!2xj0-";
+    const puuid = "PtSa$ap1!2xj0-";
 
     apiService.apiCall.mockResolvedValue([
       {
@@ -89,7 +89,7 @@ describe("getRankedInfo function tests", () => {
       },
     ]);
 
-    const result = await AppModule.getRankedInfo(server, id);
+    const result = await AppModule.getRankedInfo(server, puuid);
 
     expect(result).toEqual([
       {
@@ -115,11 +115,11 @@ describe("getRankedInfo function tests", () => {
 
   test("Returns none of the ranked modes", async () => {
     const server = "EUW";
-    const id = "PtSa$ap1!2xj0-";
+    const puuid = "PtSa$ap1!2xj0-";
 
     apiService.apiCall.mockResolvedValue([{}, {}]);
 
-    const result = await AppModule.getRankedInfo(server, id);
+    const result = await AppModule.getRankedInfo(server, puuid);
 
     expect(result).toEqual(["Unranked", "Unranked"]);
   });
