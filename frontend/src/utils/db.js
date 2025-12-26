@@ -23,7 +23,6 @@ async function initDatabase() {
         table.json("summonerWinrate").notNullable();
         table.dateTime("lastUpdatedDate").notNullable();
       });
-      console.log("summonerInfo table created");
     }
 
     if (!matchTableExists) {
@@ -37,10 +36,7 @@ async function initDatabase() {
           .references("summonerInfo.puuid")
           .onDelete("CASCADE");
       });
-      console.log("matchInfo table created");
     }
-
-    console.log("Database initialization complete");
   } catch (error) {
     console.error("Error initializing database:", error);
   }

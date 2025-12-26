@@ -123,7 +123,6 @@ function App() {
 
   const handleChange = (server) => {
     setSelectedServer(server);
-    console.log(`Option selected:`, server);
   };
 
   useEffect(() => {
@@ -396,7 +395,6 @@ export async function getInput(
     handleNavigation();
   } catch (error) {
     // Stops spinner and reverts back to homepage while showing an error
-    console.log(error);
     document.getElementById("homeBody").style.animation = "fade-in 0.5s";
     document.getElementById("homeBody").style.pointerEvents = "all";
     setIsLoading(false);
@@ -966,8 +964,6 @@ export async function getRankedInfo(server, puuid) {
       rankedFlexInfo = currentRankedInfo;
     }
   }
-  console.log("ID", puuid);
-  console.log("RANKED DATA ", data);
   return [rankedFlexInfo || "Unranked", rankedSoloInfo || "Unranked"];
 }
 

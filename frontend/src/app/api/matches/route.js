@@ -48,7 +48,6 @@ async function getMatchSpecific(matchID, puuid) {
     `,
       [matchID, puuid]
     );
-    console.log(match);
     return NextResponse.json(match, {
       headers: {
         "Cache-Control": "public, max-age=120, must-revalidate",
@@ -79,7 +78,6 @@ async function getExtendedMatchIDs(matchDate, puuid) {
     `,
       [puuid, matchDate]
     );
-    console.log(matchIDs);
     await db.end();
     return NextResponse.json(matchIDs, {
       headers: {
@@ -111,7 +109,6 @@ async function getMatchIDs(puuid) {
     `,
       [puuid]
     );
-    console.log(matchIDs);
     await db.end();
     return NextResponse.json(matchIDs, {
       headers: {
