@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
   try {
     const body = await request.json();
-    db.query(
+    await db.query(
       `
       INSERT INTO summonerInfo (RiotID, puuid, summonerInfo, lastUpdatedDate)
       VALUES (?, ?, ?, ?)

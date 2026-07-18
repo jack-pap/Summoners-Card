@@ -1,5 +1,4 @@
 import path from "path";
-import webpack from "webpack";
 
 export default {
     async headers() {
@@ -15,7 +14,7 @@ export default {
         }
       ];
     },
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, webpack }) => {
     // Add alias for @ when importing
     config.resolve.alias["@"] = path.resolve();
 
@@ -30,7 +29,7 @@ export default {
     }
 
     config.plugins.push(
-      new webpack.NormalModuleReplacementPlugin(/node:/, (resource) => {
+      new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
         resource.request = resource.request.replace(/^node:/, "");
       })
     );
