@@ -39,7 +39,6 @@
     "knex": "^3.1.0",
     "mysql2": "^3.11.3",
     "next": "14.2.35",
-    "node": "^22.9.0",
     "node-cache": "^5.1.2",
     "node-fetch": "^3.3.2",
     "pg-query-stream": "^4.7.0",
@@ -54,8 +53,10 @@
     "serverless-mysql": "^1.5.5",
     "styled-components": "^6.1.8",
     "styled-jsx": "^5.1.6",
-    "webpack": "^5.95.0",
     "zustand": "^5.0.0"
+  },
+  "engines": {
+    "node": "22.x"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.25.7",
